@@ -1757,105 +1757,18 @@ function generateLocalCycle(){
 async function loadHomeAI(cacheKey){
   const recsEl=document.getElementById('home-recs-body');
   const cycleEl=document.getElementById('home-cycle-body');
-  recsEl.innerHTML='<div class="home-loading">La IA está analizando tu biblioteca…</div>';
+  recsEl.innerHTML='<div class="home-loading">Analizando tu biblioteca…</div>';
   cycleEl.innerHTML='<div class="home-loading">Preparando ciclo semanal…</div>';
-
-  const sample = buildRepresentativeSample();
-  const today = new Date().toLocaleDateString('es',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-
-  const ratedFilms = FILMS.filter(f=>f.rating!=null);
-  const avgRating = ratedFilms.length ? (ratedFilms.reduce((s,f)=>s+f.rating,0)/ratedFilms.length).toFixed(1) : '?';
-  const topCountries = Object.entries(
-    ratedFilms.reduce((acc,f)=>{ if(f.country){acc[f.country]=(acc[f.country]||0)+1;} return acc; },{})
-  ).sort((a,b)=>b[1]-a[1]).slice(0,5).map(([c])=>c).join(', ');
-  const topDirs = Object.entries(
-    ratedFilms.reduce((acc,f)=>{ if(f.director){acc[f.director]=(acc[f.director]||0)+1;} return acc; },{})
-  ).sort((a,b)=>b[1]-a[1]).slice(0,5).map(([d])=>d).join(', ');
-
-  const prompt = `Eres un experto en cinematografía mundial. Analiza el historial de películas de este cinéfilo y genera recomendaciones muy personalizadas.
-
-PERFIL DEL USUARIO:
-- Total de películas vistas: ${FILMS.length}
-- Nota media: ${avgRating}/10
-- Países más vistos: ${topCountries}
-- Directores más vistos: ${topDirs}
-- Hoy: ${today}
-
-MUESTRA REPRESENTATIVA (200 películas con sus notas):
-${sample}
-
-INSTRUCCIONES:
-Responde ÚNICAMENTE con un JSON válido, sin texto antes ni después, sin backticks. Estructura exacta:
-{
-  "recs": [
-    {
-      "title": "Título original de la película",
-      "year": 1985,
-      "director": "Nombre del Director",
-      "country": "País",
-      "why": "Razón MUY específica y personal: menciona películas concretas que ya vio y que justifiquen esta recomendación (máx 130 caracteres)",
-      "desc": "Sinopsis breve y atractiva de la película, qué la hace especial, por qué vale la pena (máx 180 caracteres)",
-      "tags": ["género", "país o movimiento", "época"]
-    }
-  ],
-  "cycle": {
-    "theme": "Título evocador del ciclo semanal — conecta 3 películas por temática, director, movimiento o país (ej: 'Tres formas de mirar el tiempo: Tarkovsky, Tarr y Akerman')",
-    "films": [
-      {
-        "title": "Título original",
-        "year": 1999,
-        "director": "Director",
-        "why": "Por qué esta película encaja en el ciclo temático (máx 100 caracteres)"
-      }
-    ]
-  }
-}
-
-REGLAS CRÍTICAS:
-- "recs": exactamente 5 películas que el usuario NO ha visto (verificar contra la lista)
-- "cycle.films": exactamente 3 películas que el usuario NO ha visto
-- Las razones en "why" deben mencionar títulos específicos de su lista cuando sea posible
-- Prioriza películas menos conocidas pero de alta calidad que se alineen con su gusto
-- El ciclo debe tener un hilo conductor claro e interesante`;
-
-  console.log('[BibliotecaPersonal] Llamando a API de Anthropic...');
-  recsEl.innerHTML='<div class="home-loading">Conectando con IA… <span style="font-size:10px;color:var(--text3);">(puede tardar ~10s)</span></div>';
-
+  await new Promise(r=>setTimeout(r,80));
   try{
-    const res = await fetch('/api/claude-proxy', {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:1200,
-        messages:[{role:'user',content:prompt}]
-      })
-    });
-    console.log('[BibliotecaPersonal] Respuesta API status:', res.status);
-    if(!res.ok){
-      const errText = await res.text();
-      console.error('[BibliotecaPersonal] API error body:', errText);
-      throw new Error(`API ${res.status}: ${errText.slice(0,200)}`);
-    }
-    const data = await res.json();
-    console.log('[BibliotecaPersonal] API OK, tokens usados:', data.usage);
-    const raw = (data.content||[]).map(b=>b.text||'').join('').trim();
-    const cleaned = raw.replace(/^```json\s*/,'').replace(/^```\s*/,'').replace(/\s*```$/,'').trim();
-    const parsed = JSON.parse(cleaned);
-    if(!parsed.recs||!parsed.cycle) throw new Error('Estructura inválida');
-    console.log('[BibliotecaPersonal] Recomendaciones IA generadas:', parsed.recs.map(r=>r.title));
-    localStorage.setItem(cacheKey, JSON.stringify({recs:parsed.recs, cycle:parsed.cycle, aiGenerated:true}));
-    renderHomeRecs(parsed.recs, true);
-    renderHomeCycle(parsed.cycle);
-  } catch(e) {
-    console.warn('[BibliotecaPersonal] API falló, usando recomendaciones locales. Error:', e.message);
-    recsEl.innerHTML=`<div style="font-size:11px;color:var(--red);padding:8px 0;">⚠ IA no disponible: ${esc(e.message.slice(0,120))}<br><span style="color:var(--text3);">Usando recomendaciones curadas como fallback.</span></div>`;
-    await new Promise(r=>setTimeout(r,1500));
-    const recs = generateLocalRecs();
-    const cycle = generateLocalCycle();
-    localStorage.setItem(cacheKey, JSON.stringify({recs, cycle, aiGenerated:false}));
-    renderHomeRecs(recs, false);
+    const recs=generateLocalRecs();
+    const cycle=generateLocalCycle();
+    localStorage.setItem(cacheKey,JSON.stringify({recs,cycle,aiGenerated:false}));
+    renderHomeRecs(recs,false);
     renderHomeCycle(cycle);
+  }catch(e){
+    recsEl.innerHTML='<div style="font-size:12px;color:var(--text3);padding:14px 0;">Error generando recomendaciones.</div>';
+    cycleEl.innerHTML='';
   }
 }
 
