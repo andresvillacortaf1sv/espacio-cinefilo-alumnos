@@ -237,6 +237,246 @@ select.fsel{background:var(--bg3);border:1px solid var(--border);border-radius:6
 .rank-view-btns{display:flex;gap:4px;}
 .rvbtn{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:5px 12px;font-size:12px;color:var(--text2);}
 .rvbtn.on{background:var(--bg4);color:var(--text);border-color:var(--border2);}
+/* ═══ HOME ═══════════════════════════════════════════════════════════════════ */
+/* Layout */
+.home-wrap{display:grid;grid-template-rows:auto 1fr;}
+
+/* ── Hero: full-bleed poster mosaic with overlay ── */
+.home-hero{position:relative;height:420px;overflow:hidden;background:var(--bg);}
+.home-hero-mosaic{position:absolute;inset:0;display:grid;grid-template-columns:repeat(7,1fr);gap:3px;opacity:.22;}
+.home-hero-mosaic-img{width:100%;height:420px;object-fit:cover;background:var(--bg3);}
+.home-hero-overlay{position:absolute;inset:0;background:linear-gradient(90deg,rgba(11,11,14,.97) 30%,rgba(11,11,14,.6) 65%,rgba(11,11,14,.2) 100%);}
+.home-hero-content{position:relative;z-index:2;padding:0 48px;height:100%;display:flex;flex-direction:column;justify-content:center;max-width:620px;}
+.home-hero-eyebrow{font-size:10px;text-transform:uppercase;letter-spacing:.2em;color:var(--gold);margin-bottom:18px;display:flex;align-items:center;gap:10px;}
+.home-hero-eyebrow::before{content:'';width:28px;height:1px;background:var(--gold);}
+.home-hero-title{font-family:'Fraunces',serif;font-size:52px;font-weight:400;line-height:1;letter-spacing:-1px;color:var(--text);margin-bottom:6px;}
+.home-hero-title em{font-style:italic;color:var(--gold2);}
+.home-hero-date{font-size:13px;color:var(--text3);margin-bottom:32px;letter-spacing:.02em;}
+.home-hero-stats{display:flex;gap:0;}
+.home-hero-stat{padding:0 28px 0 0;margin-right:28px;border-right:1px solid var(--border2);}
+.home-hero-stat:last-child{border-right:none;}
+.home-hero-stat-val{font-family:'Fraunces',serif;font-size:36px;color:var(--text);line-height:1;margin-bottom:3px;}
+.home-hero-stat-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);}
+
+/* ── Main grid below hero ── */
+.home-body{display:grid;grid-template-columns:1fr 300px;min-height:0;}
+.home-main{padding:36px 40px;border-right:1px solid var(--border);}
+.home-sidebar{padding:32px 24px;display:flex;flex-direction:column;gap:36px;}
+
+/* ── Section header ── */
+.home-section-hd{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:20px;}
+.home-section-hd-title{font-size:10px;text-transform:uppercase;letter-spacing:.18em;color:var(--text3);position:relative;padding-bottom:10px;}
+.home-section-hd-title::after{content:'';position:absolute;bottom:0;left:0;width:24px;height:2px;background:var(--gold2);}
+.home-section-hd-action{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--text3);background:none;border:none;font-family:inherit;cursor:pointer;transition:.15s;padding:0;}
+.home-section-hd-action:hover{color:var(--gold2);}
+
+/* ── Recent films — Letterboxd-style dense poster grid ── */
+.home-recent-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;margin-bottom:40px;}
+.home-recent-tile{cursor:pointer;position:relative;transition:.18s;group:true;}
+.home-recent-tile:hover{transform:scale(1.04);z-index:2;}
+.home-recent-tile img,.home-recent-tile-noimg{width:100%;aspect-ratio:2/3;object-fit:cover;border-radius:4px;display:block;background:var(--bg3);}
+.home-recent-tile-noimg{display:flex;align-items:center;justify-content:center;font-size:8px;color:var(--text3);text-align:center;padding:4px;line-height:1.4;}
+.home-recent-tile-rating{position:absolute;bottom:4px;right:4px;background:rgba(11,11,14,.92);border-radius:3px;padding:1px 5px;font-size:10px;font-family:'Fraunces',serif;color:var(--gold2);backdrop-filter:blur(4px);}
+.home-recent-tile-overlay{position:absolute;inset:0;border-radius:4px;background:rgba(11,11,14,.7);display:flex;align-items:flex-end;padding:8px;opacity:0;transition:.15s;}
+.home-recent-tile:hover .home-recent-tile-overlay{opacity:1;}
+.home-recent-tile-title{font-size:9px;color:var(--text);line-height:1.3;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+
+/* ── Recs — editorial numbered list ── */
+.home-rec-list{display:flex;flex-direction:column;}
+.home-rec-item{display:grid;grid-template-columns:52px 70px 1fr;gap:14px;padding:18px 0;border-bottom:1px solid var(--border);align-items:start;}
+.home-rec-item:first-child{padding-top:0;}
+.home-rec-item:last-child{border-bottom:none;padding-bottom:0;}
+.home-rec-num{font-family:'Fraunces',serif;font-size:32px;color:var(--bg4);line-height:1;text-align:right;padding-top:2px;letter-spacing:-1px;}
+.home-rec-poster{width:70px;height:105px;border-radius:5px;object-fit:cover;display:block;background:var(--bg3);flex-shrink:0;}
+.home-rec-poster-placeholder{width:70px;height:105px;border-radius:5px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:20px;opacity:.2;}
+.home-rec-title{font-family:'Fraunces',serif;font-size:15px;line-height:1.25;margin-bottom:3px;color:var(--text);}
+.home-rec-title-year{font-family:'Inter', sans-serif;font-size:11px;color:var(--text3);font-style:normal;font-weight:400;}
+.home-rec-dir{font-size:10.5px;color:var(--gold);margin-bottom:6px;letter-spacing:.01em;}
+.home-rec-reason{font-size:11.5px;color:var(--text2);line-height:1.65;}
+.home-rec-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:8px;}
+.home-rec-tag{font-size:9.5px;color:var(--text3);border:1px solid var(--border);border-radius:2px;padding:2px 6px;letter-spacing:.04em;text-transform:uppercase;}
+
+/* ── Sidebar: upcoming — SensaCine style ── */
+.home-upcoming-list{display:flex;flex-direction:column;gap:0;}
+.home-upcoming-item{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--border);}
+.home-upcoming-item:last-child{border-bottom:none;}
+.home-upcoming-poster{width:48px;height:72px;border-radius:3px;object-fit:cover;flex-shrink:0;background:var(--bg3);display:block;}
+.home-upcoming-info{flex:1;min-width:0;padding-top:3px;}
+.home-upcoming-title{font-size:12px;font-weight:500;line-height:1.35;margin-bottom:4px;color:var(--text);}
+.home-upcoming-meta{font-size:10.5px;color:var(--text3);line-height:1.4;}
+.home-upcoming-date{font-size:10px;color:var(--gold2);margin-top:4px;font-weight:500;}
+
+/* ── Sidebar: cycle — Cahiers style ── */
+.home-cycle-theme-text{font-family:'Fraunces',serif;font-style:italic;font-size:13.5px;color:var(--text);line-height:1.55;padding:14px 0 16px;border-bottom:1px solid var(--border);margin-bottom:16px;}
+.home-cycle-films{display:flex;flex-direction:column;gap:0;}
+.home-cycle-film{display:flex;gap:10px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--border);}
+.home-cycle-film:last-child{border-bottom:none;}
+.home-cycle-poster{width:40px;height:60px;border-radius:3px;object-fit:cover;flex-shrink:0;background:var(--bg3);display:block;overflow:hidden;}
+.home-cycle-info{flex:1;min-width:0;padding-top:2px;}
+.home-cycle-title{font-size:12px;font-weight:500;margin-bottom:1px;line-height:1.35;color:var(--text);}
+.home-cycle-dir{font-size:10px;color:var(--gold);margin-bottom:4px;letter-spacing:.01em;}
+.home-cycle-why{font-size:11px;color:var(--text2);line-height:1.55;}
+
+/* Shared utils */
+.home-loading{font-size:11.5px;color:var(--text3);padding:14px 0;display:flex;align-items:center;gap:8px;}
+.home-loading::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--gold2);flex-shrink:0;animation:hpulse 1.2s infinite;}
+@keyframes hpulse{0%,100%{opacity:.15;}50%{opacity:1;}}
+.home-section-hd-badge{font-size:10px;color:var(--text3);letter-spacing:0;text-transform:none;border-bottom:none !important;padding-bottom:0 !important;}
+.home-section-hd-badge::after{display:none;}
+
+
+
+
+/* Ephemeris */
+.home-ephemeris{margin-top:22px;padding-top:18px;border-top:1px solid rgba(255,255,255,.07);max-width:460px;}
+.home-ephemeris-label{font-size:9px;text-transform:uppercase;letter-spacing:.18em;color:var(--gold);margin-bottom:5px;}
+.home-ephemeris-text{font-size:11.5px;color:rgba(238,234,227,.6);line-height:1.7;}
+.home-ephemeris-text strong{color:var(--gold2);font-weight:500;}
+/* Rec description */
+.home-rec-desc{font-size:11px;color:var(--text3);line-height:1.65;margin-top:5px;font-style:italic;padding-top:5px;border-top:1px solid var(--border);}
+/* FESTIVALS */
+.fest-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:28px;}
+.fest-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:.15s;}
+.fest-card:hover{border-color:var(--border2);}
+.fest-card-top{padding:18px 20px 14px;border-bottom:1px solid var(--border);}
+.fest-badge{display:inline-flex;align-items:center;gap:5px;font-size:9.5px;text-transform:uppercase;letter-spacing:.12em;border-radius:3px;padding:3px 8px;margin-bottom:10px;font-weight:500;}
+.fest-badge.upcoming{background:rgba(240,192,80,.1);color:var(--gold2);border:1px solid rgba(240,192,80,.22);}
+.fest-badge.live{background:rgba(76,175,130,.1);color:var(--green);border:1px solid rgba(76,175,130,.25);}
+.fest-badge.past{background:var(--bg3);color:var(--text3);border:1px solid var(--border);}
+.fest-card-name{font-family:'Fraunces',serif;font-size:21px;font-weight:400;letter-spacing:-.3px;margin-bottom:3px;}
+.fest-card-dates{font-size:11.5px;color:var(--text2);margin-bottom:4px;}
+.fest-card-location{font-size:11px;color:var(--text3);}
+.fest-card-award{font-size:11px;color:var(--gold);margin-top:8px;font-style:italic;}
+.fest-countdown{font-size:11px;color:var(--text2);margin-top:6px;}
+.fest-countdown strong{color:var(--text);font-weight:500;}
+.fest-card-body{padding:14px 20px;}
+.fest-section-label{font-size:9.5px;text-transform:uppercase;letter-spacing:.14em;color:var(--text3);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.fest-winner-card{background:rgba(201,149,46,.07);border:1px solid rgba(201,149,46,.2);border-radius:7px;padding:11px 14px;margin-bottom:10px;}
+.fest-winner-prize{font-size:9px;text-transform:uppercase;letter-spacing:.15em;color:var(--gold);margin-bottom:3px;}
+.fest-winner-film{font-size:14px;font-family:'Fraunces',serif;font-weight:400;}
+.fest-winner-dir{font-size:11px;color:var(--text2);margin-top:2px;}
+.fest-film-item{display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.03);}
+.fest-film-item:last-child{border-bottom:none;}
+.fest-film-title{font-size:12px;font-weight:500;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.fest-film-dir{font-size:11px;color:var(--text3);white-space:nowrap;flex-shrink:0;}
+
+/* ── NOTICIAS ───────────────────────────────────────────────────────────────── */
+.news-wrap{padding:24px 32px;}
+.news-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border);}
+.news-header-left{display:flex;align-items:baseline;gap:16px;}
+.news-header-title{font-family:'Fraunces',serif;font-size:26px;font-weight:400;letter-spacing:-.5px;}
+.news-header-date{font-size:10px;color:var(--text3);}
+.news-header-refresh{background:none;border:none;font-family:inherit;font-size:9.5px;text-transform:uppercase;letter-spacing:.12em;color:var(--text3);cursor:pointer;transition:.15s;padding:0;}
+.news-header-refresh:hover{color:var(--gold2);}
+.news-sources{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:20px;}
+/* TIME/NYT style grid */
+.news-grid-outer{display:grid;grid-template-columns:1fr 2fr 1fr;gap:0;border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+/* Left column */
+.news-col-left{border-right:1px solid var(--border);display:flex;flex-direction:column;}
+.news-col-right{border-left:1px solid var(--border);display:flex;flex-direction:column;}
+/* Center column */
+.news-col-center{display:flex;flex-direction:column;}
+.news-center-hero{cursor:pointer;border-bottom:1px solid var(--border);transition:.12s;}
+.news-center-hero:hover{background:rgba(255,255,255,.01);}
+.news-center-hero-img{width:100%;height:280px;overflow:hidden;background:var(--bg3);}
+.news-center-hero-img img{width:100%;height:100%;object-fit:cover;display:block;transition:.3s;}
+.news-center-hero:hover .news-center-hero-img img{transform:scale(1.02);}
+.news-center-hero-body{padding:16px 20px;}
+.news-center-hero-cat{font-size:9px;text-transform:uppercase;letter-spacing:.16em;margin-bottom:8px;font-weight:500;}
+.news-center-hero-title{font-family:'Fraunces',serif;font-size:22px;font-weight:400;line-height:1.2;letter-spacing:-.3px;margin-bottom:8px;transition:.15s;}
+.news-center-hero:hover .news-center-hero-title{color:var(--gold2);}
+.news-center-hero-summary{font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+.news-center-hero-meta{display:flex;align-items:center;gap:8px;font-size:10px;color:var(--text3);}
+/* Side items */
+.news-side-item{padding:14px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:.12s;flex:1;}
+.news-side-item:last-child{border-bottom:none;}
+.news-side-item:hover{background:rgba(255,255,255,.02);}
+.news-side-img{width:100%;height:110px;overflow:hidden;border-radius:4px;background:var(--bg3);margin-bottom:10px;}
+.news-side-img img{width:100%;height:100%;object-fit:cover;display:block;transition:.3s;}
+.news-side-item:hover .news-side-img img{transform:scale(1.03);}
+.news-side-cat{font-size:8.5px;text-transform:uppercase;letter-spacing:.14em;margin-bottom:5px;font-weight:500;}
+.news-side-title{font-family:'Fraunces',serif;font-size:13px;font-weight:400;line-height:1.3;margin-bottom:5px;}
+.news-side-summary{font-size:10.5px;color:var(--text2);line-height:1.6;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:6px;}
+.news-side-meta{font-size:9px;color:var(--text3);display:flex;justify-content:space-between;}
+/* Bottom strip */
+.news-bottom-strip{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--border);margin-top:12px;border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+.news-strip-item{padding:12px 14px;border-right:1px solid var(--border);cursor:pointer;transition:.12s;}
+.news-strip-item:last-child{border-right:none;}
+.news-strip-item:hover{background:rgba(255,255,255,.02);}
+.news-strip-rule{height:2px;width:18px;margin-bottom:7px;}
+.news-strip-cat{font-size:8px;text-transform:uppercase;letter-spacing:.12em;color:var(--text3);margin-bottom:4px;}
+.news-strip-title{font-family:'Fraunces',serif;font-size:12.5px;font-weight:400;line-height:1.3;margin-bottom:4px;}
+.news-strip-meta{font-size:9px;color:var(--text3);}
+/* Shared */
+.news-source-badge{background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:2px 6px;font-size:9px;font-weight:500;color:var(--text2);}
+.news-read-link{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--gold);text-decoration:none;margin-left:auto;transition:.15s;flex-shrink:0;}
+.news-read-link:hover{color:var(--gold2);}
+.news-noimg{background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:28px;opacity:.12;}
+.news-loading-wrap{display:flex;align-items:center;justify-content:center;padding:60px 0;}
+.news-error{text-align:center;padding:60px;color:var(--text3);font-size:13px;}
+.src-variety{color:#e8b040;}.src-deadline{color:#d95f5f;}.src-indiewire{color:#4caf82;}.src-thr{color:#9b7fd4;}.src-screen{color:#6b9fd4;}.src-default{color:var(--gold);}
+
+/* ── BLOG ───────────────────────────────────────────────────────────────────── */
+.blog-wrap{padding:32px 36px;max-width:100%;}
+.blog-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:28px;}
+.blog-title{font-family:'Fraunces',serif;font-size:28px;font-weight:400;letter-spacing:-.5px;}
+.blog-admin-btn{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:6px 12px;font-size:11px;color:var(--text2);cursor:pointer;transition:.15s;font-family:inherit;}
+.blog-admin-btn:hover{border-color:var(--border2);color:var(--text);}
+.blog-list{display:flex;flex-direction:column;gap:0;}
+.blog-post-item{padding:24px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:.15s;}
+.blog-post-item:first-child{padding-top:0;}
+.blog-post-item:last-child{border-bottom:none;}
+.blog-post-item:hover .blog-post-title{color:var(--gold2);}
+.blog-post-cat{font-size:9.5px;text-transform:uppercase;letter-spacing:.16em;color:var(--gold);margin-bottom:8px;}
+.blog-post-title{font-family:'Fraunces',serif;font-size:22px;font-weight:400;line-height:1.2;margin-bottom:8px;transition:.15s;}
+.blog-post-excerpt{font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+.blog-post-meta{font-size:10.5px;color:var(--text3);}
+/* Blog full article */
+.blog-article{padding:40px 36px;max-width:680px;}
+.blog-article-back{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--text3);background:none;border:none;font-family:inherit;cursor:pointer;transition:.15s;padding:0;margin-bottom:28px;display:flex;align-items:center;gap:6px;}
+.blog-article-back:hover{color:var(--gold2);}
+.blog-article-cat{font-size:10px;text-transform:uppercase;letter-spacing:.18em;color:var(--gold);margin-bottom:12px;}
+.blog-article-title{font-family:'Fraunces',serif;font-size:36px;font-weight:400;line-height:1.1;letter-spacing:-.5px;margin-bottom:12px;}
+.blog-article-meta{font-size:11px;color:var(--text3);margin-bottom:32px;padding-bottom:24px;border-bottom:1px solid var(--border);}
+.blog-article-body{font-size:14px;color:var(--text2);line-height:1.9;}
+.blog-article-body p{margin-bottom:20px;}
+.blog-article-body h2{font-family:'Fraunces',serif;font-size:22px;color:var(--text);margin:32px 0 12px;font-weight:400;}
+.blog-article-body h3{font-size:15px;font-weight:500;color:var(--text);margin:24px 0 8px;}
+.blog-article-body em{font-style:italic;color:var(--text);}
+.blog-article-body strong{font-weight:500;color:var(--text);}
+.blog-article-body blockquote{border-left:2px solid var(--gold);padding:4px 0 4px 16px;margin:20px 0;color:var(--text2);font-style:italic;}
+/* Admin panel */
+.blog-admin-panel{background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:24px;margin-bottom:24px;}
+.blog-admin-title{font-family:'Fraunces',serif;font-size:18px;margin-bottom:16px;}
+.blog-field{margin-bottom:12px;}
+.blog-field label{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--text3);margin-bottom:5px;}
+.blog-field input,.blog-field select,.blog-field textarea{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:13px;font-family:inherit;padding:9px 12px;outline:none;transition:.15s;}
+.blog-field input:focus,.blog-field select:focus,.blog-field textarea:focus{border-color:rgba(240,192,80,.4);}
+.blog-field textarea{min-height:220px;resize:vertical;line-height:1.7;}
+.blog-field select{background:var(--bg3);}
+.blog-publish-btn{background:var(--gold);color:#0b0b0e;border:none;border-radius:7px;padding:10px 20px;font-size:13px;font-weight:600;cursor:pointer;transition:.15s;font-family:inherit;}
+.blog-publish-btn:hover{background:var(--gold2);}
+.blog-cancel-btn{background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:10px 16px;font-size:13px;color:var(--text2);cursor:pointer;transition:.15s;font-family:inherit;margin-left:8px;}
+.blog-cancel-btn:hover{border-color:var(--border2);color:var(--text);}
+.blog-post-admin-actions{display:flex;gap:6px;margin-top:8px;}
+.blog-edit-btn{font-size:10px;color:var(--text3);background:none;border:none;font-family:inherit;cursor:pointer;padding:0;transition:.15s;}
+.blog-edit-btn:hover{color:var(--gold2);}
+.blog-del-btn{font-size:10px;color:var(--text3);background:none;border:none;font-family:inherit;cursor:pointer;padding:0;transition:.15s;}
+.blog-del-btn:hover{color:var(--red);}
+/* Admin login */
+.blog-login{max-width:320px;margin:60px auto;text-align:center;}
+.blog-login-title{font-family:'Fraunces',serif;font-size:22px;margin-bottom:6px;}
+.blog-login-sub{font-size:12px;color:var(--text3);margin-bottom:24px;}
+.blog-login input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:7px;color:var(--text);font-size:14px;font-family:inherit;padding:10px 14px;outline:none;text-align:center;margin-bottom:10px;transition:.15s;}
+.blog-login input:focus{border-color:rgba(240,192,80,.4);}
+.blog-login-btn{width:100%;background:var(--gold);color:#0b0b0e;border:none;border-radius:7px;padding:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:.15s;}
+.blog-login-btn:hover{background:var(--gold2);}
+.blog-login-err{font-size:12px;color:var(--red);margin-top:8px;}
+.blog-empty{text-align:center;padding:60px 0;color:var(--text3);}
+.blog-empty-icon{font-size:36px;margin-bottom:12px;}
+.blog-empty-text{font-size:13px;}
+
+
 </style>
 </head>
 <body>
@@ -286,7 +526,8 @@ select.fsel{background:var(--bg3);border:1px solid var(--border);border-radius:6
       <button class="logout-btn" onclick="doLogout()">Salir</button>
     </div>
     <div class="header-nav">
-      <button class="nav-btn on" onclick="switchView('films',this)">Películas</button>
+      <button class="nav-btn on" onclick="switchView('home',this)">Inicio</button>
+      <button class="nav-btn" onclick="switchView('films',this)">Películas</button>
       <button class="nav-btn" onclick="switchView('ranking',this)">Mi Ranking</button>
       <button class="nav-btn" onclick="switchView('rewatched',this)">Re-vistas</button>
       <button class="nav-btn" onclick="switchView('filmog',this)">Filmografías</button>
@@ -296,7 +537,75 @@ select.fsel{background:var(--bg3);border:1px solid var(--border);border-radius:6
     </div>
   </header>
 
-  <div id="view-films" class="view on">
+  <div id="view-home" class="view on">
+  <div class="home-wrap">
+
+    <!-- ── Hero: mosaic backdrop + big stats ── -->
+    <div class="home-hero">
+      <div class="home-hero-mosaic" id="home-mosaic"></div>
+      <div class="home-hero-overlay"></div>
+      <div class="home-hero-content">
+        <div class="home-hero-eyebrow">Cine · Academia Otto Salamanca</div>
+        <div class="home-hero-title">Espacio<br><em>Cinéfilo</em></div>
+        <div class="home-hero-date" id="home-sub-date"></div>
+        <div class="home-hero-stats" id="home-kpis"></div>
+        <div class="home-ephemeris" id="home-ephemeris"></div>
+      </div>
+    </div>
+
+    <!-- ── Body: main + sidebar ── -->
+    <div class="home-body">
+
+      <!-- Main column -->
+      <div class="home-main">
+
+        <!-- Últimas añadidas -->
+        <div class="home-section-hd">
+          <div class="home-section-hd-title">Últimas añadidas <span class="home-section-hd-badge" id="home-recent-badge"></span></div>
+        </div>
+        <div class="home-recent-grid" id="home-recent-films"></div>
+
+        <!-- Recomendaciones -->
+        <div class="home-section-hd">
+          <div class="home-section-hd-title">Recomendaciones del día</div>
+          <button class="home-section-hd-action" onclick="initHome(true)">↺ Regenerar</button>
+        </div>
+        <div id="home-recs-body" class="home-rec-list">
+          <div class="home-loading">Analizando tu biblioteca…</div>
+        </div>
+
+      </div>
+
+      <!-- Sidebar -->
+      <div class="home-sidebar">
+
+        <!-- Próximos estrenos -->
+        <div>
+          <div class="home-section-hd">
+            <div class="home-section-hd-title">En cartelera pronto</div>
+          </div>
+          <div id="home-upcoming-list" class="home-upcoming-list">
+            <div class="home-loading">Cargando…</div>
+          </div>
+        </div>
+
+        <!-- Ciclo semanal -->
+        <div>
+          <div class="home-section-hd">
+            <div class="home-section-hd-title">Ciclo semanal</div>
+          </div>
+          <div id="home-cycle-body">
+            <div class="home-loading">Preparando ciclo…</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="view-films" class="view">
     <div class="toolbar">
       <select class="fsel" id="fc-sort" onchange="renderFilms()">
         <option value="rating-desc">Mayor nota</option>
@@ -397,8 +706,8 @@ select.fsel{background:var(--bg3);border:1px solid var(--border);border-radius:6
 <div id="toast"></div>
 
 <script>
-const SUPABASE_URL = 'https://rxmvsthzitsckhmbbids.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ4bXZzdGh6aXRzY2tobWJiaWRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc5NjIzMjYsImV4cCI6MjA5MzUzODMyNn0.bS93DgQJCY4-0EGLvquHAUTfgOViglnKCXWKARaBW38';
+const SUPABASE_URL = 'SUPABASE_URL_PLACEHOLDER';
+const SUPABASE_KEY = 'SUPABASE_KEY_PLACEHOLDER';
 const TMDB_KEY = '9ead44dc2fd5da01ee3499ece3cd72fb';
 const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -1098,6 +1407,594 @@ function renderFestivals(){
 }
 
 // ── START ──────────────────────────────────────────────────────────────────────
+// ── HOME ──────────────────────────────────────────────────────────────────────
+const CINEMA_EPHEMERIS = [
+  {day:'01-01',text:'<strong>1895:</strong> Los hermanos Lumière patentan el cinematógrafo. El cine nace como herramienta científica.'},
+  {day:'01-15',text:'<strong>1929:</strong> Se celebra la primera entrega de los Óscar en el Hollywood Roosevelt Hotel. Duró 15 minutos.'},
+  {day:'01-28',text:'<strong>1939:</strong> Se estrena <em>Lo que el viento se llevó</em>, que se convertiría en la película más taquillera ajustada a la inflación.'},
+  {day:'02-04',text:'<strong>1906:</strong> Nace en Copenhagen Carl Theodor Dreyer, uno de los grandes maestros del cine silente europeo.'},
+  {day:'02-10',text:'<strong>1920:</strong> Nace en Tokio Akira Kurosawa. Dirigiría 30 películas y transformaría el lenguaje cinematográfico.'},
+  {day:'02-14',text:'<strong>1919:</strong> Se funda United Artists por Chaplin, Pickford, Fairbanks y Griffith. El primer estudio de artistas.'},
+  {day:'02-20',text:'<strong>1924:</strong> Nace Sidney Lumet en Filadelfia. Dirigió <em>12 Angry Men</em>, <em>Dog Day Afternoon</em> y <em>Network</em>.'},
+  {day:'02-22',text:'<strong>1857:</strong> Nace Heinrich Hertz. Sus ondas electromagnéticas harían posible el cine sonoro décadas después.'},
+  {day:'03-01',text:'<strong>1941:</strong> Se estrena <em>Citizen Kane</em> de Orson Welles, considerada por muchos la mejor película jamás filmada.'},
+  {day:'03-08',text:'<strong>1973:</strong> Nace en Tokyo Sofia Coppola. <em>Lost in Translation</em> le valdrá el Oscar al mejor guión en 2004.'},
+  {day:'03-15',text:'<strong>1954:</strong> Se estrena en Japón <em>Godzilla</em> de Ishirō Honda, alegoría sobre el trauma de Hiroshima.'},
+  {day:'03-19',text:'<strong>1932:</strong> Nace en Cambridge Miloš Forman. Dirigió <em>One Flew Over the Cuckoo\'s Nest</em> y <em>Amadeus</em>.'},
+  {day:'03-23',text:'<strong>1970:</strong> Nace en Seúl Park Chan-wook. Su trilogía de la venganza redefiniría el thriller coreano para siempre.'},
+  {day:'04-01',text:'<strong>1957:</strong> Se estrena <em>The Seventh Seal</em> de Bergman en Suecia. El caballero jugando al ajedrez con la Muerte.'},
+  {day:'04-08',text:'<strong>1973:</strong> Nace en Buenos Aires Lucrecia Martel. <em>La Ciénaga</em> y <em>Zama</em> la sitúan entre los grandes del cine latinoamericano.'},
+  {day:'04-13',text:'<strong>1906:</strong> Samuel Beckett nace en Irlanda. Sus obras influirían en el cine de Bergman, Godard y Haneke.'},
+  {day:'04-20',text:'<strong>1889:</strong> Nace en Londres Charlie Chaplin, que transformaría la pantomima en arte cinematográfico universal.'},
+  {day:'04-25',text:'<strong>1945:</strong> Roberto Rossellini termina de filmar <em>Roma città aperta</em>, fundando el neorrealismo italiano.'},
+  {day:'05-01',text:'<strong>1970:</strong> Nace en Busan Bong Joon-ho. En 2020 <em>Parasite</em> se convirtió en la primera película no anglófona en ganar el Oscar a Mejor Película.'},
+  {day:'05-10',text:'<strong>1946:</strong> Se celebra la primera edición del Festival de Cannes tras su suspensión por la Segunda Guerra Mundial.'},
+  {day:'05-14',text:'<strong>1984:</strong> Nace en Daejeon Lee Chang-dong. <em>Poetry</em> y <em>Burning</em> lo consolidan como voz moral del cine coreano.'},
+  {day:'05-22',text:'<strong>1931:</strong> Se estrena <em>M</em> de Fritz Lang, el primer gran thriller psicológico del cine sonoro alemán.'},
+  {day:'06-01',text:'<strong>1926:</strong> Nace en Lyon Claude Chabrol, uno de los fundadores de la Nouvelle Vague francesa.'},
+  {day:'06-08',text:'<strong>1949:</strong> Nace en Osaka Juzo Itami. Sus sátiras sobre la sociedad japonesa como <em>Tampopo</em> son obras únicas.'},
+  {day:'06-15',text:'<strong>1960:</strong> Se estrena <em>Psycho</em> de Alfred Hitchcock. Mató a su protagonista en el primer tercio del film y cambió el cine para siempre.'},
+  {day:'06-20',text:'<strong>1975:</strong> <em>Jaws</em> de Spielberg establece el concepto del blockbuster de verano y transforma Hollywood.'},
+  {day:'06-27',text:'<strong>1880:</strong> Nace en Paris Georges Méliès. Padre de los efectos especiales con <em>Le Voyage dans la Lune</em> (1902).'},
+  {day:'07-04',text:'<strong>1929:</strong> Nace en Calcuta Satyajit Ray. Su trilogía Apu reveló el cine indio al mundo occidental.'},
+  {day:'07-10',text:'<strong>1957:</strong> Nace en Santiago de Chile Pablo Larraín. <em>No</em>, <em>Jackie</em> y <em>El Conde</em> lo posicionan en el cine mundial.'},
+  {day:'07-14',text:'<strong>1900:</strong> Nace en Madrid Luis Buñuel. Surrealista, anticlerical y genial. <em>Un chien andalou</em> nació de sus sueños.'},
+  {day:'07-20',text:'<strong>1950:</strong> Se estrena <em>All About Eve</em> de Mankiewicz. 14 nominaciones al Oscar, récord que duró hasta <em>Titanic</em>.'},
+  {day:'07-28',text:'<strong>1948:</strong> Nace en St. Louis Wes Anderson. Sus composiciones simétricas y paleta de colores son inconfundibles.'},
+  {day:'08-05',text:'<strong>1921:</strong> Nace en Oita Kenji Mizoguchi. Maestro del plano secuencia y de los relatos de mujeres japonesas.'},
+  {day:'08-12',text:'<strong>1964:</strong> Nace en Daegu Kim Ki-duk. <em>Spring, Summer, Fall, Winter... and Spring</em> es meditación zen en imágenes.'},
+  {day:'08-18',text:'<strong>1937:</strong> Nace en Paris Roman Polanski. <em>Chinatown</em>, <em>The Pianist</em> y <em>Rosemary\'s Baby</em> son hitos del séptimo arte.'},
+  {day:'08-25',text:'<strong>1930:</strong> Nace en Kyoto Kon Ichikawa. Representó a Japón en múltiples festivales internacionales durante dos décadas.'},
+  {day:'09-01',text:'<strong>1932:</strong> La primera edición del Festival de Venecia corona al cine europeo como arte mayor frente a Hollywood.'},
+  {day:'09-06',text:'<strong>1943:</strong> Nace en Catania Giuseppe Tornatore. <em>Cinema Paradiso</em> es la carta de amor más bella jamás filmada al cine.'},
+  {day:'09-14',text:'<strong>1959:</strong> La Nouvelle Vague irrumpe en el mundo con <em>Les Quatre Cents Coups</em> de Truffaut en Cannes.'},
+  {day:'09-20',text:'<strong>1952:</strong> Nace en Hong Kong Wong Kar-wai. <em>In the Mood for Love</em> es el poema visual del amor no consumado.'},
+  {day:'09-28',text:'<strong>1970:</strong> Nace en Buenos Aires Mariana Enriquez. Sus relatos de horror inspiraron a varios directores latinoamericanos.'},
+  {day:'10-04',text:'<strong>1924:</strong> Nace en Moscú el teórico Andréi Tarkovsky. Su libro <em>Esculpir en el tiempo</em> es la Biblia del cine de autor.'},
+  {day:'10-10',text:'<strong>1930:</strong> Nace en Montebelluna Michelangelo Antonioni. <em>L\'avventura</em> introdujo el silencio como lenguaje cinematográfico.'},
+  {day:'10-17',text:'<strong>1906:</strong> Nace en Estocolmo Ingmar Bergman. 62 películas que interrogan a Dios, la muerte y el alma humana.'},
+  {day:'10-25',text:'<strong>1881:</strong> Nace en Lyon Louis Lumière. Junto a su hermano Auguste, filmaron los primeros instantes del mundo en movimiento.'},
+  {day:'11-01',text:'<strong>1964:</strong> Nace en Osaka Hirokazu Kore-eda. <em>Shoplifters</em> y <em>Monster</em> exploran la familia como construcción emocional.'},
+  {day:'11-08',text:'<strong>1895:</strong> Wilhelm Röntgen descubre los rayos X. La misma semana, los Lumière realizan su primera proyección pública.'},
+  {day:'11-15',text:'<strong>1932:</strong> Nace en Łódź Krzysztof Kieślowski. <em>Dekalog</em> y la trilogía Trois Couleurs son cimas del cine europeo.'},
+  {day:'11-20',text:'<strong>1946:</strong> Se celebra la primera edición del Festival de Cannes en su formato actual, con películas de 20 países.'},
+  {day:'11-28',text:'<strong>1974:</strong> Nace en Daegu Lee Chang-dong. <em>Oasis</em> y <em>Poetry</em> muestran un realismo social sin igual en el cine asiático.'},
+  {day:'12-01',text:'<strong>1980:</strong> Nace en Tokio Ryusuke Hamaguchi. <em>Drive My Car</em> ganó el Oscar al Mejor Filme Internacional en 2022.'},
+  {day:'12-08',text:'<strong>1942:</strong> Nace en Haifa Amos Gitai. Sus documentales y ficciones son testimonio vivo del conflicto israelí-palestino.'},
+  {day:'12-15',text:'<strong>1954:</strong> Se estrena <em>La Strada</em> de Fellini. Ganó el primer Oscar a Mejor Película Extranjera de la historia.'},
+  {day:'12-22',text:'<strong>1858:</strong> Nace en Lyon Auguste Lumière. Junto a su hermano Louis inventó el cine tal como lo conocemos.'},
+  {day:'12-28',text:'<strong>1895:</strong> Los hermanos Lumière realizan la primera proyección pública de la historia en el Grand Café de París.'},
+];;
+
+const REC_DB = [
+  // Directores que suelen gustar si ya ves cine de autor
+  {title:"Andrei Rublev",year:1966,director:"Andrei Tarkovsky",country:"Rusia",tags:["drama épico","arte","Tarkovsky"],refDir:"Andrei Tarkovsky",why:"La obra maestra de Tarkovsky que completa su universo espiritual",desc:"Crónica de la vida de un monje iconógrafo en la Rusia medieval. A través de episodios fragmentados, Tarkovsky explora la fe, el arte y el sacrificio con una fotografía en blanco y negro de belleza sobrenatural."},
+  {title:"Aguirre, the Wrath of God",year:1972,director:"Werner Herzog",country:"Alemania",tags:["aventura","épico","Herzog"],refDir:"Werner Herzog",why:"Herzog en estado puro: obsesión y locura en la selva amazónica",desc:"Un conquistador español desciende por el Amazonas buscando El Dorado. Klaus Kinski encarna la megalomanía pura en esta odisea rodada con condiciones extremas reales. Herzog y Kinski, dos fuerzas de la naturaleza."},
+  {title:"The Flowers of Shanghai",year:1998,director:"Hou Hsiao-hsien",country:"China",tags:["drama","período","Hou"],refDir:"Hou Hsiao-hsien",why:"Lánguida obra maestra del slow cinema, planos secuencia hipnóticos",desc:"Los burdeles de Shanghai del siglo XIX filmados con planos largos a la luz de las velas. Hou convierte el espacio cerrado en un universo de deseo, poder y melancolía. Pocas películas son tan visualmente hipnóticas."},
+  {title:"Yi Yi",year:2000,director:"Edward Yang",country:"China",tags:["drama familiar","Taiwan"],refDir:"Edward Yang",why:"Retrato íntimo de una familia taiwanesa, de lo cotidiano a lo universal",desc:"Durante tres horas, una familia de Taipei atraviesa cumpleaños, bodas, enfermedades y primeros amores. Yang filma lo ordinario con una precisión y ternura únicas. Considerada una de las mejores películas del siglo XXI."},
+  {title:"Dekalog",year:1988,director:"Krzysztof Kieślowski",country:"Polonia",tags:["drama moral","serie"],refDir:"Krzysztof Kieślowski",why:"Los 10 mandamientos como dilemas éticos contemporáneos, obra cumbre",desc:"Diez episodios basados en los diez mandamientos, ambientados en un bloque de pisos en Varsovia. Kieślowski crea pequeñas tragedias morales de una humanidad aplastante. Stanley Kubrick la consideró obra maestra."},
+  {title:"L'eclisse",year:1962,director:"Michelangelo Antonioni",country:"Italia",tags:["drama modernista","romance"],refDir:"Michelangelo Antonioni",why:"Antonioni deconstruye el amor en Roma, vacío y arquitectura urbana",desc:"Vittoria (Monica Vitti) rompe con su novio y se enamora de un broker de bolsa. Antonioni filma el vacío emocional de la modernidad con una frialdad geométrica: los edificios dicen más que los personajes."},
+  {title:"Beau travail",year:1999,director:"Claire Denis",country:"Francia",tags:["drama","cuerpo","Denis"],refDir:"Claire Denis",why:"Denis transforma la Legión Extranjera en poema visual sobre masculinidad",desc:"Un legionario recuerda su vida en Djibouti. Denis convierte los ejercicios militares en danza, los cuerpos en poesía. Una obra sobre la masculinidad, la envidia y el deseo reprimido que culmina en una escena icónica."},
+  {title:"Jeanne Dielman",year:1975,director:"Chantal Akerman",country:"Bélgica",tags:["feminismo","minimalismo"],refDir:"Chantal Akerman",why:"Radical retrato del tedio doméstico que explota en tensión silenciosa",desc:"Tres días en la vida de una ama de casa viuda en Bruselas, filmados en tiempo real. Akerman convierte pelar patatas en un acto político. Elegida mejor película de la historia por Sight & Sound en 2022."},
+  {title:"The Cremator",year:1969,director:"Juraj Herz",country:"República Checa",tags:["horror psicológico","nueva ola checa"],why:"Perturbadora joya del cine checo: un hombre que se cree purificador",desc:"Un funcionario de crematorio en la Praga de los años 30 desarrolla una filosofía de purificación que lo lleva hacia el nazismo. Visualmente expresionista y perturbadora, es una de las grandes joyas ocultas del cine checo."},
+  {title:"Daisies",year:1966,director:"Věra Chytilová",country:"República Checa",tags:["experimental","feminismo","nouvelle vague"],refDir:"Věra Chytilová",why:"Comedia nihilista y anarquista, visual y políticamente explosiva",desc:"Dos chicas llamadas Marie deciden ser tan malas como el mundo que las rodea. Chytilová usa collage, colores saturados y edición anárquica para crear un manifiesto feminista único. Prohibida por el gobierno checo al estrenarse."},
+  {title:"Le cercle rouge",year:1970,director:"Jean-Pierre Melville",country:"Francia",tags:["noir","thriller","Melville"],refDir:"Jean-Pierre Melville",why:"El cine negro elevado a arte puro, tensión sin una palabra de más",desc:"Un ex-convicto, un fugitivo y un policía caído convergen en un elaborado robo. Melville filma el silencio, los abrigos y la fatalidad con una elegancia minimal. El código de honor entre criminales como filosofía de vida."},
+  {title:"Army of Shadows",year:1969,director:"Jean-Pierre Melville",country:"Francia",tags:["guerra","resistencia","Melville"],refDir:"Jean-Pierre Melville",why:"La Resistencia francesa retratada con frialdad moral devastadora",desc:"La Resistencia francesa vista sin romanticismo: traiciones, ejecuciones, miedo. Melville, que fue resistente real, retrata la moral de guerra con una frialdad que rompe el corazón. Lino Ventura está absolutamente perfecto."},
+  {title:"The Apartment",year:1960,director:"Billy Wilder",country:"USA",tags:["comedia dramática","Wilder"],refDir:"Billy Wilder",why:"Wilder en su cima: comedia y tragedia del sueño americano",desc:"Un empleado de oficina presta su apartamento a sus jefes para sus aventuras amorosas hasta que se enamora de la amante del director. Wilder mezcla comedia de enredos con una crítica feroz al corporativismo. Jack Lemmon en estado de gracia."},
+  {title:"Chinatown",year:1974,director:"Roman Polanski",country:"USA",tags:["noir","thriller","Polanski"],refDir:"Roman Polanski",why:"El noir definitivo de los 70: corrupción, agua y Jack Nicholson",desc:"Un detective privado investiga una infidelidad en Los Ángeles y acaba atrapado en una conspiración sobre el agua. Polanski y Robert Towne crearon el guión neo-noir definitivo. El final es uno de los más devastadores del cine."},
+  {title:"Badlands",year:1973,director:"Terrence Malick",country:"USA",tags:["road movie","crimen","Malick"],refDir:"Terrence Malick",why:"Malick debuta con poesía y violencia en el corazón de América",desc:"Una chica de 15 años y su novio asesino huyen por las llanuras de Dakota. Malick debuta con una road movie que mezcla la violencia con una voz en off lírica y una fotografía que hace de la pradera americana un paraíso perdido."},
+  {title:"The Night of the Hunter",year:1955,director:"Charles Laughton",country:"USA",tags:["thriller","noir","expresionismo"],why:"Única dirección de Laughton: pesadilla expresionista de terror rural",desc:"Un predicador asesino persigue a dos niños a lo largo del río Ohio. Laughton solo dirigió una película, y es una obra maestra expresionista: siluetas en la noche, amor y odio tatuados en los nudillos, Robert Mitchum aterrador."},
+  {title:"Ikiru",year:1952,director:"Akira Kurosawa",country:"Japón",tags:["drama","humanismo","Kurosawa"],refDir:"Akira Kurosawa",why:"Kurosawa sobre cómo vivir antes de morir: poético e irresistible",desc:"Un burócrata descubre que tiene cáncer y decide construir un parque para niños antes de morir. Kurosawa filma la burocracia japonesa y la redención personal con una humanidad que desborda la pantalla. La escena del columpio es perfecta."},
+  {title:"The Wind Will Carry Us",year:1999,director:"Abbas Kiarostami",country:"Irán",tags:["drama contemplativo","Kiarostami"],refDir:"Abbas Kiarostami",why:"Kiarostami interroga la vida y la muerte entre colinas kurdas",desc:"Un equipo de televisión espera la muerte de una anciana en un pueblo kurdo de Irán. Kiarostami filma sin mostrarnos casi nada: la espera, el paisaje y la conversación como únicas herramientas para hablar sobre la vida y la muerte."},
+  {title:"A Separation",year:2011,director:"Asghar Farhadi",country:"Irán",tags:["drama moral","Farhadi"],refDir:"Asghar Farhadi",why:"Laberinto moral iraní: cada personaje tiene razón y todos sufren",desc:"Una pareja iraní se separa cuando ella quiere emigrar y él no puede dejar a su padre enfermo. Un accidente desencadena un laberinto legal y moral donde nadie miente del todo ni dice toda la verdad. Oscar a Mejor Film Internacional 2012."},
+  {title:"Memories of Murder",year:2003,director:"Bong Joon-ho",country:"Corea del Sur",tags:["thriller","crimen","Bong"],refDir:"Bong Joon-ho",why:"Bong antes de Parasite: el mejor thriller coreano sobre la impunidad",desc:"Dos detectives incompetentes investigan los primeros crímenes seriales de Corea del Sur. Bong mezcla la comedia con el horror y la crítica política en una película sobre la impunidad y la frustración. Una obra maestra del género."},
+  {title:"Decision to Leave",year:2022,director:"Park Chan-wook",country:"Corea del Sur",tags:["neo-noir","romance","Park"],refDir:"Park Chan-wook",why:"Park en su faceta más lírica: un detective obsesionado con su sospechosa",desc:"Un detective investiga la muerte de un montañero y se obsesiona con la viuda china. Park Chan-wook crea un neo-noir de una elegancia visual deslumbrante: la mirada como arma, el deseo como trampa. Ganó el premio a Mejor Dirección en Cannes 2022."},
+  {title:"The Wailing",year:2016,director:"Na Hong-jin",country:"Corea del Sur",tags:["horror","misterio","Corea"],why:"Horror coreano que mezcla folklore, demonio y tragedia de forma única",desc:"Un extraño llega a un pueblo coreano y comienzan las muertes. Na Hong-jin mezcla el thriller policial con el horror folclórico coreano en un espiral de confusión y terror que no ofrece respuestas fáciles. Inquietante e imposible de olvidar."},
+  {title:"Shoplifters",year:2018,director:"Hirokazu Kore-eda",country:"Japón",tags:["drama familiar","Kore-eda"],refDir:"Hirokazu Kore-eda",why:"Kore-eda desmonta la familia convencional con ternura y dureza a la vez",desc:"Una familia marginal de Tokio recoge a una niña abandonada. Kore-eda explora qué hace a una familia real: no la sangre sino el amor y la necesidad. Palme d'Or en Cannes 2018. Una de las películas más emotivas de la última década."},
+  {title:"Burning",year:2018,director:"Lee Chang-dong",country:"Corea del Sur",tags:["thriller lento","misterio","Lee"],refDir:"Lee Chang-dong",why:"Adaptación de Murakami: misterio, clase social y fuego que no se ve",desc:"Un joven escritor conoce a una chica que a su regreso de África trae a un misterioso amigo rico que tiene un hobby inusual. Lee Chang-dong adapta a Murakami en un thriller de clase social y deseo que nunca muestra lo que insinúa."},
+  {title:"Satantango",year:1994,director:"Béla Tarr",country:"Hungría",tags:["slow cinema","épico","Tarr"],refDir:"Béla Tarr",why:"7 horas de barro y desolación húngara: el cine más radical del siglo XX",desc:"Siete horas sobre el colapso de una comunidad agrícola húngara que espera a un líder carismático que quizás sea un estafador. Tarr filma en largos planos fijos y panorámicas bajo la lluvia. Una experiencia cinematográfica sin igual."},
+  {title:"The Turin Horse",year:2011,director:"Béla Tarr",country:"Hungría",tags:["existencialismo","slow cinema","Tarr"],refDir:"Béla Tarr",why:"Tarr se despide con 146 minutos de fin del mundo doméstico",desc:"Un campesino y su hija repiten las mismas rutinas cada día mientras el viento arrecia y el mundo parece acabarse. Tarr declaró que sería su última película. 30 tomas en 146 minutos: el fin del mundo filmado con patatas hervidas."},
+  {title:"The Great Beauty",year:2013,director:"Paolo Sorrentino",country:"Italia",tags:["drama","Italia","Sorrentino"],refDir:"Paolo Sorrentino",why:"Sorrentino y Fellini se funden en un retrato decadente de Roma",desc:"Un periodista romano de 65 años recorre la dolce vita nocturna de la ciudad eterna mientras reflexiona sobre su vida. Sorrentino invoca a Fellini con una Roma nocturna de una belleza decadente. Oscar al Mejor Film Internacional 2014."},
+  {title:"I Am Love",year:2009,director:"Luca Guadagnino",country:"Italia",tags:["drama","sensorial","Guadagnino"],refDir:"Luca Guadagnino",why:"Guadagnino antes de ser famoso: Tilda Swinton y Milano aristocrático",desc:"La matriarca de una familia burguesa milanesa se enamora del mejor amigo de su hijo. Guadagnino filma el deseo y la clase social con una sensorialidad desbordante: la comida, las telas, la luz de Milán. Tilda Swinton en modo diosa."},
+  {title:"We Are What We Are",year:2010,director:"Jorge Michel Grau",country:"México",tags:["horror","familia","México"],why:"Horror familiar mexicano que subvierte la clase social con ritualismo",desc:"Una familia de clase baja en Ciudad de México debe continuar con sus rituales tras la muerte del padre. Grau usa el horror para hablar de pobreza, clase y supervivencia. Una joya perturbadora del cine mexicano de género."},
+  {title:"Amores perros",year:2000,director:"Alejandro González Iñárritu",country:"México",tags:["drama","México","fragmentado"],why:"Iñárritu debuta con fuerza brutal: tres historias unidas por un choque",desc:"Tres historias unidas por un accidente de tráfico en Ciudad de México: un joven enamorado, un modelo en decadencia y un ex-guerrillero. Iñárritu debuta con una energía visual y narrativa arrolladora que anunció a un cineasta mayor."},
+  {title:"The Headless Woman",year:2008,director:"Lucrecia Martel",country:"Argentina",tags:["thriller","Argentina","Martel"],refDir:"Lucrecia Martel",why:"Martel crea culpa sin moralizar: un accidente que lo cambia todo",desc:"Una dentista burguesa atropella algo en la ruta y no sabe si fue un perro o un niño. Martel filma la culpa, la negación y la clase social con una subjetividad radical: vemos solo lo que ve ella, y ella elige no ver. Perturbador e inteligente."},
+  {title:"Zama",year:2017,director:"Lucrecia Martel",country:"Argentina",tags:["histórico","colonial","Martel"],refDir:"Lucrecia Martel",why:"Martel deconstruye el colonialismo con una mise-en-scène deslumbrante",desc:"Un funcionario español espera una transferencia que nunca llega en el Paraguay colonial del siglo XVIII. Martel convierte la burocracia imperial en pesadilla kafkiana y el colonialismo en enfermedad del alma. Visualmente deslumbrante."},
+  {title:"Wild Tales",year:2014,director:"Damián Szifron",country:"Argentina",tags:["comedia negra","antología","Szifron"],refDir:"Damián Szifron",why:"Seis historias de venganza que explotan de adrenalina y humor negro",desc:"Seis historias sobre personas que pierden el control ante las injusticias cotidianas. Szifron construye cada segmento como una espiral de violencia que hace reír y aterrar a partes iguales. Nominated Oscar al Mejor Film Internacional 2015."},
+  {title:"No",year:2012,director:"Pablo Larraín",country:"Chile",tags:["político","drama","Larraín"],refDir:"Pablo Larraín",why:"Larraín usa el plebiscito chileno del 88 para reflexionar sobre el poder",desc:"Un publicista diseña la campaña del 'No' en el plebiscito de 1988 que derrocó a Pinochet. Larraín filmó en Beta deteriorado para igualar la imagen de la época. Gael García Bernal en el mejor papel de su carrera. La democracia como jingle."},
+  {title:"The Club",year:2015,director:"Pablo Larraín",country:"Chile",tags:["drama","religión","Larraín"],refDir:"Pablo Larraín",why:"Sacerdotes escondidos: Larraín y la Iglesia en su película más perturbadora",desc:"Cuatro sacerdotes viven recluidos en una casa en la costa chilena, alejados por sus crímenes. La llegada de una víctima que los reconoce desata el caos. Larraín filma la impunidad eclesiástica con una frialdad que paraliza."},
+  {title:"City of God",year:2002,director:"Fernando Meirelles",country:"Brasil",tags:["crimen","Brasil","épico"],refDir:"Fernando Meirelles",why:"Favela como universo cinematográfico: energía visual sin pausa",desc:"La vida del tráfico en la favela Cidade de Deus de Río de Janeiro narrada desde los años 60 hasta los 80. Meirelles usa una edición vertiginosa y actores no profesionales para crear un fresco épico del crimen y la pobreza. Un hito del cine mundial."},
+  {title:"Central Station",year:1998,director:"Walter Salles",country:"Brasil",tags:["road movie","drama","Brasil"],refDir:"Walter Salles",why:"Road movie sentimental por el interior de Brasil, de un realismo poético",desc:"Una ex-maestra cínica y un niño huérfano viajan por el nordeste brasileño buscando al padre del niño. Salles filma la pobreza y la solidaridad con una ternura sin sentimentalismo. Fernanda Montenegro, una de las grandes actuaciones del cine latinoamericano."},
+  {title:"Embrace of the Serpent",year:2015,director:"Ciro Guerra",country:"Colombia",tags:["aventura","Amazonas","Colombia"],refDir:"Ciro Guerra",why:"Viaje ritual al Amazonas en blanco y negro: cine latinoamericano mayor",desc:"Dos viajes paralelos en el tiempo por el Amazonas colombiano, ambos en busca de una planta sagrada. Guerra filma en blanco y negro el colonialismo, el chamanismo y la destrucción del mundo indígena. Primera nominación al Oscar de Colombia."},
+  {title:"Sunset Boulevard",year:1950,director:"Billy Wilder",country:"USA",tags:["noir","Hollywood","Wilder"],refDir:"Billy Wilder",why:"El Hollywood que devora a sus estrellas: Wilder en estado puro",desc:"Un guionista arruinado queda atrapado en la mansión de una estrella del cine mudo que se niega a aceptar el olvido. Wilder desmonta Hollywood desde dentro con ironía y crueldad. Gloria Swanson está absolutamente genial. 'Soy grande, es el cine el que se hizo pequeño.'"},
+  {title:"All About Eve",year:1950,director:"Joseph L. Mankiewicz",country:"USA",tags:["drama","teatro","clásico"],why:"La ambición femenina en Broadway: diálogos que cortan como cuchillas",desc:"Una joven fan manipula su camino hacia el estrellato teatral desplazando a la actriz que la acogió. Mankiewicz escribe diálogos devastadores sobre la ambición, la envidia y la edad en el mundo del espectáculo. Bette Davis en la cima de su arte."},
+  {title:"Network",year:1976,director:"Sidney Lumet",country:"USA",tags:["sátira","televisión","Lumet"],refDir:"Sidney Lumet",why:"Profética sátira de los medios que parece escrita hoy: Lumet en su cima",desc:"Un presentador de televisión que anuncia en directo su próximo suicidio se convierte en el mayor éxito de audiencia de la cadena. Paddy Chayefsky escribió una sátira que en 1976 parecía exagerada y hoy parece un documental sobre nuestro mundo."},
+  {title:"Crimes and Misdemeanors",year:1989,director:"Woody Allen",country:"USA",tags:["drama moral","Allen"],refDir:"Woody Allen",why:"Allen en su faceta más oscura: culpa, moral y crimen impune",desc:"Un oftalmólogo hace asesinar a su amante para preservar su matrimonio y su reputación. Allen entreteje esta historia con una comedia romántica para explorar si la moral tiene sentido en un universo indiferente. Su película más filosófica."},
+  {title:"Blue Velvet",year:1986,director:"David Lynch",country:"USA",tags:["neo-noir","Lynch","suburban horror"],refDir:"David Lynch",why:"Lynch revela la podredumbre bajo el césped americano: icónica y perturbadora",desc:"Un joven encuentra una oreja cortada en un jardín suburbano e investiga un misterio que lo lleva a los submundos de violencia y perversión de su idílica ciudad. Lynch crea la gran metáfora del sueño americano como pesadilla sadomasoquista."},
+  {title:"Mulholland Drive",year:2001,director:"David Lynch",country:"USA",tags:["neo-noir","Lynch","sueño"],refDir:"David Lynch",why:"El sueño de Hollywood: Lynch crea el laberinto narrativo más fascinante",desc:"Una aspirante a actriz y una amante amnésica buscan identidades en un Hollywood onírico. Lynch construye un laberinto donde la primera hora es el sueño y la segunda la realidad, pero nunca sabrás cuál es cuál. La obra maestra del cine posmoderno."},
+  {title:"Paris, Texas",year:1984,director:"Wim Wenders",country:"Alemania",tags:["road movie","drama","Wenders"],refDir:"Wim Wenders",why:"Wenders y Shepard: silencio, desierto y una búsqueda de redención",desc:"Un hombre aparece en el desierto de Texas sin memoria. Su hermano lo recoge y juntos buscan a la mujer que los abandonó. Wenders y Sam Shepard crean el road movie del desamor: la escena del peep show es de las más emotivas del cine."},
+  {title:"The Act of Killing",year:2012,director:"Joshua Oppenheimer",country:"Dinamarca",tags:["documental","Indonesia","trauma"],refDir:"Joshua Oppenheimer",why:"Documental que hace que los asesinos reinterpreten sus crímenes: aterrador",desc:"Los perpetradores del genocidio indonesio de 1965 reinterpretan sus crímenes en los géneros cinematográficos que aman. Oppenheimer crea el documental más perturbador del siglo XXI: los asesinos como actores de su propio horror."},
+  {title:"Caché",year:2005,director:"Michael Haneke",country:"Francia",tags:["thriller","culpa","Haneke"],refDir:"Michael Haneke",why:"Haneke desnuda la culpa colonial francesa con un thriller de paranoia total",desc:"Una pareja burguesa parisina recibe grabaciones anónimas de su propia casa. Haneke usa el thriller para hacer una disección de la culpa francesa por el colonialismo argelino. Uno de esos films donde cada plano puede ser una trampa."},
+  {title:"The White Ribbon",year:2009,director:"Michael Haneke",country:"Alemania",tags:["drama histórico","Haneke"],refDir:"Michael Haneke",why:"El fascismo germina en una aldea: Haneke en su obra más austera",desc:"Una serie de crímenes inexplicables en una aldea protestante alemana justo antes de la Primera Guerra Mundial. Haneke filma en blanco y negro cómo la represión y la humillación en la infancia generan la violencia del fascismo. Palme d'Or 2009."},
+  {title:"Amour",year:2012,director:"Michael Haneke",country:"Francia",tags:["drama","vejez","Haneke"],refDir:"Michael Haneke",why:"Haneke filma el amor y la muerte de pareja con devastadora honestidad",desc:"Un matrimonio de ancianos músicos en París. Ella sufre un ictus y él la cuida hasta el final. Haneke filma el amor conyugal y la enfermedad sin concesiones ni sentimentalismo. Devastadora y honesta. Palme d'Or y Oscar al Mejor Film Internacional 2013."},
+  {title:"Holy Motors",year:2012,director:"Leos Carax",country:"Francia",tags:["experimental","Carax","metamorfosis"],refDir:"Leos Carax",why:"Carax reinventa el cine desde dentro: Denis Lavant en 9 vidas asombrosas",desc:"Un hombre recorre París en limusina interpretando una serie de personajes radicalmente distintos: padre, asesino, monstruo, moribundo. Carax usa cada segmento para celebrar y deconstruir géneros cinematográficos. Denis Lavant en el papel de su vida."},
+  {title:"Portrait of a Lady on Fire",year:2019,director:"Céline Sciamma",country:"Francia",tags:["romance","drama","Sciamma"],refDir:"Céline Sciamma",why:"Sciamma pinta el deseo femenino con una precisión y sensibilidad únicas",desc:"Una pintora viaja a Bretaña para hacer el retrato de una joven noble que no sabe que está siendo retratada. Sciamma filma el nacimiento del amor entre dos mujeres con una tensión y belleza visuales únicas. Sin música: solo el fuego y la mirada."},
+  {title:"Raw",year:2016,director:"Julia Ducournau",country:"Francia",tags:["horror corporal","coming-of-age"],refDir:"Julia Ducournau",why:"Ducournau usa el canibalismo para explorar el despertar sexual: impacto total",desc:"Una estudiante de veterinaria vegetariana descubre su apetito por la carne humana durante su primer año universitario. Ducournau usa el body horror para hablar del despertar sexual y la identidad con una precisión perturbadora. Visceral y brillante."},
+  {title:"Spirited Away",year:2001,director:"Hayao Miyazaki",country:"Japón",tags:["animación","Miyazaki","fantasía"],refDir:"Hayao Miyazaki",why:"Miyazaki crea el universo onírico más rico de la animación mundial",desc:"Chihiro llega a un mundo de espíritus y debe trabajar en unos baños para salvar a sus padres convertidos en cerdos. Miyazaki crea el universo de fantasía más rico y detallado de la historia de la animación. Oscar a Mejor Animación 2003."},
+  {title:"Princess Mononoke",year:1997,director:"Hayao Miyazaki",country:"Japón",tags:["animación","ecología","Miyazaki"],refDir:"Hayao Miyazaki",why:"Miyazaki y la guerra entre naturaleza e industria: épica y sin villanos simples",desc:"Un príncipe busca cura a su maldición y queda atrapado en la guerra entre los dioses del bosque y los humanos industriales. Miyazaki no tiene villanos: cada parte tiene razones. Una épica ecológica que trata al espectador como adulto."},
+  {title:"Millennium Actress",year:2001,director:"Satoshi Kon",country:"Japón",tags:["animación","metaficción","Kon"],refDir:"Satoshi Kon",why:"Kon fusiona la vida de una actriz con sus películas en un poema fílmico",desc:"Un documentalista entrevista a una actriz retirada y su historia se funde con sus películas. Kon crea un poema sobre la memoria, el amor imposible y el cine mismo. La transición entre realidad y ficción nunca fue tan fluida ni tan emotiva."},
+  {title:"Perfect Blue",year:1997,director:"Satoshi Kon",country:"Japón",tags:["thriller psicológico","animación","Kon"],refDir:"Satoshi Kon",why:"Kon destruye la frontera realidad-ficción con este thriller de anime único",desc:"Una cantante pop se convierte en actriz y comienza a perder el control sobre su identidad mientras un acosador la persigue. Kon crea el thriller psicológico más perturbador de la animación japonesa, influencia declarada de Darren Aronofsky."},
+  {title:"Paprika",year:2006,director:"Satoshi Kon",country:"Japón",tags:["sci-fi","animación","Kon"],refDir:"Satoshi Kon",why:"Kon en su apoteosis visual: sueños invasores que inspiraron Inception",desc:"Una psicóloga usa tecnología experimental para entrar en los sueños de sus pacientes. Cuando el dispositivo es robado, los sueños invaden la realidad. Nolan reconoció su influencia en Inception. Una orgía visual de ideas cinematográficas."},
+  {title:"Ghost in the Shell",year:1995,director:"Mamoru Oshii",country:"Japón",tags:["cyberpunk","filosofía","animación"],refDir:"Mamoru Oshii",why:"Oshii define el cyberpunk y la identidad digital: filosófica y visual",desc:"Una cyborg detective busca a un hacker misterioso en un futuro distópico mientras cuestiona su propia humanidad. Oshii creó la película de ciencia ficción más filosófica de la animación: ¿qué nos hace humanos cuando el cuerpo es maquinaria?"},
+  {title:"The Tale of the Princess Kaguya",year:2013,director:"Isao Takahata",country:"Japón",tags:["animación","Takahata","belleza"],refDir:"Isao Takahata",why:"Takahata usa acuarela animada para un poema sobre la fugacidad de la vida",desc:"Una niña encontrada en un bambú crece hasta convertirse en una belleza que atrae a todos los nobles del Japón medieval, pero anhela su vida simple. Takahata animó en acuarela un poema sobre la belleza, el deseo y la irreversibilidad del tiempo."},
+  {title:"Grave of the Fireflies",year:1988,director:"Isao Takahata",country:"Japón",tags:["animación","guerra","Takahata"],refDir:"Isao Takahata",why:"El antibelicismo más desgarrador de la animación: imposible no llorar",desc:"Dos huérfanos intentan sobrevivir en el Japón de 1945 tras los bombardeos americanos. Takahata convierte la animación en el vehículo más brutal del antibelicismo: la guerra vista desde los más vulnerables. Roger Ebert la llamó 'una obra maestra'."},
+  {title:"In the Mood for Love",year:2000,director:"Wong Kar-wai",country:"China",tags:["romance","nostalgia","Wong"],refDir:"Wong Kar-wai",why:"Wong Kar-wai y el amor no consumado: cada plano es una obra de arte",desc:"Dos vecinos descubren que sus respectivas parejas tienen una aventura y desarrollan entre ellos un amor que nunca consuman. Wong Kar-wai filmó durante 15 meses con Maggie Cheung y Tony Leung. Cada plano es una fotografía de la nostalgia y el deseo."},
+  {title:"Chungking Express",year:1994,director:"Wong Kar-wai",country:"China",tags:["romance urbano","Wong","Hong Kong"],refDir:"Wong Kar-wai",why:"Wong Kar-wai captura Hong Kong con energía cinematográfica desbordante",desc:"Dos historias de amor en Hong Kong: un policía melancólico y una mujer misteriosa; otro policía y la chica de la tienda de comida. Wong filmó en 23 días con cámara en mano y luz natural. La película más energética y vital de su carrera."},
+  {title:"Come and See",year:1985,director:"Elem Klimov",country:"Rusia",tags:["guerra","horror","Klimov"],refDir:"Elem Klimov",why:"La película de guerra más devastadora jamás filmada: trauma puro",desc:"Un adolescente bielorruso se une a la Resistencia y presencia las atrocidades nazis durante la Segunda Guerra Mundial. Klimov filma el horror sin distancia estética: vemos todo en primer plano, incluyendo la destrucción del alma de un niño. Insoportable y necesaria."},
+  {title:"The Mirror",year:1975,director:"Andrei Tarkovsky",country:"Rusia",tags:["autobiográfico","Tarkovsky","lírico"],refDir:"Andrei Tarkovsky",why:"Tarkovsky en su película más personal: memoria, sueño y poesía visual",desc:"Fragmentos de memoria, sueño y presente en la vida de un hombre moribundo. Tarkovsky mezcla recuerdos de la infancia, la guerra y el amor en un poema visual autobiográfico que desafía la narrativa lineal. La más personal y difícil de sus películas."},
+  {title:"Paths of Glory",year:1957,director:"Stanley Kubrick",country:"USA",tags:["guerra","antibelicismo","Kubrick"],refDir:"Stanley Kubrick",why:"Kubrick y la inhumanidad militar: su primer gran film, perfecto y rabia pura",desc:"Un coronel francés defiende a tres soldados condenados a muerte por cobardia tras una misión imposible. Kubrick filma los pasillos del poder con travellings implacables y la trinchera con caos de cámara en mano. Un alegato antibelicista perfecto."},
+  {title:"Barry Lyndon",year:1975,director:"Stanley Kubrick",country:"Reino Unido",tags:["histórico","Kubrick","fotografia"],refDir:"Stanley Kubrick",why:"Kubrick ilumina con velas del siglo XVIII: la más bella fotografía del cine"},
+  {title:"Eyes Wide Shut",year:1999,director:"Stanley Kubrick",country:"Reino Unido",tags:["erotismo","Kubrick","sueño"],refDir:"Stanley Kubrick",why:"El último Kubrick: obsesión, deseo y el laberinto del matrimonio burgués"},
+];;
+
+const CYCLE_THEMES = [
+  {
+    theme:"Trilogía de la incomunicación: Antonioni en los 60",
+    films:[
+      {title:"L'avventura",year:1960,director:"Michelangelo Antonioni",why:"El deseo y la ausencia como motores narrativos: la película que cambió el cine"},
+      {title:"La notte",year:1961,director:"Michelangelo Antonioni",why:"Un matrimonio a la deriva en la Milán industrial nocturna"},
+      {title:"L'eclisse",year:1962,director:"Michelangelo Antonioni",why:"El amor se disuelve en arquitectura vacía: el cierre perfecto del tríptico"}
+    ]
+  },
+  {
+    theme:"Tres maestras del cine europeo que deberías conocer",
+    films:[
+      {title:"Vagabond",year:1985,director:"Agnès Varda",why:"Varda retrata la muerte de una joven libre con frialdad documental"},
+      {title:"Jeanne Dielman",year:1975,director:"Chantal Akerman",why:"Akerman filma el tedio doméstico hasta que explota en violencia silenciosa"},
+      {title:"Beau travail",year:1999,director:"Claire Denis",why:"Denis convierte a la Legión Extranjera en un ballet de masculinidad y deseo"}
+    ]
+  },
+  {
+    theme:"El nuevo extremismo francés: tres películas que te sacudirán",
+    films:[
+      {title:"Irréversible",year:2002,director:"Gaspar Noé",why:"Noé destruye la narrativa lineal para hacer la violencia insoportable"},
+      {title:"Martyrs",year:2008,director:"Pascal Laugier",why:"El horror francés más radical: trasciende el género para hablar de sufrimiento"},
+      {title:"Raw",year:2016,director:"Julia Ducournau",why:"Ducournau usa el canibalismo como metáfora del despertar: visceral y brillante"}
+    ]
+  },
+  {
+    theme:"Cine coreano antes de Parasite: tres imprescindibles",
+    films:[
+      {title:"A Tale of Two Sisters",year:2003,director:"Kim Jee-woon",why:"El horror psicológico coreano en su punto más elegante y perturbador"},
+      {title:"The Wailing",year:2016,director:"Na Hong-jin",why:"Mezcla de thriller, horror folclórico y comedia: única en el cine mundial"},
+      {title:"Poetry",year:2010,director:"Lee Chang-dong",why:"Una anciana aprende poesía mientras procesa una tragedia: humanismo puro"}
+    ]
+  },
+  {
+    theme:"El slow cinema asiático: tiempo como experiencia",
+    films:[
+      {title:"Yi Yi",year:2000,director:"Edward Yang",why:"Edward Yang retrata tres generaciones taiwanesas en 173 minutos perfectos"},
+      {title:"Flowers of Shanghai",year:1998,director:"Hou Hsiao-hsien",why:"Hou filma los burdeles de Shanghai con una morosidad hipnótica única"},
+      {title:"Still Life",year:2006,director:"Jia Zhangke",why:"La China que desaparece bajo las aguas del Yangtze: tiempo y pérdida"}
+    ]
+  },
+  {
+    theme:"Tres documentales que cambian cómo ves el mundo",
+    films:[
+      {title:"The Act of Killing",year:2012,director:"Joshua Oppenheimer",why:"Los asesinos de Indonesia reinterpretan sus crímenes: el documental más inquietante"},
+      {title:"Shoah",year:1985,director:"Claude Lanzmann",why:"9 horas de testimonios del Holocausto: monumento sin imágenes de archivo"},
+      {title:"Sans Soleil",year:1983,director:"Chris Marker",why:"Marker medita sobre la memoria visual del mundo desde Japón a Guinea-Bissau"}
+    ]
+  },
+  {
+    theme:"El cine latinoamericano que el mundo no conoce",
+    films:[
+      {title:"Amores perros",year:2000,director:"Alejandro González Iñárritu",why:"Iñárritu debuta con el México DF como campo de batalla de vidas cruzadas"},
+      {title:"The Headless Woman",year:2008,director:"Lucrecia Martel",why:"Martel filma la culpa sin mostrarla: cine político como experiencia sensorial"},
+      {title:"Zama",year:2017,director:"Lucrecia Martel",why:"El colonialismo como pesadilla kafkiana: Martel en su punto más ambicioso"}
+    ]
+  },
+  {
+    theme:"Tres cimas del cine de animación japonés",
+    films:[
+      {title:"Millennium Actress",year:2001,director:"Satoshi Kon",why:"Kon funde la vida de una actriz con su filmografía: poema visual único"},
+      {title:"The Tale of the Princess Kaguya",year:2013,director:"Isao Takahata",why:"Acuarela animada y poesía sobre la fugacidad: obra maestra final de Takahata"},
+      {title:"Grave of the Fireflies",year:1988,director:"Isao Takahata",why:"El antibelicismo más desgarrador de la animación: tan real que duele"}
+    ]
+  },
+  {
+    theme:"Neo-noir europeo: la oscuridad del siglo XXI",
+    films:[
+      {title:"Le cercle rouge",year:1970,director:"Jean-Pierre Melville",why:"Melville eleva el género a arte: minimalismo y tensión sin una palabra de más"},
+      {title:"Blue Velvet",year:1986,director:"David Lynch",why:"Lynch descubre que el sueño americano esconde pesadillas sadomasoquistas"},
+      {title:"Caché",year:2005,director:"Michael Haneke",why:"Haneke usa el thriller para anatomizar la culpa colonial: perturbador e inteligente"}
+    ]
+  },
+  {
+    theme:"Cine iraní: maestros de lo cotidiano",
+    films:[
+      {title:"Where Is the Friend's House?",year:1987,director:"Abbas Kiarostami",why:"Kiarostami y una historia de cuaderno: la belleza en los gestos más simples"},
+      {title:"The Wind Will Carry Us",year:1999,director:"Abbas Kiarostami",why:"Kiarostami interroga la vida y la muerte entre aldeas kurdas: contemplativo"},
+      {title:"Offside",year:2006,director:"Jafar Panahi",why:"Panahi filma la exclusión de las mujeres iraníes del fútbol con humor y rabia"}
+    ]
+  }
+];;
+
+function sourceClass(src) {
+  const s = src.toLowerCase();
+  if(s.includes('variety')) return 'src-variety';
+  if(s.includes('deadline')) return 'src-deadline';
+  if(s.includes('indiewire')) return 'src-indiewire';
+  if(s.includes('hollywood')) return 'src-thr';
+  if(s.includes('screen')) return 'src-screen';
+  return 'src-default';
+}
+
+function catColor(cat) {
+  const map = {'Festivales':'var(--gold)','Premios':'var(--gold2)','Estrenos':'var(--green)',
+    'Cine de Autor':'var(--purple)','Industria':'var(--text2)','Streaming':'#6b9fd4',
+    'Cine Independiente':'#4caf82'};
+  return map[cat] || 'var(--gold)';
+}
+
+function formatNewsDate(str) {
+  if(!str) return '';
+  try {
+    const d = new Date(str);
+    const now = new Date();
+    const diff = Math.floor((now - d) / 60000);
+    if(diff < 60) return `Hace ${diff} min`;
+    if(diff < 1440) return `Hace ${Math.floor(diff/60)}h`;
+    return d.toLocaleDateString('es',{day:'numeric',month:'short'});
+  } catch(e) { return str; }
+}
+
+function renderHomeEphemeris(){
+  const el=document.getElementById('home-ephemeris');
+  if(!el)return;
+  const now=new Date();
+  const mm=String(now.getMonth()+1).padStart(2,'0');
+  const dd=String(now.getDate()).padStart(2,'0');
+  const key=`${mm}-${dd}`;
+  // Find closest ephemeris entry
+  let entry=CINEMA_EPHEMERIS.find(e=>e.day===key);
+  if(!entry){
+    // Pick deterministic daily entry
+    const idx=(now.getDate()+now.getMonth()*3)%CINEMA_EPHEMERIS.length;
+    entry=CINEMA_EPHEMERIS[idx];
+  }
+  el.innerHTML=`<div class="home-ephemeris-label">Efeméride · ${dd}/${mm}</div><div class="home-ephemeris-text">${entry.text}</div>`;
+}
+
+function generateLocalRecs(){
+  // Analyze user's tastes
+  const seenTitles = new Set(FILMS.map(f=>f.title.toLowerCase().trim()));
+  const ratedFilms = FILMS.filter(f=>f.rating!=null && f.rating>=7);
+
+  // Count favorite directors (≥2 films with rating ≥7.5)
+  const dirCount = {};
+  ratedFilms.forEach(f=>{
+    if(!f.director)return;
+    f.director.split(',').map(d=>d.trim()).forEach(d=>{
+      if(!dirCount[d]) dirCount[d]={n:0,sum:0};
+      dirCount[d].n++;
+      dirCount[d].sum+=f.rating;
+    });
+  });
+  const favDirs = new Set(
+    Object.entries(dirCount)
+      .filter(([,v])=>v.n>=2 && v.sum/v.n>=7.5)
+      .map(([k])=>k)
+  );
+
+  // Favorite countries
+  const countryCount = {};
+  ratedFilms.forEach(f=>{
+    if(!f.country)return;
+    if(!countryCount[f.country]) countryCount[f.country]=0;
+    countryCount[f.country]++;
+  });
+  const favCountries = new Set(
+    Object.entries(countryCount).sort((a,b)=>b[1]-a[1]).slice(0,8).map(([k])=>k)
+  );
+
+  // Score each candidate
+  const candidates = REC_DB.filter(r=>!seenTitles.has(r.title.toLowerCase().trim()));
+
+  // Shuffle for variety
+  for(let i=candidates.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [candidates[i],candidates[j]]=[candidates[j],candidates[i]];
+  }
+
+  const scored = candidates.map(r=>{
+    let score = 0;
+    // Boost if we like the director
+    if(r.refDir && favDirs.has(r.refDir)) score += 4;
+    // Boost for favorite country
+    if(favCountries.has(r.country)) score += 2;
+    // Small random variance
+    score += Math.random()*1.5;
+    return {...r, score};
+  }).sort((a,b)=>b.score-a.score);
+
+  // Build why text referencing actual seen films
+  return scored.slice(0,5).map(r=>{
+    // Find a seen film by same director to reference
+    const sameDir = r.refDir ? FILMS.find(f=>f.director&&f.director.includes(r.refDir)&&f.rating>=8) : null;
+    const why = sameDir
+      ? `Si te gustó "${sameDir.title}" (${sameDir.rating}), este es el siguiente paso del director`
+      : r.why;
+    return {title:r.title, year:r.year, director:r.director, why, desc:r.desc||'', tags:r.tags};
+  });
+}
+
+function generateLocalCycle(){
+  // Pick a cycle somewhat based on what the user likes
+  const seenTitles = new Set(FILMS.map(f=>f.title.toLowerCase().trim()));
+  
+  // Filter cycles whose films aren't all seen
+  const available = CYCLE_THEMES.filter(c=>
+    c.films.some(f=>!seenTitles.has(f.title.toLowerCase().trim()))
+  );
+  
+  if(!available.length) return CYCLE_THEMES[Math.floor(Math.random()*CYCLE_THEMES.length)];
+
+  // Pick deterministically based on day of week for consistency within the week
+  const dayOfWeek = new Date().getDay();
+  const weekNum = Math.floor(Date.now()/(7*24*60*60*1000));
+  const idx = (dayOfWeek + weekNum) % available.length;
+  
+  const chosen = available[idx];
+  // Filter out already-seen films and keep only unseen ones (up to 3)
+  const unseenFilms = chosen.films.filter(f=>!seenTitles.has(f.title.toLowerCase().trim()));
+  return {
+    theme: chosen.theme,
+    films: unseenFilms.slice(0,3)
+  };
+}
+
+async function loadHomeAI(cacheKey){
+  const recsEl=document.getElementById('home-recs-body');
+  const cycleEl=document.getElementById('home-cycle-body');
+  recsEl.innerHTML='<div class="home-loading">La IA está analizando tu biblioteca…</div>';
+  cycleEl.innerHTML='<div class="home-loading">Preparando ciclo semanal…</div>';
+
+  const sample = buildRepresentativeSample();
+  const today = new Date().toLocaleDateString('es',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+
+  const ratedFilms = FILMS.filter(f=>f.rating!=null);
+  const avgRating = ratedFilms.length ? (ratedFilms.reduce((s,f)=>s+f.rating,0)/ratedFilms.length).toFixed(1) : '?';
+  const topCountries = Object.entries(
+    ratedFilms.reduce((acc,f)=>{ if(f.country){acc[f.country]=(acc[f.country]||0)+1;} return acc; },{})
+  ).sort((a,b)=>b[1]-a[1]).slice(0,5).map(([c])=>c).join(', ');
+  const topDirs = Object.entries(
+    ratedFilms.reduce((acc,f)=>{ if(f.director){acc[f.director]=(acc[f.director]||0)+1;} return acc; },{})
+  ).sort((a,b)=>b[1]-a[1]).slice(0,5).map(([d])=>d).join(', ');
+
+  const prompt = `Eres un experto en cinematografía mundial. Analiza el historial de películas de este cinéfilo y genera recomendaciones muy personalizadas.
+
+PERFIL DEL USUARIO:
+- Total de películas vistas: ${FILMS.length}
+- Nota media: ${avgRating}/10
+- Países más vistos: ${topCountries}
+- Directores más vistos: ${topDirs}
+- Hoy: ${today}
+
+MUESTRA REPRESENTATIVA (200 películas con sus notas):
+${sample}
+
+INSTRUCCIONES:
+Responde ÚNICAMENTE con un JSON válido, sin texto antes ni después, sin backticks. Estructura exacta:
+{
+  "recs": [
+    {
+      "title": "Título original de la película",
+      "year": 1985,
+      "director": "Nombre del Director",
+      "country": "País",
+      "why": "Razón MUY específica y personal: menciona películas concretas que ya vio y que justifiquen esta recomendación (máx 130 caracteres)",
+      "desc": "Sinopsis breve y atractiva de la película, qué la hace especial, por qué vale la pena (máx 180 caracteres)",
+      "tags": ["género", "país o movimiento", "época"]
+    }
+  ],
+  "cycle": {
+    "theme": "Título evocador del ciclo semanal — conecta 3 películas por temática, director, movimiento o país (ej: 'Tres formas de mirar el tiempo: Tarkovsky, Tarr y Akerman')",
+    "films": [
+      {
+        "title": "Título original",
+        "year": 1999,
+        "director": "Director",
+        "why": "Por qué esta película encaja en el ciclo temático (máx 100 caracteres)"
+      }
+    ]
+  }
+}
+
+REGLAS CRÍTICAS:
+- "recs": exactamente 5 películas que el usuario NO ha visto (verificar contra la lista)
+- "cycle.films": exactamente 3 películas que el usuario NO ha visto
+- Las razones en "why" deben mencionar títulos específicos de su lista cuando sea posible
+- Prioriza películas menos conocidas pero de alta calidad que se alineen con su gusto
+- El ciclo debe tener un hilo conductor claro e interesante`;
+
+  console.log('[BibliotecaPersonal] Llamando a API de Anthropic...');
+  recsEl.innerHTML='<div class="home-loading">Conectando con IA… <span style="font-size:10px;color:var(--text3);">(puede tardar ~10s)</span></div>';
+
+  try{
+    const res = await fetch('/api/claude-proxy', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1200,
+        messages:[{role:'user',content:prompt}]
+      })
+    });
+    console.log('[BibliotecaPersonal] Respuesta API status:', res.status);
+    if(!res.ok){
+      const errText = await res.text();
+      console.error('[BibliotecaPersonal] API error body:', errText);
+      throw new Error(`API ${res.status}: ${errText.slice(0,200)}`);
+    }
+    const data = await res.json();
+    console.log('[BibliotecaPersonal] API OK, tokens usados:', data.usage);
+    const raw = (data.content||[]).map(b=>b.text||'').join('').trim();
+    const cleaned = raw.replace(/^```json\s*/,'').replace(/^```\s*/,'').replace(/\s*```$/,'').trim();
+    const parsed = JSON.parse(cleaned);
+    if(!parsed.recs||!parsed.cycle) throw new Error('Estructura inválida');
+    console.log('[BibliotecaPersonal] Recomendaciones IA generadas:', parsed.recs.map(r=>r.title));
+    localStorage.setItem(cacheKey, JSON.stringify({recs:parsed.recs, cycle:parsed.cycle, aiGenerated:true}));
+    renderHomeRecs(parsed.recs, true);
+    renderHomeCycle(parsed.cycle);
+  } catch(e) {
+    console.warn('[BibliotecaPersonal] API falló, usando recomendaciones locales. Error:', e.message);
+    recsEl.innerHTML=`<div style="font-size:11px;color:var(--red);padding:8px 0;">⚠ IA no disponible: ${esc(e.message.slice(0,120))}<br><span style="color:var(--text3);">Usando recomendaciones curadas como fallback.</span></div>`;
+    await new Promise(r=>setTimeout(r,1500));
+    const recs = generateLocalRecs();
+    const cycle = generateLocalCycle();
+    localStorage.setItem(cacheKey, JSON.stringify({recs, cycle, aiGenerated:false}));
+    renderHomeRecs(recs, false);
+    renderHomeCycle(cycle);
+  }
+}
+
+function renderHomeRecs(recs, aiGenerated){
+  const el=document.getElementById('home-recs-body');
+  if(!el) return;
+  if(!recs||!recs.length){el.innerHTML='<div style="font-size:12px;color:var(--text3);padding:14px 0;">Sin recomendaciones disponibles.</div>';return;}
+  // Show AI badge in section header
+  const hd = document.querySelector('#view-home .home-section-hd-title');
+  if(hd && aiGenerated!==undefined){
+    const badge = aiGenerated
+      ? `<span style="margin-left:10px;font-size:9px;background:rgba(155,127,212,.15);border:1px solid rgba(155,127,212,.3);color:var(--purple);border-radius:3px;padding:2px 7px;letter-spacing:.08em;text-transform:uppercase;vertical-align:middle;">✦ IA</span>`
+      : `<span style="margin-left:10px;font-size:9px;background:var(--bg3);border:1px solid var(--border);color:var(--text3);border-radius:3px;padding:2px 7px;letter-spacing:.08em;text-transform:uppercase;vertical-align:middle;">Curadas</span>`;
+    // Only add if not already there
+    if(!hd.querySelector('span')) hd.innerHTML += badge;
+  }
+  // Enrich with description from REC_DB if AI didn't provide one
+  el.innerHTML=recs.map((r,i)=>{
+    const dbEntry = !r.desc ? REC_DB.find(d=>d.title===r.title) : null;
+    const desc = r.desc || dbEntry?.desc || '';
+    const posterId = `rec-poster-${i}`;
+    return `<div class="home-rec-item">
+      <div class="home-rec-num">${String(i+1).padStart(2,'0')}</div>
+      <div class="home-rec-poster-placeholder" id="${posterId}">🎬</div>
+      <div class="home-rec-body">
+        <div class="home-rec-title">${esc(r.title||'')} <span class="home-rec-title-year">(${r.year||''})</span></div>
+        <div class="home-rec-dir">${esc(r.director||'')}${r.country?` · ${esc(r.country)}`:''}</div>
+        <div class="home-rec-reason">${esc(r.why||'')}</div>
+        ${desc?`<div class="home-rec-desc">${esc(desc)}</div>`:''}
+        <div class="home-rec-tags">${(r.tags||[]).map(t=>`<span class="home-rec-tag">${esc(t)}</span>`).join('')}</div>
+      </div>
+    </div>`;
+  }).join('');
+  // Load posters from TMDB
+  recs.forEach((r,i) => loadRecPoster(r.title, r.year, `rec-poster-${i}`));
+}
+
+function renderHomeCycle(cycle){
+  const el=document.getElementById('home-cycle-body');
+  if(!el||!cycle){if(el)el.innerHTML='';return;}
+  el.innerHTML=`
+    <div class="home-cycle-theme-text">${esc(cycle.theme||'')}</div>
+    <div class="home-cycle-films">
+      ${(cycle.films||[]).map((f,i)=>`
+        <div class="home-cycle-film">
+          <div class="home-cycle-poster" id="cyp-${i}"></div>
+          <div class="home-cycle-info">
+            <div class="home-cycle-title">${esc(f.title||'')}</div>
+            <div class="home-cycle-dir">${esc(f.director||'')}${f.year?' · '+f.year:''}</div>
+            <div class="home-cycle-why">${esc(f.why||'')}</div>
+          </div>
+        </div>`).join('')}
+    </div>`;
+  (cycle.films||[]).forEach((f,i)=>loadCycleFilmPoster(f.title,f.year,document.getElementById('cyp-'+i)));
+}
+
+async function loadCycleFilmPoster(title,year,el){
+  if(!el)return;
+  try{
+    const data=await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${TMDB_KEY}&query=${encodeURIComponent(title)}&language=es${year?'&year='+year:''}`).then(r=>r.json());
+    const m=data.results?.[0];
+    if(m?.poster_path){
+      const img=document.createElement('img');
+      img.src=`https://image.tmdb.org/t/p/w92${m.poster_path}`;
+      img.style.cssText='width:100%;height:100%;object-fit:cover;border-radius:5px;display:block;';
+      el.innerHTML='';
+      el.appendChild(img);
+    }
+  }catch(e){}
+}
+
+function renderHomeKPIs(){
+  const total=FILMS.length;
+  const ratings=FILMS.filter(f=>f.rating!=null).map(f=>f.rating);
+  const avg=ratings.length?(ratings.reduce((a,b)=>a+b,0)/ratings.length).toFixed(2):0;
+  const perfect=FILMS.filter(f=>f.rating===10).length;
+  const countries=new Set(FILMS.map(f=>f.country).filter(Boolean)).size;
+  const el = document.getElementById('home-kpis');
+  if(!el) return;
+  el.innerHTML = `
+    <div class="home-hero-stat"><div class="home-hero-stat-val">${total.toLocaleString()}</div><div class="home-hero-stat-lbl">Películas</div></div>
+    <div class="home-hero-stat"><div class="home-hero-stat-val">${avg}</div><div class="home-hero-stat-lbl">Nota media</div></div>
+    <div class="home-hero-stat"><div class="home-hero-stat-val" style="color:var(--gold2)">${perfect}</div><div class="home-hero-stat-lbl">Perfectas</div></div>
+    <div class="home-hero-stat" style="border-right:none;"><div class="home-hero-stat-val">${countries}</div><div class="home-hero-stat-lbl">Países</div></div>`;
+}
+
+function renderHomeRecent(){
+  const sorted=[...FILMS].sort((a,b)=>b.id-a.id).slice(0,16);
+  const badge = document.getElementById('home-recent-badge');
+  if(badge) badge.textContent = `— ${sorted.length} más recientes`;
+  const grid = document.getElementById('home-recent-films');
+  if(!grid) return;
+  grid.innerHTML = sorted.map(f => {
+    const img = f.poster
+      ? `<img src="https://image.tmdb.org/t/p/w185${f.poster}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=home-recent-tile-noimg>${esc(f.title)}</div>'">`
+      : `<div class="home-recent-tile-noimg">${esc(f.title)}</div>`;
+    return `<div class="home-recent-tile" onclick="openModal(${f.id})">
+      ${img}
+      ${f.rating!=null?`<div class="home-recent-tile-rating">${f.rating}</div>`:''}
+      <div class="home-recent-tile-overlay"><div class="home-recent-tile-title">${esc(f.title)}</div></div>
+    </div>`;
+  }).join('');
+}
+
+function buildHomeMosaic() {
+  const el = document.getElementById('home-mosaic');
+  if(!el) return;
+  // Pick 7 films with posters for mosaic background
+  const withPoster = FILMS.filter(f=>f.poster).sort(()=>Math.random()-.5).slice(0,7);
+  if(!withPoster.length) return;
+  el.innerHTML = withPoster.map(f=>
+    `<img class="home-hero-mosaic-img" src="https://image.tmdb.org/t/p/w342${f.poster}" loading="eager">`
+  ).join('');
+}
+
+function initHome(forceRefresh) {
+  renderHomeKPIs();
+  const d = new Date();
+  const dias=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  const meses=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  const subEl = document.getElementById('home-sub-date');
+  if(subEl) subEl.textContent = `${dias[d.getDay()]}, ${d.getDate()} de ${meses[d.getMonth()]} de ${d.getFullYear()}`;
+  renderHomeRecent();
+  buildHomeMosaic();
+  renderHomeEphemeris();
+  loadHomeUpcoming();
+  const today=new Date().toISOString().split('T')[0];
+  const cacheKey='cl_home_'+today;
+  let cached=null;
+  try{cached=JSON.parse(localStorage.getItem(cacheKey));}catch(e){}
+  if(cached&&!forceRefresh){
+    renderHomeRecs(cached.recs, cached.aiGenerated);
+    renderHomeCycle(cached.cycle);
+  }else{
+    loadHomeAI(cacheKey);
+  }
+}
+
+
 init();
 </script>
 </body>
