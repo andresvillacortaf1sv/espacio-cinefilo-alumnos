@@ -810,7 +810,7 @@ footer { border-top: 1px solid var(--border); padding: 40px 32px; margin-top: 20
     <div class="modal-form on" id="form-register">
       <h3>Únete gratis</h3>
       <p class="modal-sub">Accede a recomendaciones, el ciclo mensual y el Cine Fórum sin costo.</p>
-      <form id="register-form" action="https://formspree.io/f/mykopjbn" method="POST">
+      <form id="register-form" action="#">
         <input type="hidden" name="tipo_cuenta" value="gratuito">
         <div class="form-group">
           <label class="form-label">Nombre completo</label>
@@ -858,28 +858,44 @@ footer { border-top: 1px solid var(--border); padding: 40px 32px; margin-top: 20
 
 <!-- ═══ JAVASCRIPT ═══ -->
 <script>
-/* ── FORMSPREE — manejo del formulario de registro ── */
+/* ── GOOGLE SHEETS — manejo del formulario de registro ── */
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbyKBHWlh3-jd1hrOERy8Fc0HTCk5oMJVARlQM67koK_2fYwPZn3WQlrIM3NuJ735H4y/exec';
+
 document.addEventListener('submit', async function(e) {
   if (e.target.id !== 'register-form') return;
   e.preventDefault();
-  const form   = e.target;
-  const btn    = document.getElementById('register-submit');
+  const form    = e.target;
+  const btn     = document.getElementById('register-submit');
   const success = document.getElementById('register-success');
-  btn.textContent = 'Enviando...';
+
+  const nombre   = form.querySelector('[name="nombre"]').value.trim();
+  const email    = form.querySelector('[name="email"]').value.trim();
+  const telefono = form.querySelector('[name="telefono"]').value.trim();
+
+  if (!nombre || !email) {
+    btn.textContent = 'Completa los campos requeridos';
+    setTimeout(() => { btn.textContent = 'Crear cuenta gratis'; }, 2000);
+    return;
+  }
+
+  btn.textContent = 'Guardando...';
   btn.disabled = true;
+
   try {
-    const res = await fetch(form.action, {
+    await fetch(SHEETS_URL, {
       method: 'POST',
-      body: new FormData(form),
-      headers: { 'Accept': 'application/json' }
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        nombre:   nombre,
+        email:    email,
+        telefono: telefono,
+        tipo:     'gratuito'
+      })
     });
-    if (res.ok) {
-      form.style.display = 'none';
-      success.style.display = 'block';
-    } else {
-      btn.textContent = 'Error — intenta de nuevo';
-      btn.disabled = false;
-    }
+    // no-cors no retorna status, asumimos éxito si no hay excepción
+    form.style.display    = 'none';
+    success.style.display = 'block';
   } catch(err) {
     btn.textContent = 'Error — intenta de nuevo';
     btn.disabled = false;
