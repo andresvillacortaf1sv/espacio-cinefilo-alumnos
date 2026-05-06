@@ -663,9 +663,9 @@ footer { border-top: 1px solid var(--border); padding: 40px 32px; margin-top: 20
       <!-- PROYECCIÓN 1 — Edita aquí -->
       <div class="ciclo-card">
         <div class="ciclo-day">
-          <div class="ciclo-day-label">Vie</div>
+          <div class="ciclo-day-label">Lun</div>
           <div class="ciclo-day-date">05</div>
-          <div class="ciclo-day-month">Junio</div>
+          <div class="ciclo-day-month">Mayo</div>
         </div>
         <div class="ciclo-sep"></div>
         <div class="ciclo-body">
@@ -682,9 +682,9 @@ footer { border-top: 1px solid var(--border); padding: 40px 32px; margin-top: 20
       <!-- PROYECCIÓN 2 — Edita aquí -->
       <div class="ciclo-card">
         <div class="ciclo-day">
-          <div class="ciclo-day-label">Vie</div>
-          <div class="ciclo-day-date">19</div>
-          <div class="ciclo-day-month">Jun</div>
+          <div class="ciclo-day-label">Mié</div>
+          <div class="ciclo-day-date">14</div>
+          <div class="ciclo-day-month">Mayo</div>
         </div>
         <div class="ciclo-sep"></div>
         <div class="ciclo-body">
@@ -701,8 +701,8 @@ footer { border-top: 1px solid var(--border); padding: 40px 32px; margin-top: 20
       <div class="ciclo-card">
         <div class="ciclo-day">
           <div class="ciclo-day-label">Vie</div>
-          <div class="ciclo-day-date">26</div>
-          <div class="ciclo-day-month"></div>
+          <div class="ciclo-day-date">23</div>
+          <div class="ciclo-day-month">Mayo</div>
         </div>
         <div class="ciclo-sep"></div>
         <div class="ciclo-body">
@@ -919,38 +919,47 @@ const TMDB_IMG = 'https://image.tmdb.org/t/p/w342';
 async function loadTMDBPosters() {
   const cards = document.querySelectorAll('.tmdb-card');
   for (const card of cards) {
-    const title  = card.dataset.title;
-    const year   = card.dataset.year;
-    const rating = card.dataset.rating;
-    const dir    = card.dataset.dir;
+    const title = card.dataset.title;
+    const year  = card.dataset.year;
     if (!title) continue;
     try {
-      const url = \`https://api.themoviedb.org/3/search/movie?api_key=\${TMDB_KEY}&query=\${encodeURIComponent(title)}&year=\${year}&language=es-ES\`;
+      // TMDB v3 — api_key como parámetro URL (compatible con navegadores)
+      const url = 'https://api.themoviedb.org/3/search/movie'
+        + '?api_key=' + TMDB_KEY
+        + '&query=' + encodeURIComponent(title)
+        + (year ? '&primary_release_year=' + year : '')
+        + '&language=es-ES&include_adult=false&page=1';
+
       const res = await fetch(url);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
       const data = await res.json();
-      const movie = data.results && data.results[0];
+
+      // Si no encuentra con el año exacto, intenta sin año
+      let movie = data.results && data.results[0];
+      if (!movie && year) {
+        const url2 = 'https://api.themoviedb.org/3/search/movie'
+          + '?api_key=' + TMDB_KEY
+          + '&query=' + encodeURIComponent(title)
+          + '&language=es-ES&include_adult=false&page=1';
+        const res2 = await fetch(url2);
+        const data2 = await res2.json();
+        movie = data2.results && data2.results[0];
+      }
+
       if (movie && movie.poster_path) {
-        const poster = card.querySelector('.film-poster');
+        const poster      = card.querySelector('.film-poster');
         const placeholder = card.querySelector('.poster-placeholder');
-        const ratingEl = card.querySelector('.film-rating');
-        const gradEl = card.querySelector('.film-poster-grad');
-        // Insert real poster image
         const img = document.createElement('img');
-        img.src = TMDB_IMG + movie.poster_path;
-        img.alt = title;
+        img.src     = TMDB_IMG + movie.poster_path;
+        img.alt     = title;
         img.loading = 'lazy';
-        // Clear placeholder, keep overlay and rating
-        if (placeholder) placeholder.remove();
+        img.onload  = () => { if (placeholder) placeholder.style.display = 'none'; };
         poster.insertBefore(img, poster.firstChild);
         poster.classList.remove('loading');
-        // Update rating with TMDB score if not overridden
-        if (ratingEl && !card.dataset.rating) {
-          ratingEl.textContent = (movie.vote_average / 10 * 10).toFixed(1);
-        }
       }
     } catch(e) {
-      // Si falla TMDB, se queda el emoji — sin error visible al usuario
-      console.warn('TMDB poster not loaded for:', title);
+      // Poster no cargado — el emoji sigue visible como fallback
+      console.warn('TMDB:', title, '-', e.message);
     }
   }
 }
