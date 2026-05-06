@@ -88,7 +88,10 @@ img { display: block; max-width: 100%; }
 .header-top { display: flex; align-items: center; gap: 16px; padding: 0 32px; height: 64px; }
 
 /* LOGO */
-.logo-img { height: 40px; width: auto; object-fit: contain; flex-shrink: 0; }
+.logo-img {
+  height: 40px; width: auto; object-fit: contain; flex-shrink: 0;
+  mix-blend-mode: screen;   /* elimina el fondo negro del PNG */
+}
 
 .header-sep { width: 1px; height: 22px; background: var(--border2); flex-shrink: 0; }
 .header-tag { font-size: 11px; color: var(--text3); font-style: italic; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -324,7 +327,7 @@ img { display: block; max-width: 100%; }
 @keyframes modal-in { from{opacity:0;transform:translateY(10px) scale(.98);} to{opacity:1;transform:translateY(0) scale(1);} }
 .modal-close { position: absolute; top: 14px; right: 14px; background: var(--bg3); border: 1px solid var(--border); border-radius: 6px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; color: var(--text2); font-size: 16px; cursor: pointer; transition: var(--transition); }
 .modal-close:hover { color: var(--text); border-color: var(--border2); }
-.modal-logo-img { height: 32px; width: auto; margin-bottom: 20px; }
+.modal-logo-img { height: 32px; width: auto; margin-bottom: 20px; mix-blend-mode: screen; }
 .modal h3 { font-family: 'Fraunces', serif; font-size: 22px; color: var(--text); margin-bottom: 6px; }
 .modal-sub { font-size: 13px; color: var(--text2); margin-bottom: 24px; line-height: 1.5; }
 .form-group { margin-bottom: 14px; }
@@ -349,7 +352,7 @@ img { display: block; max-width: 100%; }
 ═══════════════════════════════════════════════════════════════ */
 footer { border-top: 1px solid var(--border); padding: 40px 32px; margin-top: 20px; }
 .footer-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 40px; }
-.footer-logo-img { height: 36px; width: auto; margin-bottom: 12px; }
+.footer-logo-img { height: 36px; width: auto; margin-bottom: 12px; mix-blend-mode: screen; }
 .footer-desc { font-size: 12px; color: var(--text3); line-height: 1.7; max-width: 220px; }
 .footer-col-title { font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 12px; }
 .footer-links { display: flex; flex-direction: column; gap: 8px; }
@@ -796,23 +799,42 @@ footer { border-top: 1px solid var(--border); padding: 40px 32px; margin-top: 20
       <button class="mtab on" onclick="switchTab('register')">Crear cuenta</button>
       <button class="mtab" onclick="switchTab('login')">Iniciar sesión</button>
     </div>
-    <!-- Registro -->
+    <!-- Registro — datos enviados a Formspree -->
+    <!--
+      FORMSPREE: Para recibir los registros por correo y verlos en un panel:
+      1. Ve a https://formspree.io y crea cuenta gratis
+      2. Crea un nuevo form — te dan un código como "xpwzgkab"
+      3. Reemplaza YOUR_FORMSPREE_ID abajo por ese código
+      Cada registro te llegará por email y quedará guardado en formspree.io
+    -->
     <div class="modal-form on" id="form-register">
       <h3>Únete gratis</h3>
       <p class="modal-sub">Accede a recomendaciones, el ciclo mensual y el Cine Fórum sin costo.</p>
-      <div class="form-group">
-        <label class="form-label">Nombre completo</label>
-        <input type="text" class="form-input" placeholder="Tu nombre">
+      <form id="register-form" action="https://formspree.io/f/YOUR_FORMSPREE_ID" method="POST">
+        <input type="hidden" name="tipo_cuenta" value="gratuito">
+        <div class="form-group">
+          <label class="form-label">Nombre completo</label>
+          <input type="text" name="nombre" class="form-input" placeholder="Tu nombre" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Correo electrónico</label>
+          <input type="email" name="email" class="form-input" placeholder="tu@correo.com" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Teléfono <span style="color:var(--text3);font-weight:400;">(opcional)</span></label>
+          <input type="tel" name="telefono" class="form-input" placeholder="+503 7000 0000">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Contraseña</label>
+          <input type="password" name="_ignore_password" class="form-input" placeholder="Mínimo 8 caracteres" required>
+        </div>
+        <button type="submit" class="form-submit" id="register-submit">Crear cuenta gratis</button>
+      </form>
+      <div id="register-success" style="display:none;text-align:center;padding:20px 0;">
+        <div style="font-size:28px;margin-bottom:10px;">🎬</div>
+        <p style="font-size:14px;font-weight:500;color:var(--text);margin-bottom:6px;">¡Bienvenido a la Academia!</p>
+        <p style="font-size:12px;color:var(--text2);">Revisa tu correo para confirmar tu cuenta.</p>
       </div>
-      <div class="form-group">
-        <label class="form-label">Correo electrónico</label>
-        <input type="email" class="form-input" placeholder="tu@correo.com">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Contraseña</label>
-        <input type="password" class="form-input" placeholder="Mínimo 8 caracteres">
-      </div>
-      <button class="form-submit">Crear cuenta gratis</button>
       <div class="modal-switch">¿Ya tienes cuenta? <a onclick="switchTab('login')">Inicia sesión aquí</a></div>
     </div>
     <!-- Login -->
@@ -836,6 +858,34 @@ footer { border-top: 1px solid var(--border); padding: 40px 32px; margin-top: 20
 
 <!-- ═══ JAVASCRIPT ═══ -->
 <script>
+/* ── FORMSPREE — manejo del formulario de registro ── */
+document.addEventListener('submit', async function(e) {
+  if (e.target.id !== 'register-form') return;
+  e.preventDefault();
+  const form   = e.target;
+  const btn    = document.getElementById('register-submit');
+  const success = document.getElementById('register-success');
+  btn.textContent = 'Enviando...';
+  btn.disabled = true;
+  try {
+    const res = await fetch(form.action, {
+      method: 'POST',
+      body: new FormData(form),
+      headers: { 'Accept': 'application/json' }
+    });
+    if (res.ok) {
+      form.style.display = 'none';
+      success.style.display = 'block';
+    } else {
+      btn.textContent = 'Error — intenta de nuevo';
+      btn.disabled = false;
+    }
+  } catch(err) {
+    btn.textContent = 'Error — intenta de nuevo';
+    btn.disabled = false;
+  }
+});
+
 /* ── SCROLL SUAVE ── */
 function scrollToSection(id){
   const el=document.getElementById(id);
