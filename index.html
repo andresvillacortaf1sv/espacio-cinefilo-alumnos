@@ -266,7 +266,12 @@ img { display: block; max-width: 100%; }
   overflow: hidden; cursor: pointer; transition: transform .22s ease, border-color .18s, box-shadow .22s ease;
 }
 .film-card:hover { transform: translateY(-6px); border-color: var(--border2); box-shadow: 0 18px 44px rgba(0,0,0,.65); }
-.film-poster { aspect-ratio: 2/3; background: var(--bg3); display: flex; align-items: center; justify-content: center; position: relative; font-size: 38px; }
+.film-poster { aspect-ratio: 2/3; background: var(--bg3); display: flex; align-items: center; justify-content: center; position: relative; font-size: 38px; overflow: hidden; }
+.film-poster img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; z-index: 0; }
+.poster-placeholder { z-index: 1; position: relative; }
+.film-poster-grad { z-index: 2 !important; }
+.film-rating { z-index: 3 !important; }
+.film-poster.loading { background: var(--bg3); }
 .film-poster-grad { position: absolute; bottom: 0; left: 0; right: 0; height: 60%; background: linear-gradient(to top, rgba(11,11,14,.95) 0%, transparent 100%); }
 .film-rating { position: absolute; top: 8px; right: 8px; background: rgba(11,11,14,.88); border: 1px solid var(--border2); border-radius: 4px; padding: 2px 7px; font-family: 'Fraunces', serif; font-size: 13px; color: var(--gold); backdrop-filter: blur(4px); }
 .film-info { padding: 8px 10px 10px; }
@@ -530,10 +535,22 @@ footer { border-top: 1px solid var(--border); padding: 40px 32px; margin-top: 20
       <button class="btn-secondary" style="font-size:12px;padding:8px 16px;">Ver todas →</button>
     </div>
     <div class="films-grid reveal">
-      <!-- PELÍCULA 1 — Edita aquí -->
-      <div class="film-card">
-        <div class="film-poster" style="background:#1a1208;">
-          🎬
+      <!--
+        ╔══════════════════════════════════════════════════════════╗
+        ║  ZONA DE EDICIÓN: PELÍCULAS RECOMENDADAS                 ║
+        ║  Solo cambia los valores dentro de data-title,           ║
+        ║  data-year, data-dir y data-rating.                      ║
+        ║  El poster se carga automáticamente desde TMDB.          ║
+        ╚══════════════════════════════════════════════════════════╝
+      -->
+      <!-- PELÍCULA 1 — Edita: data-title, data-year, data-dir, data-rating -->
+      <div class="film-card tmdb-card"
+           data-title="Metropolis"
+           data-year="1927"
+           data-dir="Fritz Lang · 1927"
+           data-rating="9.2">
+        <div class="film-poster loading">
+          <span class="poster-placeholder">🎬</span>
           <div class="film-poster-grad"></div>
           <div class="film-rating">9.2</div>
         </div>
@@ -542,10 +559,14 @@ footer { border-top: 1px solid var(--border); padding: 40px 32px; margin-top: 20
           <div class="film-dir">Fritz Lang · 1927</div>
         </div>
       </div>
-      <!-- PELÍCULA 2 — Edita aquí -->
-      <div class="film-card">
-        <div class="film-poster" style="background:#0d1520;">
-          🎞
+      <!-- PELÍCULA 2 — Edita: data-title, data-year, data-dir, data-rating -->
+      <div class="film-card tmdb-card"
+           data-title="Rashomon"
+           data-year="1950"
+           data-dir="Kurosawa · 1950"
+           data-rating="9.0">
+        <div class="film-poster loading">
+          <span class="poster-placeholder">🎞</span>
           <div class="film-poster-grad"></div>
           <div class="film-rating">9.0</div>
         </div>
@@ -554,10 +575,14 @@ footer { border-top: 1px solid var(--border); padding: 40px 32px; margin-top: 20
           <div class="film-dir">Kurosawa · 1950</div>
         </div>
       </div>
-      <!-- PELÍCULA 3 — Edita aquí -->
-      <div class="film-card">
-        <div class="film-poster" style="background:#1a0d10;">
-          🎥
+      <!-- PELÍCULA 3 — Edita: data-title, data-year, data-dir, data-rating -->
+      <div class="film-card tmdb-card"
+           data-title="L'Avventura"
+           data-year="1960"
+           data-dir="Antonioni · 1960"
+           data-rating="8.9">
+        <div class="film-poster loading">
+          <span class="poster-placeholder">🎥</span>
           <div class="film-poster-grad"></div>
           <div class="film-rating">8.9</div>
         </div>
@@ -566,10 +591,14 @@ footer { border-top: 1px solid var(--border); padding: 40px 32px; margin-top: 20
           <div class="film-dir">Antonioni · 1960</div>
         </div>
       </div>
-      <!-- PELÍCULA 4 — Edita aquí -->
-      <div class="film-card">
-        <div class="film-poster" style="background:#0f1a0d;">
-          🎦
+      <!-- PELÍCULA 4 — Edita: data-title, data-year, data-dir, data-rating -->
+      <div class="film-card tmdb-card"
+           data-title="Amarcord"
+           data-year="1973"
+           data-dir="Fellini · 1973"
+           data-rating="8.8">
+        <div class="film-poster loading">
+          <span class="poster-placeholder">🎦</span>
           <div class="film-poster-grad"></div>
           <div class="film-rating">8.8</div>
         </div>
@@ -578,10 +607,14 @@ footer { border-top: 1px solid var(--border); padding: 40px 32px; margin-top: 20
           <div class="film-dir">Fellini · 1973</div>
         </div>
       </div>
-      <!-- PELÍCULA 5 — Edita aquí -->
-      <div class="film-card">
-        <div class="film-poster" style="background:#1a1520;">
-          📽
+      <!-- PELÍCULA 5 — Edita: data-title, data-year, data-dir, data-rating -->
+      <div class="film-card tmdb-card"
+           data-title="The Battle of Algiers"
+           data-year="1966"
+           data-dir="Pontecorvo · 1966"
+           data-rating="8.7">
+        <div class="film-poster loading">
+          <span class="poster-placeholder">📽</span>
           <div class="film-poster-grad"></div>
           <div class="film-rating">8.7</div>
         </div>
@@ -869,7 +902,58 @@ function convertScreeningTimes(){
   });
 }
 
-window.addEventListener('load', convertScreeningTimes);
+window.addEventListener('load', () => {
+  convertScreeningTimes();
+  loadTMDBPosters();
+});
+
+/* ══════════════════════════════════════════════════
+   TMDB — CARGA AUTOMÁTICA DE POSTERS
+   API Key: configurada abajo
+   Para cambiar una película: edita data-title y data-year
+   en el HTML de cada .tmdb-card
+════════════════════════════════════════════════ */
+const TMDB_KEY = '9ead44dc2fd5da01ee3499ece3cd72fb';
+const TMDB_IMG = 'https://image.tmdb.org/t/p/w342';
+
+async function loadTMDBPosters() {
+  const cards = document.querySelectorAll('.tmdb-card');
+  for (const card of cards) {
+    const title  = card.dataset.title;
+    const year   = card.dataset.year;
+    const rating = card.dataset.rating;
+    const dir    = card.dataset.dir;
+    if (!title) continue;
+    try {
+      const url = \`https://api.themoviedb.org/3/search/movie?api_key=\${TMDB_KEY}&query=\${encodeURIComponent(title)}&year=\${year}&language=es-ES\`;
+      const res = await fetch(url);
+      const data = await res.json();
+      const movie = data.results && data.results[0];
+      if (movie && movie.poster_path) {
+        const poster = card.querySelector('.film-poster');
+        const placeholder = card.querySelector('.poster-placeholder');
+        const ratingEl = card.querySelector('.film-rating');
+        const gradEl = card.querySelector('.film-poster-grad');
+        // Insert real poster image
+        const img = document.createElement('img');
+        img.src = TMDB_IMG + movie.poster_path;
+        img.alt = title;
+        img.loading = 'lazy';
+        // Clear placeholder, keep overlay and rating
+        if (placeholder) placeholder.remove();
+        poster.insertBefore(img, poster.firstChild);
+        poster.classList.remove('loading');
+        // Update rating with TMDB score if not overridden
+        if (ratingEl && !card.dataset.rating) {
+          ratingEl.textContent = (movie.vote_average / 10 * 10).toFixed(1);
+        }
+      }
+    } catch(e) {
+      // Si falla TMDB, se queda el emoji — sin error visible al usuario
+      console.warn('TMDB poster not loaded for:', title);
+    }
+  }
+}
 
 /* ── SUBNAV ACTIVO AL HACER SCROLL ── */
 const sections = ['hero','zona-free','recomendaciones','ciclo','premium-cta'];
