@@ -272,11 +272,20 @@ img{display:block;max-width:100%;}
 
     <!-- PELÍCULA DEL MES -->
     <div class="pelicula-mes" id="pelicula-mes" style="display:none;">
-      <div class="pm-label">🎬 Película del mes · Cine Fórum</div>
-      <div class="pm-title" id="pm-title">Cargando...</div>
-      <div class="pm-dir" id="pm-dir"></div>
-      <div class="pm-desc" id="pm-desc"></div>
-      <div class="pm-date" id="pm-date"></div>
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+        <div style="flex:1;min-width:0;">
+          <div class="pm-label">🎬 Película del mes · Cine Fórum</div>
+          <div class="pm-title" id="pm-title">Cargando...</div>
+          <div class="pm-dir" id="pm-dir"></div>
+          <div class="pm-desc" id="pm-desc"></div>
+          <div class="pm-date" id="pm-date"></div>
+        </div>
+        <button onclick="location.href='proyeccion.html'"
+          style="background:var(--gold2);color:#0b0b0e;border:none;padding:11px 22px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap;flex-shrink:0;transition:.18s ease;"
+          onmouseover="this.style.background='#f0c050'" onmouseout="this.style.background='#c9952e'">
+          ▶ Ver proyección
+        </button>
+      </div>
     </div>
 
     <!-- FILTROS -->
