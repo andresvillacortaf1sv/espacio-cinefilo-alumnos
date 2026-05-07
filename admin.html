@@ -250,6 +250,7 @@ tr:hover td{background:rgba(255,255,255,0.02);}
       <button class="nav-item" onclick="showPage('noticias',this)"><span class="nav-icon">📰</span> Noticias</button>
       <button class="nav-item" onclick="showPage('editorial',this)"><span class="nav-icon">✍️</span> Editorial</button>
       <button class="nav-item" onclick="showPage('forum',this)"><span class="nav-icon">💬</span> Cine Fórum</button>
+      <button class="nav-item" onclick="showPage('proyeccion',this)"><span class="nav-icon">🎥</span> Sala de Proyección</button>
     </nav>
     <button class="nav-logout" onclick="doLogout()">🚪 Cerrar sesión</button>
   </aside>
@@ -493,6 +494,43 @@ tr:hover td{background:rgba(255,255,255,0.02);}
       <div class="forum-list" id="forum-list"><div class="empty"><span class="spinner"></span> Cargando...</div></div>
     </div>
 
+    <!-- PROYECCIÓN -->
+    <div class="page" id="page-proyeccion">
+      <div class="sec-header">
+        <div>
+          <div class="sec-title">Sala de <em>Proyección</em></div>
+          <p style="font-size:12px;color:var(--text3);margin-top:4px;">Configura la película activa para el Cine Fórum. Los usuarios acceden en <strong style="color:var(--text2);">proyeccion.html</strong>.</p>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-outline" onclick="window.open('proyeccion.html','_blank')">↗ Ver sala</button>
+          <button class="btn btn-gold" onclick="openProyeccionModal()">+ Nueva proyección</button>
+        </div>
+      </div>
+
+      <!-- Proyección activa -->
+      <div id="proyeccion-active-card" style="background:linear-gradient(135deg,#1a1208,#201810);border:1px solid var(--border-gold);border-radius:var(--radius-lg);padding:24px;margin-bottom:24px;">
+        <div style="font-size:11px;color:var(--gold2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;">Proyección activa</div>
+        <div id="proy-active-body" style="color:var(--text3);font-size:13px;">Cargando...</div>
+      </div>
+
+      <!-- Lista de proyecciones -->
+      <div class="sec-title" style="font-size:16px;margin-bottom:14px;">Historial de proyecciones</div>
+      <div class="news-list" id="proyecciones-list">
+        <div style="color:var(--text3);font-size:13px;padding:12px 0;"><span class="spinner"></span> Cargando...</div>
+      </div>
+
+      <!-- Crear hilo desde admin -->
+      <div style="margin-top:32px;border-top:1px solid var(--border);padding-top:24px;">
+        <div class="sec-header">
+          <div class="sec-title" style="font-size:18px;">Crear hilo en el <em>Fórum</em></div>
+          <button class="btn btn-gold" onclick="openHiloModal()">+ Crear hilo</button>
+        </div>
+        <div class="news-list" id="hilos-admin-list">
+          <div style="color:var(--text3);font-size:13px;padding:12px 0;"><span class="spinner"></span> Cargando hilos...</div>
+        </div>
+      </div>
+    </div>
+
   </main>
 </div>
 
@@ -665,6 +703,92 @@ tr:hover td{background:rgba(255,255,255,0.02);}
   </div>
 </div>
 
+<!-- Modal Proyección -->
+<div class="modal-overlay" id="modal-proyeccion">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-proyeccion')">✕</button>
+    <div class="modal-title" id="proy-modal-title">Nueva proyección</div>
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div class="field"><label>Título de la película</label><input type="text" id="proy-titulo" placeholder="Ej: Amores Perros"></div>
+      <div class="form-grid">
+        <div class="field"><label>Director</label><input type="text" id="proy-director" placeholder="González Iñárritu"></div>
+        <div class="field"><label>Año</label><input type="text" id="proy-anio" placeholder="2000"></div>
+      </div>
+      <div class="form-grid">
+        <div class="field"><label>Duración</label><input type="text" id="proy-duracion" placeholder="2h 33min"></div>
+        <div class="field"><label>Fecha del Fórum</label><input type="date" id="proy-fecha"></div>
+      </div>
+      <div class="field"><label>Descripción</label><textarea id="proy-desc" placeholder="Sinopsis o nota introductoria..."></textarea></div>
+
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:14px;">
+        <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;">Fuente del video</div>
+        <div class="field">
+          <label>Tipo de fuente</label>
+          <select id="proy-tipo" onchange="toggleProyTipo()">
+            <option value="drive">Google Drive</option>
+            <option value="externa">YouTube / Vimeo / URL externa</option>
+          </select>
+        </div>
+        <div class="field" id="proy-drive-field">
+          <label>Link de Google Drive</label>
+          <input type="text" id="proy-drive" placeholder="https://drive.google.com/file/d/XXXXXXX/view">
+          <span style="font-size:11px;color:var(--text3);">El archivo debe tener permiso "Cualquier persona con el enlace puede ver".</span>
+        </div>
+        <div class="field" id="proy-url-field" style="display:none;">
+          <label>URL de YouTube / Vimeo</label>
+          <input type="text" id="proy-url" placeholder="https://youtube.com/watch?v=... o https://vimeo.com/...">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Acceso</label>
+        <select id="proy-acceso">
+          <option value="gratuito">★ Gratuito — todos los usuarios registrados</option>
+          <option value="premium">✦ Premium — solo alumnos del diplomado</option>
+        </select>
+      </div>
+      <input type="hidden" id="proy-id">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal('modal-proyeccion')">Cancelar</button>
+      <button class="btn btn-gold" onclick="saveProyeccion()">Publicar proyección</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Crear Hilo -->
+<div class="modal-overlay" id="modal-hilo">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-hilo')">✕</button>
+    <div class="modal-title">Crear hilo en el Fórum</div>
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:10px 14px;margin-bottom:16px;font-size:12px;color:var(--text3);">
+      Los hilos creados desde el admin aparecen como publicados por <strong style="color:var(--text2);">Academia Otto Salamanca</strong>.
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div class="field"><label>Título del hilo</label><input type="text" id="hilo-titulo" placeholder="Ej: ¿Qué aspectos técnicos destacan en esta película?"></div>
+      <div class="field"><label>Categoría</label>
+        <select id="hilo-cat"><option>Análisis</option><option>Técnica</option><option>Propuesta</option><option>Recomendación</option><option>General</option></select>
+      </div>
+      <div class="field"><label>Contenido del hilo</label><textarea id="hilo-body" style="min-height:130px;" placeholder="Escribe la publicación inicial del hilo..."></textarea></div>
+      <div class="field"><label>Acceso</label>
+        <select id="hilo-acceso">
+          <option value="gratuito">Gratuito — visible para todos</option>
+          <option value="premium">Premium — solo alumnos</option>
+        </select>
+      </div>
+      <div class="field" style="flex-direction:row;align-items:center;gap:10px;">
+        <input type="checkbox" id="hilo-pinned" style="width:16px;height:16px;accent-color:var(--gold2);">
+        <label style="font-size:13px;color:var(--text2);margin:0;">📌 Destacar este hilo (aparece primero)</label>
+      </div>
+      <input type="hidden" id="hilo-id">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal('modal-hilo')">Cancelar</button>
+      <button class="btn btn-gold" onclick="saveHilo()">Publicar hilo</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -706,7 +830,7 @@ function doLogout(){document.getElementById('app').style.display='none';document
 document.getElementById('login-pass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
 
 /* NAV */
-const pageTitles={dashboard:'Dashboard',usuarios:'Usuarios',diplomados:'Diplomados',peliculas:'Películas',ciclo:'Ciclo Mensual',noticias:'Noticias',editorial:'Editorial',forum:'Cine Fórum'};
+const pageTitles={dashboard:'Dashboard',usuarios:'Usuarios',diplomados:'Diplomados',peliculas:'Películas',ciclo:'Ciclo Mensual',noticias:'Noticias',editorial:'Editorial',forum:'Cine Fórum',proyeccion:'Sala de Proyección'};
 function showPage(id,btn){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
@@ -731,7 +855,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelect
 
 /* LOAD ALL */
 async function loadAllData(){
-  await Promise.all([loadUsuarios(),loadPeliculas(),loadCiclo(),loadNoticias(),loadEditorial(),loadForum(),loadDiplomados()]);
+  await Promise.all([loadUsuarios(),loadPeliculas(),loadCiclo(),loadNoticias(),loadEditorial(),loadForum(),loadDiplomados(),loadProyeccion()]);
 }
 
 /* USUARIOS */
@@ -1362,6 +1486,238 @@ async function saveDiplomadoEdit() {
     closeModal('modal-diplomado-edit');
     toast('Diplomado actualizado ✓');
   } catch(e) { toast('Error guardando','error'); }
+}
+
+
+/* ══ SALA DE PROYECCIÓN ══ */
+let proyeccionData = [];
+
+async function loadProyeccion(){
+  try{
+    const data = await supaGet('proyeccion','select=*&order=created_at.desc');
+    proyeccionData = data || [];
+    renderProyeccion();
+    loadHilosAdmin();
+  }catch(e){ toast('Error cargando proyecciones','error'); }
+}
+
+function renderProyeccion(){
+  // Active card
+  const active = proyeccionData.find(p=>p.activa);
+  const activeEl = document.getElementById('proy-active-body');
+  if(active){
+    const badge = active.acceso==='premium'
+      ? '<span class="badge badge-premium">✦ Premium</span>'
+      : '<span class="badge badge-green">★ Gratuito</span>';
+    activeEl.innerHTML = `
+      <div style="display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap;">
+        <div style="flex:1;min-width:200px;">
+          ${badge}
+          <div style="font-family:Fraunces,serif;font-size:20px;color:var(--text);margin:6px 0 4px;">${active.titulo}</div>
+          <div style="font-size:12px;color:var(--text3);">${active.director||''} ${active.anio?'· '+active.anio:''} ${active.duracion?'· '+active.duracion:''}</div>
+          <div style="font-size:12px;color:var(--text2);margin-top:6px;">${active.descripcion||''}</div>
+          <div style="font-size:11.5px;color:var(--gold2);margin-top:10px;">
+            Fuente: ${active.tipo_url==='externa'?'🔗 URL externa':'📁 Google Drive'}
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;flex-shrink:0;">
+          <button class="btn btn-sm btn-outline" onclick="editProyeccion(${active.id})">✏ Editar</button>
+          <button class="btn btn-sm btn-danger" onclick="deleteProyeccion(${active.id})">✕ Quitar</button>
+        </div>
+      </div>`;
+  } else {
+    activeEl.innerHTML = '<span style="color:var(--text3);">No hay proyección activa. Crea una nueva.</span>';
+  }
+
+  // List
+  const list = document.getElementById('proyecciones-list');
+  if(!proyeccionData.length){
+    list.innerHTML='<div class="empty"><div class="empty-icon">🎥</div><p>Sin proyecciones aún.</p></div>';
+    return;
+  }
+  list.innerHTML = proyeccionData.map(p=>`
+    <div class="news-item" style="${p.activa?'border-color:rgba(240,192,80,0.3);':''}">
+      <div class="news-thumb" style="font-size:22px;">${p.activa?'▶':'⏸'}</div>
+      <div class="news-info">
+        <div class="news-title-text">${p.activa?'<span style="color:var(--gold2);font-size:10px;margin-right:6px;">ACTIVA</span>':''}${p.titulo}</div>
+        <div class="news-meta-text">${p.director||''} ${p.anio?'· '+p.anio:''} · ${p.acceso==='premium'?'✦ Premium':'★ Gratuito'} · ${p.tipo_url==='externa'?'URL externa':'Drive'}</div>
+      </div>
+      <div style="display:flex;gap:6px;flex-shrink:0;">
+        ${!p.activa?`<button class="btn btn-sm btn-green" onclick="activarProyeccion(${p.id})">Activar</button>`:''}
+        <button class="btn btn-sm btn-outline" onclick="editProyeccion(${p.id})">✏</button>
+        <button class="btn btn-sm btn-danger" onclick="deleteProyeccion(${p.id})">✕</button>
+      </div>
+    </div>`).join('');
+}
+
+function toggleProyTipo(){
+  const tipo = document.getElementById('proy-tipo').value;
+  document.getElementById('proy-drive-field').style.display = tipo==='drive'?'flex':'none';
+  document.getElementById('proy-url-field').style.display   = tipo==='externa'?'flex':'none';
+}
+
+function openProyeccionModal(id=null){
+  document.getElementById('proy-modal-title').textContent = id?'Editar proyección':'Nueva proyección';
+  document.getElementById('proy-id').value = id||'';
+  if(id){
+    const p=proyeccionData.find(x=>x.id===id);
+    if(p){
+      document.getElementById('proy-titulo').value   = p.titulo||'';
+      document.getElementById('proy-director').value = p.director||'';
+      document.getElementById('proy-anio').value     = p.anio||'';
+      document.getElementById('proy-duracion').value = p.duracion||'';
+      document.getElementById('proy-fecha').value    = p.fecha_forum||'';
+      document.getElementById('proy-desc').value     = p.descripcion||'';
+      document.getElementById('proy-tipo').value     = p.tipo_url||'drive';
+      document.getElementById('proy-drive').value    = p.drive_id?`https://drive.google.com/file/d/${p.drive_id}/view`:'';
+      document.getElementById('proy-url').value      = p.url_externa||'';
+      document.getElementById('proy-acceso').value   = p.acceso||'gratuito';
+      toggleProyTipo();
+    }
+  } else {
+    ['proy-titulo','proy-director','proy-anio','proy-duracion','proy-desc','proy-drive','proy-url'].forEach(i=>document.getElementById(i).value='');
+    document.getElementById('proy-tipo').value   = 'drive';
+    document.getElementById('proy-acceso').value = 'gratuito';
+    document.getElementById('proy-fecha').value  = '';
+    toggleProyTipo();
+  }
+  openModal('modal-proyeccion');
+}
+function editProyeccion(id){ openProyeccionModal(id); }
+
+function extractDriveId(url){
+  if(!url)return'';
+  const m=url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  return m?m[1]:url;
+}
+
+async function saveProyeccion(){
+  const id      = document.getElementById('proy-id').value;
+  const tipo    = document.getElementById('proy-tipo').value;
+  const driveUrl= document.getElementById('proy-drive').value.trim();
+  const extUrl  = document.getElementById('proy-url').value.trim();
+  const obj = {
+    titulo:      document.getElementById('proy-titulo').value.trim(),
+    director:    document.getElementById('proy-director').value.trim(),
+    anio:        document.getElementById('proy-anio').value.trim(),
+    duracion:    document.getElementById('proy-duracion').value.trim(),
+    fecha_forum: document.getElementById('proy-fecha').value || null,
+    descripcion: document.getElementById('proy-desc').value.trim(),
+    tipo_url:    tipo,
+    drive_id:    tipo==='drive' ? extractDriveId(driveUrl) : '',
+    url_externa: tipo==='externa' ? extUrl : '',
+    acceso:      document.getElementById('proy-acceso').value,
+    activa:      true
+  };
+  if(!obj.titulo){ toast('El título es requerido','error'); return; }
+  try{
+    // Desactivar otras si esta va a ser activa
+    for(const p of proyeccionData){
+      if(p.activa && p.id != id) await supaPatch('proyeccion', p.id, {activa: false});
+    }
+    if(id){ await supaPatch('proyeccion',id,obj); toast('Proyección actualizada'); }
+    else  { await supaPost('proyeccion',obj);     toast('Proyección publicada'); }
+    await loadProyeccion();
+    closeModal('modal-proyeccion');
+  }catch(e){ toast('Error guardando','error'); }
+}
+
+async function activarProyeccion(id){
+  try{
+    for(const p of proyeccionData){ if(p.activa) await supaPatch('proyeccion',p.id,{activa:false}); }
+    await supaPatch('proyeccion',id,{activa:true});
+    await loadProyeccion();
+    toast('Proyección activada');
+  }catch(e){ toast('Error','error'); }
+}
+
+async function deleteProyeccion(id){
+  if(!confirm('¿Eliminar esta proyección?'))return;
+  try{ await supaDelete('proyeccion',id); await loadProyeccion(); toast('Eliminada','error'); }
+  catch(e){ toast('Error','error'); }
+}
+
+/* ══ HILOS DESDE ADMIN ══ */
+let hilosAdmin = [];
+
+async function loadHilosAdmin(){
+  try{
+    const data = await supaGet('forum_hilos','select=*&oculto=eq.false&order=created_at.desc&limit=20');
+    hilosAdmin = data || [];
+    renderHilosAdmin();
+  }catch(e){}
+}
+
+function renderHilosAdmin(){
+  const list = document.getElementById('hilos-admin-list');
+  if(!hilosAdmin.length){
+    list.innerHTML='<div class="empty"><div class="empty-icon">💬</div><p>No hay hilos en el fórum aún.</p></div>';
+    return;
+  }
+  list.innerHTML = hilosAdmin.map(h=>`
+    <div class="news-item">
+      <div class="news-thumb" style="font-size:18px;">${h.pinned?'📌':'💬'}</div>
+      <div class="news-info">
+        <div class="news-title-text">${h.titulo}</div>
+        <div class="news-meta-text">${h.usuario_inicial||'Admin'} · ${h.respuestas||0} respuestas · ${h.vistas||0} vistas · ${h.likes||0} likes</div>
+      </div>
+      <div style="display:flex;gap:6px;flex-shrink:0;">
+        <button class="btn btn-sm btn-outline" onclick="togglePin(${h.id},${h.pinned})">${h.pinned?'📌':'Destacar'}</button>
+        <button class="btn btn-sm btn-danger" onclick="ocultarHilo(${h.id})">Ocultar</button>
+      </div>
+    </div>`).join('');
+}
+
+function openHiloModal(){
+  ['hilo-titulo','hilo-body'].forEach(i=>document.getElementById(i).value='');
+  document.getElementById('hilo-id').value='';
+  document.getElementById('hilo-acceso').value='gratuito';
+  document.getElementById('hilo-pinned').checked=false;
+  openModal('modal-hilo');
+}
+
+async function saveHilo(){
+  const titulo  = document.getElementById('hilo-titulo').value.trim();
+  const cat     = document.getElementById('hilo-cat').value;
+  const body    = document.getElementById('hilo-body').value.trim();
+  const acceso  = document.getElementById('hilo-acceso').value;
+  const pinned  = document.getElementById('hilo-pinned').checked;
+  if(!titulo||!body){ toast('Título y contenido son requeridos','error'); return; }
+  const obj = {
+    usuario_inicial: 'Academia Otto Salamanca',
+    titulo,
+    meta: body + ' · ' + cat,
+    cuerpo: body,
+    acceso,
+    pinned,
+    respuestas: 0,
+    vistas: 0,
+    likes: 0,
+    oculto: false
+  };
+  try{
+    await supaPost('forum_hilos',obj);
+    closeModal('modal-hilo');
+    toast('Hilo publicado en el Fórum');
+    await loadHilosAdmin();
+  }catch(e){ toast('Error publicando hilo','error'); }
+}
+
+async function togglePin(id, currentPinned){
+  try{
+    await supaPatch('forum_hilos',id,{pinned:!currentPinned});
+    await loadHilosAdmin();
+    toast(!currentPinned?'Hilo destacado':'Hilo sin destacar');
+  }catch(e){ toast('Error','error'); }
+}
+
+async function ocultarHilo(id){
+  if(!confirm('¿Ocultar este hilo del fórum?'))return;
+  try{
+    await supaPatch('forum_hilos',id,{oculto:true});
+    await loadHilosAdmin();
+    toast('Hilo ocultado','error');
+  }catch(e){ toast('Error','error'); }
 }
 
 </script>
