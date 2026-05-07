@@ -328,7 +328,7 @@ document.addEventListener('click', e=>{
       <button class="nav-link active">Mi Espacio</button>
       <button class="nav-link">Recomendaciones</button>
       <button class="nav-link">Noticias</button>
-      <button class="nav-link">Cine Fórum</button>
+      <button class="nav-link" onclick="location.href='forum.html'">Cine Fórum</button>
       <button class="nav-link premium" onclick="goToCursos()">✦ Mis Diplomados</button>
     </nav>
     <div class="user-menu">
@@ -339,9 +339,9 @@ document.addEventListener('click', e=>{
   </div>
   <div class="subnav">
     <button class="snav-btn on">Inicio</button>
-    <button class="snav-btn">Recomendaciones</button>
-    <button class="snav-btn">Noticias</button>
-    <button class="snav-btn">Cine Fórum</button>
+    <button class="snav-btn" onclick="scrollToSection('recomendaciones')">Películas</button>
+    <button class="snav-btn" onclick="scrollToSection('ciclo')">Ciclo Mensual</button>
+    <button class="snav-btn" onclick="location.href='forum.html'">Cine Fórum</button>
     <button class="snav-btn snav-premium" onclick="goToCursos()">✦ Mis Diplomados</button>
   </div>
 </header>
@@ -437,8 +437,14 @@ document.addEventListener('click', e=>{
         <div class="forum-film-dir" id="forum-film-dir"></div>
       </div>
       <div class="forum-desc" id="forum-film-desc">Cargando descripción...</div>
-      <div class="forum-cta">
-        <button class="forum-cta-btn">Ir al Fórum →</button>
+      <div class="forum-cta" style="display:flex;flex-direction:column;gap:8px;">
+        <button class="forum-cta-btn" onclick="location.href='forum.html'">Ir al Fórum →</button>
+        <button onclick="location.href='proyeccion.html'"
+          style="width:100%;background:none;color:var(--gold2);border:1px solid var(--border-gold);padding:10px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;transition:.18s ease;"
+          onmouseover="this.style.background='rgba(240,192,80,0.08)'"
+          onmouseout="this.style.background='none'">
+          ▶ Ver proyección
+        </button>
       </div>
     </div>
 

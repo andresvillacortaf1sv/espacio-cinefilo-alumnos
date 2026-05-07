@@ -272,20 +272,8 @@ img{display:block;max-width:100%;}
 
     <!-- PELÍCULA DEL MES -->
     <div class="pelicula-mes" id="pelicula-mes" style="display:none;">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;">
-        <div style="flex:1;min-width:0;">
-          <div class="pm-label">🎬 Película del mes · Cine Fórum</div>
-          <div class="pm-title" id="pm-title">Cargando...</div>
-          <div class="pm-dir" id="pm-dir"></div>
-          <div class="pm-desc" id="pm-desc"></div>
-          <div class="pm-date" id="pm-date"></div>
-        </div>
-        <button onclick="location.href='proyeccion.html'"
-          style="background:var(--gold2);color:#0b0b0e;border:none;padding:11px 22px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap;flex-shrink:0;transition:.18s ease;"
-          onmouseover="this.style.background='#f0c050'" onmouseout="this.style.background='#c9952e'">
-          ▶ Ver proyección
-        </button>
-      </div>
+      <div class="pm-label">🎬 Película del mes · Cine Fórum</div>
+      <div id="pm-inner"></div>
     </div>
 
     <!-- FILTROS -->
@@ -476,15 +464,23 @@ async function loadPeliculaMes() {
     const data = await supaGet('forum_pelicula','select=*&activa=eq.true&order=created_at.desc&limit=1');
     const pm = data && data[0];
     if(!pm) return;
+    const fechaStr = pm.fecha_forum
+      ? '📅 Fórum: ' + new Date(pm.fecha_forum+'T00:00:00').toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'})
+      : '';
     document.getElementById('pelicula-mes').style.display = 'block';
-    document.getElementById('pm-title').textContent = pm.titulo || '';
-    document.getElementById('pm-dir').textContent   = pm.director || '';
-    document.getElementById('pm-desc').textContent  = pm.descripcion || '';
-    if(pm.fecha_forum) {
-      const fecha = new Date(pm.fecha_forum + 'T00:00:00');
-      document.getElementById('pm-date').textContent = '📅 Fórum: ' +
-        fecha.toLocaleDateString('es-ES', {day:'numeric',month:'long',year:'numeric'});
-    }
+    document.getElementById('pm-inner').innerHTML = `
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+        <div style="flex:1;min-width:0;">
+          <div class="pm-title">${pm.titulo || ''}</div>
+          <div class="pm-dir">${pm.director || ''}</div>
+          <div class="pm-desc">${pm.descripcion || ''}</div>
+          ${fechaStr ? `<div class="pm-date">${fechaStr}</div>` : ''}
+        </div>
+        <button onclick="location.href='proyeccion.html'"
+          style="background:var(--gold2);color:#0b0b0e;border:none;padding:11px 22px;border-radius:8px;font-size:13.5px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap;flex-shrink:0;">
+          ▶ Ver proyección
+        </button>
+      </div>`;
   } catch(e) { console.warn('Película mes:', e.message); }
 }
 
