@@ -188,6 +188,7 @@ tr:hover td{background:rgba(255,255,255,0.02);}
       <button class="nav-item" onclick="showPage('peliculas')"><span class="nav-icon">🎬</span> Películas</button>
       <button class="nav-item" onclick="showPage('ciclo')"><span class="nav-icon">📡</span> Ciclo Mensual</button>
       <button class="nav-item" onclick="showPage('noticias')"><span class="nav-icon">📰</span> Noticias</button>
+      <button class="nav-item" onclick="showPage('editorial')"><span class="nav-icon">✍️</span> Editorial</button>
       <button class="nav-item" onclick="showPage('cursos')"><span class="nav-icon">🎓</span> Cursos Premium</button>
       <button class="nav-item" onclick="showPage('forum')"><span class="nav-icon">💬</span> Cine Fórum</button>
     </nav>
@@ -265,6 +266,34 @@ tr:hover td{background:rgba(255,255,255,0.02);}
         <button class="btn btn-gold" onclick="openNewsModal()">+ Nueva noticia</button>
       </div>
       <div class="news-list" id="news-list"><div class="empty"><span class="spinner"></span> Cargando...</div></div>
+    </div>
+
+    <!-- EDITORIAL -->
+    <div class="page" id="page-editorial">
+      <div class="sec-header">
+        <div class="sec-title">Editorial del <em>Director</em></div>
+        <button class="btn btn-gold" onclick="openEditorialModal()">✏ Escribir editorial</button>
+      </div>
+      <!-- Preview card -->
+      <div id="editorial-preview-card" style="background:linear-gradient(135deg,#1a1610,#201c14);border:1px solid rgba(240,192,80,0.18);border-radius:12px;padding:28px;margin-bottom:20px;position:relative;overflow:hidden;">
+        <div style="font-size:120px;font-family:Fraunces,serif;color:rgba(240,192,80,0.06);position:absolute;top:-10px;left:16px;line-height:1;pointer-events:none;">"</div>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+          <div style="width:44px;height:44px;border-radius:50%;background:#2a251a;border:2px solid #8a6010;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--gold2);">AV</div>
+          <div>
+            <div style="font-size:13px;font-weight:500;color:var(--text);">Andrés Villacorta</div>
+            <div style="font-size:11px;color:var(--gold2);">Director del Departamento de Cine · Academia Otto Salamanca</div>
+          </div>
+        </div>
+        <div id="editorial-admin-body" style="font-size:14px;color:var(--text2);line-height:1.8;font-style:italic;">
+          <span style="color:var(--text3);">No hay editorial publicada aún. Escribe una para que aparezca en el dashboard de los alumnos.</span>
+        </div>
+        <div id="editorial-admin-date" style="font-size:11px;color:var(--text3);margin-top:14px;"></div>
+      </div>
+      <!-- List of past editorials -->
+      <div class="sec-title" style="font-size:16px;margin-bottom:14px;">Editoriales anteriores</div>
+      <div class="news-list" id="editorial-list">
+        <div style="color:var(--text3);font-size:13px;padding:12px 0;"><span class="spinner"></span> Cargando...</div>
+      </div>
     </div>
 
     <!-- CURSOS -->
@@ -401,6 +430,28 @@ tr:hover td{background:rgba(255,255,255,0.02);}
   </div>
 </div>
 
+<!-- Modal Editorial -->
+<div class="modal-overlay" id="modal-editorial">
+  <div class="modal" style="max-width:620px;">
+    <button class="modal-close" onclick="closeModal('modal-editorial')">✕</button>
+    <div class="modal-title">✍️ Editorial del Director</div>
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:12px;color:var(--text3);line-height:1.6;">
+      Esta editorial aparecerá en el <strong style="color:var(--text2);">dashboard de todos los alumnos</strong> registrados como la voz del director del mes.
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div class="field"><label>Texto de la editorial</label>
+        <textarea id="ed-body" style="min-height:180px;" placeholder="Escribe aquí tu mensaje para los alumnos. Puedes hablar sobre la película del ciclo, una reflexión sobre el cine, o cualquier tema que quieras compartir con la comunidad..."></textarea>
+      </div>
+      <div style="font-size:11px;color:var(--text3);">Firmado automáticamente como: <strong style="color:var(--gold2);">Andrés Villacorta — Director del Departamento de Cine</strong></div>
+      <input type="hidden" id="ed-id">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal('modal-editorial')">Cancelar</button>
+      <button class="btn btn-gold" onclick="saveEditorial()">Publicar editorial</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -452,7 +503,7 @@ function doLogout(){document.getElementById('app').style.display='none';document
 document.getElementById('login-pass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
 
 /* ── NAV ── */
-const pageTitles={dashboard:'Dashboard',usuarios:'Usuarios',peliculas:'Películas Recomendadas',ciclo:'Ciclo Mensual',noticias:'Noticias',cursos:'Cursos Premium',forum:'Cine Fórum'};
+const pageTitles={dashboard:'Dashboard',usuarios:'Usuarios',peliculas:'Películas Recomendadas',ciclo:'Ciclo Mensual',noticias:'Noticias',editorial:'Editorial del Director',cursos:'Cursos Premium',forum:'Cine Fórum'};
 function showPage(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
@@ -477,7 +528,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelect
 
 /* ── LOAD ALL ── */
 async function loadAllData(){
-  await Promise.all([loadUsuarios(),loadPeliculas(),loadCiclo(),loadNoticias(),loadCursos(),loadForum()]);
+  await Promise.all([loadUsuarios(),loadPeliculas(),loadCiclo(),loadNoticias(),loadCursos(),loadForum(),loadEditorial()]);
 }
 
 /* ══ USUARIOS ══ */
@@ -901,6 +952,91 @@ async function hideThread(id){
   try{await supaPatch('forum_hilos',id,{oculto:true});await loadForum();toast('Hilo ocultado');}
   catch(e){toast('Error ocultando hilo','error');}
 }
+
+/* ══ EDITORIAL ══ */
+let editorialData = [];
+async function loadEditorial(){
+  try{
+    const data = await supaGet('noticias','select=*&categoria=eq.Editorial&order=fecha_pub.desc');
+    editorialData = data || [];
+    renderEditorial();
+  } catch(e){ toast('Error cargando editorial','error'); }
+}
+
+function renderEditorial(){
+  // Show latest in preview card
+  const latest = editorialData[0];
+  const bodyEl = document.getElementById('editorial-admin-body');
+  const dateEl = document.getElementById('editorial-admin-date');
+  if(latest){
+    bodyEl.innerHTML = latest.cuerpo || '<em>Sin contenido</em>';
+    dateEl.textContent = latest.fecha_pub
+      ? 'Publicada: ' + new Date(latest.fecha_pub).toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'})
+      : '';
+  } else {
+    bodyEl.innerHTML = '<span style="color:var(--text3);">No hay editorial publicada aún.</span>';
+    dateEl.textContent = '';
+  }
+  // List all editorials
+  const list = document.getElementById('editorial-list');
+  if(!editorialData.length){
+    list.innerHTML='<div class="empty"><div class="empty-icon">✍️</div><p>No hay editoriales anteriores.</p></div>';
+    return;
+  }
+  list.innerHTML = editorialData.map((n,i)=>`
+    <div class="news-item">
+      <div class="news-thumb" style="font-size:20px;">✍️</div>
+      <div class="news-info">
+        <div class="news-title-text">${i===0?'<span style="color:var(--gold2);font-size:10px;margin-right:6px;">ACTIVA</span>':''}${n.cuerpo ? n.cuerpo.substring(0,80)+'...' : 'Sin contenido'}</div>
+        <div class="news-meta-text">Andrés Villacorta · ${n.fecha_pub ? new Date(n.fecha_pub).toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'}) : ''}</div>
+      </div>
+      <div style="display:flex;gap:6px;flex-shrink:0;">
+        <button class="btn btn-sm btn-outline" onclick="editEditorial(${n.id})">✏</button>
+        <button class="btn btn-sm btn-danger" onclick="deleteEditorial(${n.id})">✕</button>
+      </div>
+    </div>`).join('');
+}
+
+function openEditorialModal(id=null){
+  document.getElementById('ed-id').value = id||'';
+  if(id){
+    const n = editorialData.find(x=>x.id===id);
+    if(n) document.getElementById('ed-body').value = n.cuerpo||'';
+  } else {
+    document.getElementById('ed-body').value = '';
+  }
+  openModal('modal-editorial');
+}
+function editEditorial(id){ openEditorialModal(id); }
+
+async function saveEditorial(){
+  const id   = document.getElementById('ed-id').value;
+  const body = document.getElementById('ed-body').value.trim();
+  if(!body){ toast('Escribe el contenido de la editorial','error'); return; }
+  const obj = {
+    titulo:    'Editorial — Andrés Villacorta',
+    categoria: 'Editorial',
+    cuerpo:    body,
+    emoji:     '✍️',
+    publicada: true
+  };
+  try{
+    if(id){ await supaPatch('noticias',id,obj); toast('Editorial actualizada'); }
+    else  { await supaPost('noticias',obj);      toast('Editorial publicada'); }
+    await loadEditorial();
+    closeModal('modal-editorial');
+  } catch(e){ toast('Error guardando editorial','error'); }
+}
+
+async function deleteEditorial(id){
+  if(!confirm('¿Eliminar esta editorial?')) return;
+  try{
+    await supaDelete('noticias',id);
+    await loadEditorial();
+    toast('Editorial eliminada','error');
+  } catch(e){ toast('Error eliminando','error'); }
+}
+
 </script>
 </body>
 </html>
