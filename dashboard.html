@@ -329,7 +329,7 @@ document.addEventListener('click', e=>{
       <button class="nav-link">Recomendaciones</button>
       <button class="nav-link">Noticias</button>
       <button class="nav-link">Cine Fórum</button>
-      <button class="nav-link premium">✦ Cursos Premium</button>
+      <button class="nav-link premium" onclick="goToCursos()">✦ Mis Diplomados</button>
     </nav>
     <div class="user-menu">
       <div class="user-avatar" id="user-avatar" onclick="openPhotoModal()" title="Cambiar foto de perfil">?</div>
@@ -342,7 +342,7 @@ document.addEventListener('click', e=>{
     <button class="snav-btn">Recomendaciones</button>
     <button class="snav-btn">Noticias</button>
     <button class="snav-btn">Cine Fórum</button>
-    <button class="snav-btn snav-premium">✦ Zona Premium</button>
+    <button class="snav-btn snav-premium" onclick="goToCursos()">✦ Mis Diplomados</button>
   </div>
 </header>
 
@@ -359,6 +359,11 @@ document.addEventListener('click', e=>{
       <span>Cuenta activa</span>
     </div>
   </div>
+</div>
+
+<!-- PREMIUM ACCESS BANNER -->
+<div id="premium-access-banner" style="display:none;background:linear-gradient(135deg,rgba(30,22,8,0.95),rgba(42,30,10,0.95));border-bottom:1px solid rgba(240,192,80,0.2);padding:14px 32px;">
+  <div style="max-width:1100px;margin:0 auto;"></div>
 </div>
 
 <!-- ══ DASHBOARD BODY ══ -->
@@ -448,7 +453,7 @@ document.addEventListener('click', e=>{
         <div class="premium-perk"><span class="perk-check">✓</span>Foros exclusivos de alumnos</div>
         <div class="premium-perk"><span class="perk-check">✓</span>Control de progreso</div>
       </div>
-      <button class="btn-premium">Acceder como alumno</button>
+      <button class="btn-premium" onclick="goToCursos()">Ir a mis diplomados →</button>
     </div>
 
   </div>
@@ -502,7 +507,6 @@ function doLogout(){
 function initUser(){
   const user = session || {nombre:'Invitado', email:'', tipo:'gratuito'};
   const inicial = (user.nombre||'I')[0].toUpperCase();
-  // Set text initials first
   document.getElementById('user-avatar').textContent    = inicial;
   document.getElementById('banner-avatar').textContent  = inicial;
   document.getElementById('user-name-header').textContent = user.nombre||'Cinéfilo';
@@ -514,6 +518,38 @@ function initUser(){
   // Load saved profile photo
   const savedPhoto = localStorage.getItem('aos_profile_photo');
   if(savedPhoto) applyProfilePhoto(savedPhoto);
+  // Show premium access banner if user has diplomado
+  showPremiumBanner(user.tipo);
+}
+
+function goToCursos(){
+  window.location.href = 'cursos.html';
+}
+
+function showPremiumBanner(tipo){
+  const hasPremium = ['diplomado_cine','diplomado_avanzado','ambos','admin'].includes(tipo);
+  const banner = document.getElementById('premium-access-banner');
+  if(!banner) return;
+  if(hasPremium){
+    const labels = {
+      diplomado_cine:     'Tienes acceso al Diplomado de Cine y Guion Cinematográfico',
+      diplomado_avanzado: 'Tienes acceso al Diplomado Avanzado de Cine',
+      ambos:              'Tienes acceso a ambos diplomados',
+      admin:              'Acceso completo de administrador'
+    };
+    banner.innerHTML = `
+      <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+        <div style="font-size:22px;flex-shrink:0;">✦</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:13px;font-weight:500;color:var(--gold);margin-bottom:2px;">${labels[tipo]||'Zona Premium activa'}</div>
+          <div style="font-size:12px;color:var(--text2);">Accede a tus clases, materiales y foros exclusivos de alumnos.</div>
+        </div>
+        <button onclick="goToCursos()" style="background:var(--gold2);color:#0b0b0e;border:none;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:inherit;flex-shrink:0;">Ir a mis diplomados →</button>
+      </div>`;
+    banner.style.display = 'block';
+  } else {
+    banner.style.display = 'none';
+  }
 }
 
 /* ── TOAST ── */
