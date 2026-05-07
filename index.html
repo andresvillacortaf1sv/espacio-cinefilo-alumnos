@@ -480,13 +480,35 @@ document.getElementById('register-form').addEventListener('submit', async functi
   }
 });
 
-/* ── LOGIN (básico) ── */
-function doLogin(){
-  const email=document.getElementById('login-email').value.trim();
-  if(!email)return;
-  // Por ahora muestra bienvenida — el sistema completo de auth va en la siguiente fase
-  closeModal();
-  alert('Bienvenido, ' + email + '. El sistema de acceso completo estará disponible pronto.');
+/* ── LOGIN CON SUPABASE ── */
+async function doLogin(){
+  const email = document.getElementById('login-email').value.trim();
+  const btn   = document.querySelector('#form-login .form-submit');
+  const errEl = document.getElementById('login-error-msg');
+  if(!email){ toast('Escribe tu correo electrónico'); return; }
+  btn.textContent='Verificando...'; btn.disabled=true;
+  if(errEl) errEl.style.display='none';
+  try{
+    const data = await supaGet('usuarios','select=*&email=eq.'+encodeURIComponent(email)+'&limit=1');
+    if(data && data[0]){
+      const user = data[0];
+      sessionStorage.setItem('aos_user', JSON.stringify({
+        id:       user.id,
+        nombre:   user.nombre,
+        email:    user.email,
+        telefono: user.telefono,
+        tipo:     user.tipo
+      }));
+      closeModal();
+      window.location.href = 'dashboard.html';
+    } else {
+      if(errEl){ errEl.textContent='Correo no encontrado. ¿Ya tienes cuenta?'; errEl.style.display='block'; }
+      btn.textContent='Iniciar sesión'; btn.disabled=false;
+    }
+  } catch(e){
+    if(errEl){ errEl.textContent='Error de conexión. Intenta de nuevo.'; errEl.style.display='block'; }
+    btn.textContent='Iniciar sesión'; btn.disabled=false;
+  }
 }
 
 /* ── CARGAR PELÍCULAS DESDE SUPABASE ── */
@@ -601,11 +623,34 @@ window.addEventListener('scroll',()=>{
 const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');}),{threshold:.08});
 document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
 
+/* ── TOAST ── */
+function toast(msg){
+  const t=document.getElementById('toast');
+  if(!t)return;
+  t.textContent=msg; t.className='toast show';
+  setTimeout(()=>t.className='toast',2600);
+}
+
+/* ── ENTER KEY EN LOGIN ── */
+document.addEventListener('keydown', e=>{
+  if(e.key==='Enter'){
+    const loginForm=document.getElementById('form-login');
+    if(loginForm && loginForm.classList.contains('on')) doLogin();
+  }
+});
+
+/* ── REDIRECT SI YA HAY SESIÓN ── */
+(function(){
+  const session=sessionStorage.getItem('aos_user');
+  if(session){ window.location.href='dashboard.html'; }
+})();
+
 /* ── INIT ── */
 window.addEventListener('load',()=>{
   loadPeliculas();
   loadCiclo();
 });
 </script>
+<div class="toast" id="toast" style="position:fixed;bottom:24px;right:24px;z-index:9999;background:#18181f;border:1px solid rgba(255,255,255,0.13);border-radius:8px;padding:12px 18px;font-size:13px;color:#eeeae3;transform:translateY(60px);opacity:0;transition:all .3s ease;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.4);"></div>
 </body>
 </html>
