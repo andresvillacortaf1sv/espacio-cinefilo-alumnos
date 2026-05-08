@@ -251,6 +251,7 @@ tr:hover td{background:rgba(255,255,255,0.02);}
       <button class="nav-item" onclick="showPage('editorial',this)"><span class="nav-icon">✍️</span> Editorial</button>
       <button class="nav-item" onclick="showPage('forum',this)"><span class="nav-icon">💬</span> Cine Fórum</button>
       <button class="nav-item" onclick="showPage('proyeccion',this)"><span class="nav-icon">🎥</span> Sala de Proyección</button>
+      <button class="nav-item" onclick="showPage('contactos',this)"><span class="nav-icon">📩</span> Contactos</button>
     </nav>
     <button class="nav-logout" onclick="doLogout()">🚪 Cerrar sesión</button>
   </aside>
@@ -528,6 +529,37 @@ tr:hover td{background:rgba(255,255,255,0.02);}
         <div class="news-list" id="hilos-admin-list">
           <div style="color:var(--text3);font-size:13px;padding:12px 0;"><span class="spinner"></span> Cargando hilos...</div>
         </div>
+      </div>
+    </div>
+
+    <!-- CONTACTOS -->
+    <div class="page" id="page-contactos">
+      <div class="sec-header">
+        <div>
+          <div class="sec-title">Mensajes de <em>Contacto</em></div>
+          <p style="font-size:12px;color:var(--text3);margin-top:4px;">Personas que escribieron desde la página de contacto.</p>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-outline" onclick="exportContactosCSV()">⬇ Exportar CSV</button>
+          <button class="btn btn-outline" onclick="loadContactos()">↺ Actualizar</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <div class="table-toolbar">
+          <input type="text" class="search-input" placeholder="Buscar por nombre o email..." oninput="filterContactos(this.value)">
+          <select class="filter-select" id="filter-leido" onchange="filterContactos(document.querySelector('.search-input').value)">
+            <option value="">Todos</option>
+            <option value="false">No leídos</option>
+            <option value="true">Leídos</option>
+          </select>
+          <span id="contactos-count" style="margin-left:auto;font-size:12px;color:var(--text3);"></span>
+        </div>
+        <table>
+          <thead><tr><th>Nombre</th><th>Email</th><th>Teléfono</th><th>Diplomado</th><th>Mensaje</th><th>Fecha</th><th>Estado</th></tr></thead>
+          <tbody id="contactos-tbody">
+            <tr><td colspan="7" style="text-align:center;color:var(--text3);padding:24px;"><span class="spinner"></span>Cargando...</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
@@ -830,7 +862,7 @@ function doLogout(){document.getElementById('app').style.display='none';document
 document.getElementById('login-pass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
 
 /* NAV */
-const pageTitles={dashboard:'Dashboard',usuarios:'Usuarios',diplomados:'Diplomados',peliculas:'Películas',ciclo:'Ciclo Mensual',noticias:'Noticias',editorial:'Editorial',forum:'Cine Fórum',proyeccion:'Sala de Proyección'};
+const pageTitles={dashboard:'Dashboard',usuarios:'Usuarios',diplomados:'Diplomados',peliculas:'Películas',ciclo:'Ciclo Mensual',noticias:'Noticias',editorial:'Editorial',forum:'Cine Fórum',proyeccion:'Sala de Proyección',contactos:'Mensajes de Contacto'};
 function showPage(id,btn){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
@@ -855,7 +887,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelect
 
 /* LOAD ALL */
 async function loadAllData(){
-  await Promise.all([loadUsuarios(),loadPeliculas(),loadCiclo(),loadNoticias(),loadEditorial(),loadForum(),loadDiplomados(),loadProyeccion()]);
+  await Promise.all([loadUsuarios(),loadPeliculas(),loadCiclo(),loadNoticias(),loadEditorial(),loadForum(),loadDiplomados(),loadProyeccion(),loadContactos()]);
 }
 
 /* USUARIOS */
@@ -1718,6 +1750,75 @@ async function ocultarHilo(id){
     await loadHilosAdmin();
     toast('Hilo ocultado','error');
   }catch(e){ toast('Error','error'); }
+}
+
+
+/* ══ CONTACTOS ══ */
+let contactosData = [];
+
+async function loadContactos(){
+  try{
+    const data = await supaGet('contactos','select=*&order=created_at.desc');
+    contactosData = data || [];
+    renderContactos(contactosData);
+  }catch(e){ toast('Error cargando contactos','error'); }
+}
+
+function renderContactos(data){
+  document.getElementById('contactos-count').textContent = data.length + ' mensajes';
+  const tbody = document.getElementById('contactos-tbody');
+  if(!data.length){
+    tbody.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--text3);padding:28px;">Sin mensajes aún.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = data.map(c=>`
+    <tr style="${!c.leido?'background:rgba(240,192,80,0.03);':''}" onclick="marcarLeido('${c.id}')" title="Clic para marcar como leído">
+      <td style="font-weight:${!c.leido?'500':'400'};">${c.nombre||'—'}</td>
+      <td style="color:var(--text2);">${c.email||'—'}</td>
+      <td style="color:var(--text2);">${c.telefono||'—'}</td>
+      <td style="color:var(--text3);font-size:12px;">${c.diplomado||'—'}</td>
+      <td style="color:var(--text2);max-width:260px;font-size:12px;">
+        <div style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:260px;" title="${(c.mensaje||'').replace(/"/g,'&quot;')}">${c.mensaje||'—'}</div>
+      </td>
+      <td style="color:var(--text3);font-size:12px;">${c.created_at?new Date(c.created_at).toLocaleDateString('es-ES',{day:'numeric',month:'short',year:'numeric'}):'—'}</td>
+      <td>
+        <span class="badge ${c.leido?'badge-free':'badge-premium'}" style="${!c.leido?'color:var(--gold);':''}">
+          ${c.leido?'Leído':'● Nuevo'}
+        </span>
+      </td>
+    </tr>`).join('');
+}
+
+function filterContactos(q){
+  const leido = document.getElementById('filter-leido').value;
+  const filtered = contactosData.filter(c=>{
+    const mq = !q || (c.nombre||'').toLowerCase().includes(q.toLowerCase()) || (c.email||'').toLowerCase().includes(q.toLowerCase());
+    const ml = leido===''?true:(leido==='true'?c.leido:!c.leido);
+    return mq && ml;
+  });
+  renderContactos(filtered);
+}
+
+async function marcarLeido(id){
+  try{
+    await supaPatch('contactos',id,{leido:true});
+    const c = contactosData.find(x=>x.id==id);
+    if(c) c.leido = true;
+    renderContactos(contactosData);
+  }catch(e){}
+}
+
+function exportContactosCSV(){
+  if(!contactosData.length){toast('No hay datos','error');return;}
+  const rows=[['Nombre','Email','Teléfono','Diplomado','Mensaje','Fecha','Leído'],
+    ...contactosData.map(c=>[c.nombre,c.email,c.telefono,c.diplomado,c.mensaje,
+      c.created_at?new Date(c.created_at).toLocaleDateString('es-ES'):'',c.leido?'Sí':'No'])];
+  const csv=rows.map(r=>r.map(v=>`"${(v||'').toString().replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);
+  a.download='contactos-'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click();
+  toast('CSV exportado');
 }
 
 </script>
