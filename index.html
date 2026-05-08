@@ -306,6 +306,24 @@ footer{border-top:1px solid var(--border);padding:40px 32px;margin-top:20px;}
 
 <div class="section-divider"></div>
 
+<!-- CONTACTO CTA -->
+<div class="section-divider"></div>
+<section style="padding:48px 32px;">
+  <div class="container">
+    <div style="background:linear-gradient(135deg,#1a1208,#201810);border:1px solid rgba(240,192,80,0.2);border-radius:16px;padding:40px 48px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;" class="reveal">
+      <div>
+        <div style="font-size:10.5px;letter-spacing:.12em;color:var(--gold2);text-transform:uppercase;font-weight:500;margin-bottom:8px;">Academia Otto Salamanca</div>
+        <div style="font-family:'Fraunces',serif;font-size:26px;color:var(--text);margin-bottom:8px;letter-spacing:-.2px;">¿Quieres saber más sobre <em style="font-style:italic;color:var(--gold);">nuestros diplomados?</em></div>
+        <p style="font-size:14px;color:var(--text2);max-width:480px;line-height:1.7;">Conoce las fechas de inicio, costos y promociones especiales. Te respondemos en menos de 2 horas.</p>
+      </div>
+      <div style="display:flex;gap:12px;flex-shrink:0;flex-wrap:wrap;">
+        <button onclick="location.href='contacto.html'" style="background:var(--gold2);color:#0b0b0e;border:none;padding:12px 28px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:.18s;" onmouseover="this.style.background='#f0c050'" onmouseout="this.style.background='#c9952e'">Contáctanos →</button>
+        <button onclick="window.open('https://wa.me/50360229156?text=Hola%2C%20me%20interesa%20conocer%20m%C3%A1s%20sobre%20los%20diplomados%20de%20la%20Academia%20Otto%20Salamanca.','_blank')" style="background:none;color:var(--text2);border:1px solid rgba(255,255,255,0.13);padding:12px 22px;border-radius:8px;font-size:14px;cursor:pointer;font-family:inherit;transition:.18s;" onmouseover="this.style.borderColor='#c9952e';this.style.color='#eeeae3'" onmouseout="this.style.borderColor='rgba(255,255,255,0.13)';this.style.color='#9e9aaa'">💬 WhatsApp</button>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section id="premium-cta">
   <div class="container">
     <div class="premium-box reveal">
@@ -355,7 +373,7 @@ footer{border-top:1px solid var(--border);padding:40px 32px;margin-top:20px;}
       <div class="footer-col-title">Academia</div>
       <div class="footer-links">
         <span class="footer-link">Acerca de</span>
-        <span class="footer-link">Contacto</span>
+        <span class="footer-link" onclick="location.href='contacto.html'">Contacto</span>
         <span class="footer-link" onclick="openModal('register')">Crear cuenta</span>
         <span class="footer-link" onclick="openModal('login')">Iniciar sesión</span>
       </div>
