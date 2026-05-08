@@ -465,13 +465,8 @@ document.addEventListener('click', e=>{
       <button class="btn-premium" onclick="goToCursos()">Ir a mis diplomados →</button>
     </div>
 
-    <!-- CONTACTO -->
-    <div style="background:linear-gradient(135deg,#1a1208,#201810);border:1px solid rgba(240,192,80,0.18);border-radius:var(--radius-lg);padding:20px;text-align:center;">
-      <div style="font-size:24px;margin-bottom:8px;">📩</div>
-      <div style="font-family:'Fraunces',serif;font-size:15px;color:var(--text);margin-bottom:6px;">¿Dudas sobre los <em style="font-style:italic;color:var(--gold);">diplomados?</em></div>
-      <p style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:14px;">Conoce fechas, costos y promociones especiales. Respondemos en menos de 2 horas.</p>
-      <button onclick="location.href='contacto.html'" style="width:100%;background:var(--gold2);color:#0b0b0e;border:none;padding:10px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:.18s;" onmouseover="this.style.background='#f0c050'" onmouseout="this.style.background='#c9952e'">Contáctanos →</button>
-    </div>
+    <!-- CONTACTO — condicional según tipo de cuenta -->
+    <div id="contacto-sidebar-card" style="background:linear-gradient(135deg,#1a1208,#201810);border:1px solid rgba(240,192,80,0.18);border-radius:var(--radius-lg);padding:20px;text-align:center;"></div>
 
   </div>
 </div>
@@ -537,6 +532,27 @@ function initUser(){
   if(savedPhoto) applyProfilePhoto(savedPhoto);
   // Show premium access banner if user has diplomado
   showPremiumBanner(user.tipo);
+  // Show contacto card based on tipo
+  showContactoCard(user.tipo);
+}
+
+function showContactoCard(tipo) {
+  const hasPremium = ['diplomado_cine','diplomado_avanzado','ambos','admin'].includes(tipo);
+  const card = document.getElementById('contacto-sidebar-card');
+  if(!card) return;
+  if(hasPremium) {
+    card.innerHTML = `
+      <div style="font-size:24px;margin-bottom:8px;">🎬</div>
+      <div style="font-family:'Fraunces',serif;font-size:15px;color:var(--text);margin-bottom:6px;">¿Te interesa seguir <em style="font-style:italic;color:var(--gold);">avanzando?</em></div>
+      <p style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:14px;">Conoce las promociones especiales para alumnos activos y los próximos diplomados.</p>
+      <button onclick="location.href='contacto.html'" style="width:100%;background:var(--gold2);color:#0b0b0e;border:none;padding:10px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:.18s;" onmouseover="this.style.background='#f0c050'" onmouseout="this.style.background='#c9952e'">Ver promociones →</button>`;
+  } else {
+    card.innerHTML = `
+      <div style="font-size:24px;margin-bottom:8px;">📩</div>
+      <div style="font-family:'Fraunces',serif;font-size:15px;color:var(--text);margin-bottom:6px;">¿Dudas sobre los <em style="font-style:italic;color:var(--gold);">diplomados?</em></div>
+      <p style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:14px;">Conoce fechas, costos y promociones especiales. Respondemos en menos de 2 horas.</p>
+      <button onclick="location.href='contacto.html'" style="width:100%;background:var(--gold2);color:#0b0b0e;border:none;padding:10px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:.18s;" onmouseover="this.style.background='#f0c050'" onmouseout="this.style.background='#c9952e'">Contáctanos →</button>`;
+  }
 }
 
 function goToCursos(){
