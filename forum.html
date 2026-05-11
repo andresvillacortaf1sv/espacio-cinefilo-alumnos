@@ -513,6 +513,7 @@ function renderThreads(threads) {
     return `
     <div class="thread-card ${t.pinned?'pinned':''}" onclick="openThread(${t.id})">
       <div class="thread-header">
+        <div style="width:24px;height:24px;border-radius:50%;background:var(--bg4);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:var(--text3);flex-shrink:0;">${num}</div>
         <div class="thread-avatar">${inicial}</div>
         <div class="thread-meta-top">
           <div class="thread-user">${t.usuario_inicial||'Usuario'}</div>

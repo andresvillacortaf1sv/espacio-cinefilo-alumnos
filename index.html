@@ -418,6 +418,7 @@ footer{border-top:1px solid var(--border);padding:40px 32px;margin-top:20px;}
       <div class="form-group"><label class="form-label">Correo electrónico</label><input type="email" id="login-email" class="form-input" placeholder="tu@correo.com"></div>
       <div class="form-group"><label class="form-label">Contraseña</label><input type="password" id="login-pass" class="form-input" placeholder="Tu contraseña"></div>
       <button class="form-submit" onclick="doLogin()">Iniciar sesión</button>
+      <div class="modal-switch">¿Olvidaste tu contraseña? <a onclick="forgotPassword()">Recupérala por WhatsApp</a></div>
       <div class="modal-switch">¿No tienes cuenta? <a onclick="switchTab('register')">Regístrate gratis</a></div>
     </div>
   </div>
@@ -478,13 +479,16 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
 document.getElementById('register-form').addEventListener('submit', async function(e){
   e.preventDefault();
   const btn=document.getElementById('register-submit');
-  const nombre  =this.querySelector('[name="nombre"]').value.trim();
-  const email   =this.querySelector('[name="email"]').value.trim();
-  const telefono=this.querySelector('[name="telefono"]').value.trim();
+  const nombre   =this.querySelector('[name="nombre"]').value.trim();
+  const email    =this.querySelector('[name="email"]').value.trim();
+  const telefono =this.querySelector('[name="telefono"]')?.value.trim()||'';
+  const password =this.querySelector('[name="password"]')?.value||'';
   if(!nombre||!email)return;
+  if(password && password.length < 6){toast('La contraseña debe tener al menos 6 caracteres');return;}
   btn.textContent='Guardando...';btn.disabled=true;
   try{
-    await supaPost('usuarios',{nombre,email,telefono,tipo:'gratuito'});
+    const passHash = password ? hashSimple(password) : '';
+    await supaPost('usuarios',{nombre,email,telefono,tipo:'gratuito',password_hash:passHash});
     this.style.display='none';
     document.getElementById('register-success').style.display='block';
   }catch(err){
@@ -544,6 +548,14 @@ async function doLogin(){
 function showLoginError(msg){
   const el=document.getElementById('login-error-msg');
   if(el){el.textContent=msg;el.style.display='block';}
+}
+
+function forgotPassword(){
+  const email=document.getElementById('login-email').value.trim();
+  const msg=email
+    ? `Hola, olvidé mi contraseña del Aula Virtual. Mi correo registrado es: ${email}`
+    : 'Hola, olvidé mi contraseña del Aula Virtual de la Academia Otto Salamanca.';
+  window.open('https://wa.me/50360229156?text='+encodeURIComponent(msg),'_blank');
 }
 
 /* ── CARGAR PELÍCULAS DESDE SUPABASE ── */
