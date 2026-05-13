@@ -1118,7 +1118,7 @@ function editNews(id){openNewsModal(id);}
 async function deleteNews(id){if(!confirm('¿Eliminar?'))return;try{await supaDelete('noticias',id);await loadNoticias();toast('Eliminada','error');}catch(e){toast('Error','error');}}
 async function saveNews(){
   const id=document.getElementById('n-id').value;
-  const obj={titulo:document.getElementById('n-title').value.trim(),categoria:document.getElementById('n-cat').value,cuerpo:document.getElementById('n-body').value.trim(),emoji:document.getElementById('n-emoji').value.trim()||'📰',publicada:true};
+  const obj={titulo:document.getElementById('n-title').value.trim(),categoria:document.getElementById('n-cat').value,cuerpo:document.getElementById('n-body').value.trim(),emoji:document.getElementById('n-emoji').value.trim()||'📰',publicada:true,...(!id&&{fecha_pub:new Date().toISOString()})};
   if(!obj.titulo){toast('Título requerido','error');return;}
   try{if(id){await supaPatch('noticias',id,obj);toast('Actualizada');}else{await supaPost('noticias',obj);toast('Publicada');}await loadNoticias();closeModal('modal-news');}catch(e){toast('Error','error');}
 }
@@ -1157,7 +1157,7 @@ async function saveEditorial(){
   const id=document.getElementById('ed-id').value;
   const body=document.getElementById('ed-body').value.trim();
   if(!body){toast('Escribe el contenido','error');return;}
-  const obj={titulo:'Editorial — Andrés Villacorta',categoria:'Editorial',cuerpo:body,emoji:'✍️',publicada:true};
+  const obj={titulo:'Editorial — Andrés Villacorta',categoria:'Editorial',cuerpo:body,emoji:'✍️',publicada:true,...(!id&&{fecha_pub:new Date().toISOString()})};
   try{if(id){await supaPatch('noticias',id,obj);toast('Editorial actualizada');}else{await supaPost('noticias',obj);toast('Editorial publicada');}await loadEditorial();closeModal('modal-editorial');}catch(e){toast('Error','error');}
 }
 async function deleteEditorial(id){if(!confirm('¿Eliminar editorial?'))return;try{await supaDelete('noticias',id);await loadEditorial();toast('Eliminada','error');}catch(e){toast('Error','error');}}
