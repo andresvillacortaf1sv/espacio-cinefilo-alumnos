@@ -22,6 +22,10 @@
   ],
   "rewrites": [
     {
+      "source": "/",
+      "destination": "/diplomado-cine.html"
+    },
+    {
       "source": "/((?!api/).*)",
       "destination": "/$1"
     }
