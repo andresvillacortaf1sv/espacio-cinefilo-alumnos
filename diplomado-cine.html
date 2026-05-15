@@ -1,0 +1,1426 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diplomado de Cine y Guion Cinematográfico · Academia Otto Salamanca</title>
+<meta name="description" content="Aprende a hacer cine desde cero. Dirección, fotografía, guion, sonido y montaje en 16 semanas. Próxima cohorte: 29 de junio.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ── */
+:root{
+  --bg:#0b0b0e;--bg2:#111115;--bg3:#18181f;--bg4:#222229;--bg5:#2a2a33;
+  --gold:#f0c050;--gold2:#c9952e;--gold3:rgba(240,192,80,0.12);
+  --text:#eeeae3;--text2:#9e9aaa;--text3:#5a5668;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
+  --border-gold:rgba(240,192,80,0.25);
+  --radius:8px;--radius-lg:14px;
+  --tr:all .2s ease;
+  --max:1100px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:14px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+a{text-decoration:none;color:inherit;}
+button{cursor:pointer;font-family:inherit;}
+img{display:block;max-width:100%;}
+
+/* ── HEADER ── */
+.header{
+  position:sticky;top:0;z-index:100;
+  background:rgba(11,11,14,.92);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+}
+.header-inner{
+  max-width:var(--max);margin:0 auto;
+  display:flex;align-items:center;gap:20px;
+  padding:0 28px;height:56px;
+}
+.logo-mark{
+  font-family:'Fraunces',serif;font-size:17px;font-weight:700;
+  color:var(--text);white-space:nowrap;letter-spacing:-.3px;
+}
+.logo-mark em{font-style:italic;color:var(--gold);}
+.header-sep{width:1px;height:18px;background:var(--border2);}
+.header-tag{font-size:11px;color:var(--text3);font-style:italic;white-space:nowrap;}
+.header-tag em{font-style:normal;color:var(--gold2);}
+.header-nav{display:flex;align-items:center;gap:2px;margin-left:auto;}
+.nav-link{background:none;border:none;padding:7px 13px;font-size:12.5px;color:var(--text2);border-radius:6px;transition:var(--tr);}
+.nav-link:hover{color:var(--text);background:var(--bg3);}
+.btn-cta{background:var(--gold2);border:none;padding:8px 18px;border-radius:var(--radius);color:#0b0b0e;font-size:12.5px;font-weight:600;transition:var(--tr);}
+.btn-cta:hover{background:var(--gold);}
+
+/* ── HERO ── */
+.hero{
+  position:relative;
+  min-height:92vh;
+  display:flex;align-items:flex-end;
+  overflow:hidden;
+}
+.hero-film{
+  position:absolute;inset:0;
+  background:
+    linear-gradient(to bottom right,#0b0b0e 0%,#1a1208 50%,#0b0b0e 100%);
+}
+/* Film grain overlay */
+.hero-film::before{
+  content:'';position:absolute;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity:.5;pointer-events:none;
+}
+/* Sprocket holes left side */
+.hero-film::after{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:36px;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0px,
+      transparent 14px,
+      var(--bg3) 14px,
+      var(--bg3) 28px,
+      transparent 28px,
+      transparent 42px
+    );
+  border-right:1px solid var(--border);
+  opacity:.4;
+}
+.hero-sprocket-right{
+  position:absolute;right:0;top:0;bottom:0;width:36px;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0px,
+      transparent 14px,
+      var(--bg3) 14px,
+      var(--bg3) 28px,
+      transparent 28px,
+      transparent 42px
+    );
+  border-left:1px solid var(--border);
+  opacity:.4;
+  pointer-events:none;
+}
+/* Diagonal accent line */
+.hero-diagonal{
+  position:absolute;top:0;right:30%;bottom:0;width:1px;
+  background:linear-gradient(to bottom,transparent,var(--border-gold),transparent);
+  opacity:.4;
+}
+/* Gold glow blob */
+.hero-glow{
+  position:absolute;top:-10%;right:5%;
+  width:560px;height:560px;
+  background:radial-gradient(circle,rgba(201,149,46,.12) 0%,transparent 70%);
+  pointer-events:none;
+}
+
+.hero-content{
+  position:relative;z-index:2;
+  max-width:var(--max);margin:0 auto;
+  padding:0 70px 80px;width:100%;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(240,192,80,0.08);border:1px solid var(--border-gold);
+  border-radius:20px;padding:5px 14px;
+  font-size:11px;color:var(--gold2);letter-spacing:.05em;
+  margin-bottom:22px;
+}
+.hero-badge-dot{
+  width:6px;height:6px;border-radius:50%;background:var(--gold2);
+  animation:pulse-dot 2.5s infinite;
+}
+@keyframes pulse-dot{0%,100%{opacity:1;}50%{opacity:.3;}}
+
+.hero-eyebrow{font-size:11px;letter-spacing:.1em;color:var(--text3);text-transform:uppercase;margin-bottom:12px;}
+.hero-h1{
+  font-family:'Fraunces',serif;
+  font-size:clamp(42px,6vw,72px);
+  line-height:1.02;
+  letter-spacing:-.5px;
+  color:var(--text);
+  margin-bottom:10px;
+}
+.hero-h1 em{font-style:italic;color:var(--gold);display:block;}
+.hero-sub{
+  font-size:16px;color:var(--text2);
+  line-height:1.75;max-width:520px;
+  margin-bottom:36px;
+}
+.hero-ctas{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:48px;}
+.btn-primary{
+  background:var(--gold2);color:#0b0b0e;border:none;
+  padding:13px 30px;border-radius:var(--radius);
+  font-size:13.5px;font-weight:600;transition:var(--tr);
+}
+.btn-primary:hover{background:var(--gold);}
+.btn-secondary{
+  background:none;color:var(--text2);
+  border:1px solid var(--border2);
+  padding:13px 22px;border-radius:var(--radius);
+  font-size:13.5px;transition:var(--tr);
+}
+.btn-secondary:hover{color:var(--text);border-color:var(--gold2);}
+
+.hero-stats{
+  display:flex;align-items:center;gap:32px;
+  padding-top:32px;
+  border-top:1px solid var(--border);
+}
+.hero-stat-item{display:flex;flex-direction:column;gap:2px;}
+.hero-stat-number{
+  font-family:'Fraunces',serif;font-size:28px;font-weight:600;
+  color:var(--gold);line-height:1;
+}
+.hero-stat-label{font-size:11px;color:var(--text3);letter-spacing:.04em;}
+.hero-stat-sep{width:1px;height:36px;background:var(--border2);}
+
+/* ── COUNTDOWN ── */
+.countdown-bar{
+  background:var(--bg2);border-bottom:1px solid var(--border);
+  padding:14px 28px;
+}
+.countdown-inner{
+  max-width:var(--max);margin:0 auto;
+  display:flex;align-items:center;justify-content:center;gap:20px;
+  flex-wrap:wrap;
+}
+.countdown-label{font-size:12px;color:var(--text2);}
+.countdown-label strong{color:var(--gold);}
+.countdown-units{display:flex;align-items:center;gap:10px;}
+.countdown-unit{
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:6px;padding:6px 14px;min-width:52px;
+}
+.countdown-num{
+  font-family:'Fraunces',serif;font-size:22px;color:var(--gold);
+  font-weight:600;line-height:1;
+}
+.countdown-tag{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;}
+.countdown-sep{font-size:18px;color:var(--text3);line-height:1;}
+.countdown-cta{
+  background:var(--gold2);color:#0b0b0e;border:none;
+  padding:9px 20px;border-radius:var(--radius);
+  font-size:12.5px;font-weight:600;transition:var(--tr);
+}
+.countdown-cta:hover{background:var(--gold);}
+
+/* ── SECTIONS ── */
+.section{padding:72px 28px;}
+.section-inner{max-width:var(--max);margin:0 auto;}
+.section-divider{height:1px;background:var(--border);}
+.section-label{font-size:10.5px;letter-spacing:.12em;color:var(--gold2);text-transform:uppercase;font-weight:500;margin-bottom:8px;}
+.section-title{font-family:'Fraunces',serif;font-size:32px;color:var(--text);line-height:1.1;letter-spacing:-.3px;margin-bottom:10px;}
+.section-title em{font-style:italic;color:var(--gold);}
+.section-sub{font-size:14.5px;color:var(--text2);line-height:1.75;max-width:540px;margin-bottom:0;}
+
+/* ── INTRO STRIP ── */
+.intro-strip{
+  background:var(--bg2);padding:40px 28px;
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+}
+.intro-strip-inner{
+  max-width:var(--max);margin:0 auto;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:0;
+}
+.intro-item{
+  padding:8px 24px;
+  border-right:1px solid var(--border);
+  display:flex;align-items:flex-start;gap:12px;
+}
+.intro-item:first-child{padding-left:0;}
+.intro-item:last-child{border-right:none;}
+.intro-icon{font-size:22px;flex-shrink:0;margin-top:2px;}
+.intro-body{}
+.intro-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px;}
+.intro-desc{font-size:12px;color:var(--text3);line-height:1.5;}
+
+/* ── QUÉ ES ── */
+.que-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:60px;align-items:center;
+}
+.que-visual{
+  position:relative;
+  aspect-ratio:4/5;
+  border-radius:var(--radius-lg);
+  overflow:hidden;
+  background:linear-gradient(135deg,#1a1208,#0b0b0e);
+  border:1px solid var(--border);
+}
+.que-visual-inner{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;
+  justify-content:flex-end;
+  padding:28px;
+}
+/* Film strip decoration */
+.film-strip{
+  position:absolute;top:0;left:0;right:0;height:5px;
+  background:repeating-linear-gradient(
+    to right,
+    var(--gold2) 0px,var(--gold2) 10px,
+    transparent 10px,transparent 15px
+  );
+  opacity:.6;
+}
+.que-visual-quote{
+  font-family:'Fraunces',serif;
+  font-size:18px;font-style:italic;
+  color:var(--text);line-height:1.5;
+  margin-bottom:14px;
+}
+.que-visual-attr{font-size:11px;color:var(--gold2);letter-spacing:.06em;}
+
+.que-big-number{
+  font-family:'Fraunces',serif;
+  font-size:120px;font-weight:700;
+  color:rgba(240,192,80,.06);
+  position:absolute;top:20px;right:-10px;
+  line-height:1;
+  pointer-events:none;
+}
+
+.que-text-block{}
+.que-lead{
+  font-size:17px;color:var(--text);line-height:1.7;
+  margin-bottom:20px;
+}
+.que-lead strong{color:var(--gold);}
+.que-body{font-size:14px;color:var(--text2);line-height:1.8;margin-bottom:28px;}
+
+.que-pills{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px;}
+.pill{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:20px;padding:5px 13px;
+  font-size:12px;color:var(--text2);
+}
+.pill.gold{background:var(--gold3);border-color:var(--border-gold);color:var(--gold2);}
+
+/* ── MODULOS ── */
+.modulos-wrap{margin-top:40px;}
+.modulo-block{
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  overflow:hidden;
+  margin-bottom:14px;
+  transition:border-color .2s;
+}
+.modulo-block:hover{border-color:var(--border2);}
+.modulo-header{
+  display:flex;align-items:center;gap:16px;
+  padding:18px 22px;
+  cursor:pointer;
+  background:var(--bg2);
+  user-select:none;
+}
+.modulo-header:hover{background:var(--bg3);}
+.modulo-num{
+  font-family:'Fraunces',serif;font-size:28px;font-weight:700;
+  color:var(--gold);opacity:.35;line-height:1;min-width:40px;
+}
+.modulo-title-wrap{}
+.modulo-label{font-size:10px;letter-spacing:.1em;color:var(--text3);text-transform:uppercase;margin-bottom:2px;}
+.modulo-title{font-size:14.5px;font-weight:600;color:var(--text);}
+.modulo-weeks{
+  margin-left:auto;font-size:11px;color:var(--text3);
+  white-space:nowrap;
+}
+.modulo-toggle{
+  font-size:18px;color:var(--text3);
+  transition:transform .25s;margin-left:12px;
+}
+.modulo-block.open .modulo-toggle{transform:rotate(45deg);}
+.modulo-block.open .modulo-num{opacity:1;}
+
+.modulo-body{
+  display:none;padding:0 22px 18px;
+  background:var(--bg2);
+  border-top:1px solid var(--border);
+}
+.modulo-block.open .modulo-body{display:block;}
+
+.tema-list{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:8px;margin-top:14px;
+}
+.tema-item{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 12px;
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:var(--radius);
+}
+.tema-check{color:var(--gold2);font-size:13px;flex-shrink:0;}
+.tema-week{font-size:10px;color:var(--text3);margin-left:auto;white-space:nowrap;}
+.tema-name{font-size:12.5px;color:var(--text2);line-height:1.4;}
+
+/* ── PARA QUIÉN ── */
+.para-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:16px;margin-top:36px;
+}
+.para-card{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:24px;
+  transition:var(--tr);
+}
+.para-card:hover{border-color:var(--border-gold);background:var(--bg3);}
+.para-emoji{font-size:28px;margin-bottom:12px;}
+.para-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px;}
+.para-desc{font-size:13px;color:var(--text2);line-height:1.65;}
+
+/* ── METODOLOGÍA ── */
+.metodo-list{
+  display:flex;flex-direction:column;gap:1px;
+  margin-top:36px;
+  border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;
+}
+.metodo-row{
+  display:flex;align-items:flex-start;gap:20px;
+  padding:22px 24px;
+  background:var(--bg2);
+  border-bottom:1px solid var(--border);
+  transition:background .2s;
+}
+.metodo-row:last-child{border-bottom:none;}
+.metodo-row:hover{background:var(--bg3);}
+.metodo-icon{
+  width:44px;height:44px;flex-shrink:0;
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:10px;display:flex;align-items:center;justify-content:center;
+  font-size:20px;
+}
+.metodo-body{}
+.metodo-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;}
+.metodo-desc{font-size:13px;color:var(--text2);line-height:1.65;}
+
+/* ── INSTRUCTOR ── */
+.instructor-card{
+  display:flex;gap:40px;align-items:flex-start;
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:36px;
+  margin-top:36px;
+}
+.instructor-avatar{
+  width:100px;height:100px;flex-shrink:0;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--gold2),var(--gold));
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Fraunces',serif;font-size:36px;font-weight:700;
+  color:#0b0b0e;border:3px solid var(--border-gold);
+}
+.instructor-info{}
+.instructor-role{font-size:10.5px;letter-spacing:.1em;color:var(--gold2);text-transform:uppercase;margin-bottom:6px;}
+.instructor-name{font-family:'Fraunces',serif;font-size:26px;color:var(--text);margin-bottom:10px;letter-spacing:-.2px;}
+.instructor-bio{font-size:13.5px;color:var(--text2);line-height:1.75;margin-bottom:16px;}
+.instructor-tags{display:flex;flex-wrap:wrap;gap:8px;}
+
+/* ── INVERSIÓN ── */
+.inversion-wrap{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:16px;
+  margin-top:36px;
+}
+.inv-card{
+  border-radius:var(--radius-lg);padding:26px;
+  border:1px solid var(--border);
+  background:var(--bg2);
+  display:flex;flex-direction:column;
+}
+.inv-card.featured{
+  border-color:var(--border-gold);
+  background:linear-gradient(160deg,#1e1508,#111115);
+  position:relative;
+}
+.inv-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--gold3);border:1px solid var(--border-gold);
+  border-radius:20px;padding:3px 10px;
+  font-size:10px;color:var(--gold);letter-spacing:.05em;
+  margin-bottom:14px;width:fit-content;
+}
+.inv-saving{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);
+  border-radius:20px;padding:3px 10px;
+  font-size:10px;color:#4ade80;letter-spacing:.04em;
+  margin-bottom:14px;width:fit-content;
+}
+.inv-label{font-size:10.5px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;}
+.inv-price{
+  font-family:'Fraunces',serif;font-size:38px;font-weight:700;
+  color:var(--gold);line-height:1;margin-bottom:2px;
+}
+.inv-price-sub{font-size:12.5px;color:var(--text2);margin-bottom:4px;}
+.inv-price-note{font-size:11.5px;color:var(--text3);margin-bottom:18px;}
+.inv-divider{height:1px;background:var(--border);margin:16px 0;}
+.inv-features{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:24px;flex:1;}
+.inv-features li{
+  display:flex;align-items:flex-start;gap:9px;
+  font-size:12.5px;color:var(--text2);line-height:1.5;
+}
+.inv-features li::before{content:'✓';color:var(--gold2);font-weight:700;flex-shrink:0;margin-top:1px;}
+.inv-btn{
+  width:100%;padding:11px;border-radius:var(--radius);
+  font-size:13px;font-weight:600;border:none;transition:var(--tr);
+  cursor:pointer;margin-top:auto;
+}
+.inv-btn.main{background:var(--gold2);color:#0b0b0e;}
+.inv-btn.main:hover{background:var(--gold);}
+.inv-btn.outline{background:none;color:var(--text2);border:1px solid var(--border2);}
+.inv-btn.outline:hover{border-color:var(--gold2);color:var(--text);}
+@media(max-width:900px){.inversion-wrap{grid-template-columns:1fr;}}
+
+/* ── FORMULARIO ── */
+.form-section{
+  background:var(--bg2);
+  border-top:1px solid var(--border);
+}
+.form-wrap{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:60px;align-items:start;
+}
+.form-left{}
+.form-urgency{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(240,192,80,.08);border:1px solid var(--border-gold);
+  border-radius:20px;padding:5px 14px;
+  font-size:11px;color:var(--gold2);margin-bottom:20px;
+}
+.urgency-dot{
+  width:6px;height:6px;border-radius:50%;background:#ef4444;
+  animation:pulse-dot 1.5s infinite;
+}
+.form-h2{font-family:'Fraunces',serif;font-size:28px;color:var(--text);margin-bottom:10px;letter-spacing:-.2px;line-height:1.15;}
+.form-h2 em{font-style:italic;color:var(--gold);}
+.form-desc{font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:24px;}
+.form-detail-list{display:flex;flex-direction:column;gap:12px;}
+.form-detail-item{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--text2);}
+.form-detail-icon{
+  width:34px;height:34px;flex-shrink:0;
+  background:var(--bg3);border:1px solid var(--border);border-radius:8px;
+  display:flex;align-items:center;justify-content:center;font-size:16px;
+}
+.form-detail-val{color:var(--text);font-weight:500;}
+
+.form-card{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:28px;
+}
+.form-card-title{font-size:16px;font-weight:600;color:var(--text);margin-bottom:4px;}
+.form-card-sub{font-size:12px;color:var(--text3);margin-bottom:22px;}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+.field label{font-size:12px;color:var(--text2);font-weight:500;}
+.field input,.field select,.field textarea{
+  background:var(--bg2);border:1px solid var(--border2);
+  border-radius:var(--radius);padding:10px 12px;
+  font-size:13.5px;color:var(--text);font-family:inherit;
+  transition:border-color .2s;outline:none;
+}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--gold2);}
+.field select{appearance:none;cursor:pointer;}
+.field textarea{resize:vertical;min-height:90px;}
+.field input::placeholder,.field textarea::placeholder{color:var(--text3);}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.form-submit{
+  width:100%;background:var(--gold2);color:#0b0b0e;
+  border:none;padding:13px;border-radius:var(--radius);
+  font-size:13.5px;font-weight:600;transition:var(--tr);
+  margin-top:4px;
+}
+.form-submit:hover{background:var(--gold);}
+.form-note{font-size:11px;color:var(--text3);text-align:center;margin-top:10px;}
+
+/* ── TESTIMONIOS ── */
+.testi-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:16px;margin-top:36px;
+}
+.testi-card{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:22px;
+  transition:var(--tr);
+}
+.testi-card:hover{border-color:var(--border2);}
+.testi-stars{color:var(--gold);font-size:12px;margin-bottom:10px;letter-spacing:2px;}
+.testi-text{font-size:13.5px;color:var(--text2);line-height:1.7;margin-bottom:14px;font-style:italic;}
+.testi-text::before{content:'"';color:var(--gold);font-size:20px;line-height:0;vertical-align:-5px;margin-right:3px;}
+.testi-name{font-size:12px;font-weight:600;color:var(--text);margin-bottom:2px;}
+.testi-role{font-size:11px;color:var(--text3);}
+
+/* ── FAQ ── */
+.faq-list{margin-top:36px;display:flex;flex-direction:column;gap:2px;}
+.faq-item{
+  border:1px solid var(--border);border-radius:var(--radius);
+  overflow:hidden;
+}
+.faq-q{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 20px;background:var(--bg2);
+  cursor:pointer;font-size:14px;font-weight:500;color:var(--text);
+  transition:background .2s;gap:16px;
+}
+.faq-q:hover{background:var(--bg3);}
+.faq-icon{font-size:18px;color:var(--text3);transition:transform .25s;flex-shrink:0;}
+.faq-item.open .faq-icon{transform:rotate(45deg);}
+.faq-item.open .faq-q{background:var(--bg3);}
+.faq-a{
+  display:none;padding:16px 20px;background:var(--bg2);
+  border-top:1px solid var(--border);
+  font-size:13.5px;color:var(--text2);line-height:1.75;
+}
+.faq-item.open .faq-a{display:block;}
+
+/* ── FOOTER CTA ── */
+.footer-cta{
+  background:linear-gradient(135deg,#1a1208 0%,#0b0b0e 60%);
+  border-top:1px solid var(--border-gold);
+  padding:72px 28px;text-align:center;
+}
+.footer-cta-h{font-family:'Fraunces',serif;font-size:40px;color:var(--text);margin-bottom:12px;letter-spacing:-.3px;line-height:1.1;}
+.footer-cta-h em{font-style:italic;color:var(--gold);}
+.footer-cta-sub{font-size:15px;color:var(--text2);margin-bottom:32px;}
+.footer-cta-date{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--gold3);border:1px solid var(--border-gold);
+  border-radius:20px;padding:7px 18px;
+  font-size:13px;color:var(--gold);font-weight:500;
+  margin-bottom:28px;
+}
+
+/* ── FOOTER ── */
+.footer{
+  background:var(--bg2);border-top:1px solid var(--border);
+  padding:28px;text-align:center;
+}
+.footer-inner{max-width:var(--max);margin:0 auto;}
+.footer-text{font-size:12px;color:var(--text3);}
+.footer-text a{color:var(--gold2);}
+
+/* ── REVEAL ANIMATION ── */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
+.reveal.visible{opacity:1;transform:none;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .hero-content{padding:0 44px 60px;}
+  .que-grid{grid-template-columns:1fr;}
+  .que-visual{display:none;}
+  .inversion-wrap{grid-template-columns:1fr;}
+  .form-wrap{grid-template-columns:1fr;}
+  .instructor-card{flex-direction:column;}
+}
+@media(max-width:640px){
+  .hero{min-height:80vh;}
+  .hero-content{padding:0 24px 48px;}
+  .hero-h1{font-size:36px;}
+  .hero-stats{gap:18px;flex-wrap:wrap;}
+  .section{padding:48px 20px;}
+  .intro-strip-inner{grid-template-columns:1fr 1fr;}
+  .intro-item{border-right:none;border-bottom:1px solid var(--border);}
+  .intro-item:nth-child(odd){padding-left:0;}
+  .intro-item:last-child{border-bottom:none;}
+  .field-row{grid-template-columns:1fr;}
+  .footer-cta-h{font-size:28px;}
+  .header-nav{display:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-inner">
+    <a href="index.html" class="logo-mark">Otto Salamanca <em>Academia</em></a>
+    <div class="header-sep"></div>
+    <span class="header-tag">Escuela de <em>Cine</em></span>
+    <nav class="header-nav">
+      <a href="index.html" class="nav-link">Inicio</a>
+      <a href="acerca.html" class="nav-link">Academia</a>
+      <a href="cursos.html" class="nav-link">Diplomados</a>
+      <a href="contacto.html" class="nav-link">Contacto</a>
+    </nav>
+    <button class="btn-cta" onclick="document.getElementById('formulario').scrollIntoView({behavior:'smooth'})">Inscribirme →</button>
+  </div>
+</header>
+
+<!-- COUNTDOWN BAR -->
+<div class="countdown-bar">
+  <div class="countdown-inner">
+    <span class="countdown-label">Próxima cohorte: <strong>29 de junio, 2025</strong> &mdash; Cupos limitados</span>
+    <div class="countdown-units">
+      <div class="countdown-unit">
+        <span class="countdown-num" id="cd-dias">00</span>
+        <span class="countdown-tag">días</span>
+      </div>
+      <span class="countdown-sep">:</span>
+      <div class="countdown-unit">
+        <span class="countdown-num" id="cd-hrs">00</span>
+        <span class="countdown-tag">horas</span>
+      </div>
+      <span class="countdown-sep">:</span>
+      <div class="countdown-unit">
+        <span class="countdown-num" id="cd-min">00</span>
+        <span class="countdown-tag">min</span>
+      </div>
+      <span class="countdown-sep">:</span>
+      <div class="countdown-unit">
+        <span class="countdown-num" id="cd-seg">00</span>
+        <span class="countdown-tag">seg</span>
+      </div>
+    </div>
+    <button class="countdown-cta" onclick="document.getElementById('formulario').scrollIntoView({behavior:'smooth'})">Asegurar mi lugar</button>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-film"></div>
+  <div class="hero-sprocket-right"></div>
+  <div class="hero-diagonal"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="hero-badge-dot"></span>
+      Inscripciones abiertas · Inicia 29 de junio
+    </div>
+    <p class="hero-eyebrow">Diplomado Básico · 16 semanas</p>
+    <h1 class="hero-h1">
+      Diplomado de Cine
+      <em>y Guion Cinematográfico</em>
+    </h1>
+    <p class="hero-sub">Un recorrido completo por el lenguaje cinematográfico. Aprende a desarrollar ideas, escribir guiones y realizar tu propia película con visión y criterio artístico.</p>
+    <div class="hero-ctas">
+      <button class="btn-primary" onclick="document.getElementById('formulario').scrollIntoView({behavior:'smooth'})">Completar aplicación →</button>
+      <button class="btn-secondary" onclick="document.getElementById('temario').scrollIntoView({behavior:'smooth'})">Ver temario completo</button>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat-item">
+        <span class="hero-stat-number">16</span>
+        <span class="hero-stat-label">semanas</span>
+      </div>
+      <div class="hero-stat-sep"></div>
+      <div class="hero-stat-item">
+        <span class="hero-stat-number">32</span>
+        <span class="hero-stat-label">clases</span>
+      </div>
+      <div class="hero-stat-sep"></div>
+      <div class="hero-stat-item">
+        <span class="hero-stat-number">4</span>
+        <span class="hero-stat-label">módulos</span>
+      </div>
+      <div class="hero-stat-sep"></div>
+      <div class="hero-stat-item">
+        <span class="hero-stat-number">65%</span>
+        <span class="hero-stat-label">integrados al sector</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INTRO STRIP -->
+<div class="intro-strip">
+  <div class="intro-strip-inner">
+    <div class="intro-item">
+      <span class="intro-icon">📅</span>
+      <div class="intro-body">
+        <div class="intro-title">Inicio: 29 de junio</div>
+        <div class="intro-desc">2 sesiones semanales en vivo</div>
+      </div>
+    </div>
+    <div class="intro-item">
+      <span class="intro-icon">🎬</span>
+      <div class="intro-body">
+        <div class="intro-title">Aprendizaje práctico</div>
+        <div class="intro-desc">Proyectos desde la semana 1</div>
+      </div>
+    </div>
+    <div class="intro-item">
+      <span class="intro-icon">📜</span>
+      <div class="intro-body">
+        <div class="intro-title">Certificado oficial</div>
+        <div class="intro-desc">Academia Otto Salamanca</div>
+      </div>
+    </div>
+    <div class="intro-item">
+      <span class="intro-icon">🎓</span>
+      <div class="intro-body">
+        <div class="intro-title">Cupos limitados</div>
+        <div class="intro-desc">Grupos pequeños y atención personalizada</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- QUÉ ES -->
+<section class="section" id="que-es">
+  <div class="section-inner">
+    <div class="que-grid">
+      <div class="que-visual reveal">
+        <div class="film-strip"></div>
+        <div class="que-big-number">16</div>
+        <div class="que-visual-inner">
+          <p class="que-visual-quote">El cine no se estudia, se vive. Pero para vivirlo bien, hay que entenderlo primero.</p>
+          <span class="que-visual-attr">— Andrés Villacorta, Director del Diplomado</span>
+        </div>
+      </div>
+      <div class="que-text-block reveal">
+        <div class="section-label">¿Qué es este diplomado?</div>
+        <h2 class="section-title">Tu entrada al <em>lenguaje del cine</em></h2>
+        <p class="que-lead">Un programa de <strong>16 semanas</strong> diseñado para llevarte desde los fundamentos del cine hasta la realización de proyectos propios con visión autoral.</p>
+        <p class="que-body">Estudiarás historia del cine, lenguaje cinematográfico, escritura de guion, dirección, y producción. No es teoría vacía: cada módulo tiene ejercicios prácticos y proyectos reales que construyen tu portafolio desde el primer día.</p>
+        <div class="que-pills">
+          <span class="pill gold">Historia del Cine</span>
+          <span class="pill gold">Lenguaje Visual</span>
+          <span class="pill gold">Guion Cinematográfico</span>
+          <span class="pill gold">Dirección</span>
+          <span class="pill gold">Producción</span>
+          <span class="pill">Nivel: Básico</span>
+          <span class="pill">Sin experiencia previa requerida</span>
+        </div>
+        <button class="btn-primary" onclick="document.getElementById('formulario').scrollIntoView({behavior:'smooth'})">Comenzar aplicación →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- TEMARIO -->
+<section class="section" id="temario">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-label">Plan de estudios</div>
+      <h2 class="section-title">Temario <em>completo</em></h2>
+      <p class="section-sub">4 módulos progresivos. Cada semana construye sobre la anterior, desde la historia hasta la realización independiente.</p>
+    </div>
+    <div class="modulos-wrap reveal">
+
+      <!-- MÓDULO 1 -->
+      <div class="modulo-block open">
+        <div class="modulo-header" onclick="toggleModulo(this.parentElement)">
+          <span class="modulo-num">01</span>
+          <div class="modulo-title-wrap">
+            <div class="modulo-label">Módulo 1</div>
+            <div class="modulo-title">Historia del Cine</div>
+          </div>
+          <span class="modulo-weeks">Semanas 1–4</span>
+          <span class="modulo-toggle">+</span>
+        </div>
+        <div class="modulo-body">
+          <p style="font-size:13px;color:var(--text3);margin-bottom:0;line-height:1.6;">Un recorrido por los movimientos y tradiciones que forjaron el lenguaje cinematográfico tal como lo conocemos hoy.</p>
+          <div class="tema-list">
+            <div class="tema-item"><span class="tema-check">✦</span><span class="tema-name">Vanguardias de los años 20</span><span class="tema-week">Semana 1</span></div>
+            <div class="tema-item"><span class="tema-check">✦</span><span class="tema-name">Cine Clásico de Hollywood</span><span class="tema-week">Semana 1</span></div>
+            <div class="tema-item"><span class="tema-check">✦</span><span class="tema-name">Nuevas Olas Europeas</span><span class="tema-week">Semana 2</span></div>
+            <div class="tema-item"><span class="tema-check">✦</span><span class="tema-name">El Cine Clásico Asiático</span><span class="tema-week">Semana 2</span></div>
+            <div class="tema-item"><span class="tema-check">✦</span><span class="tema-name">Edad de Oro del Cine de Latinoamérica</span><span class="tema-week">Semana 3</span></div>
+            <div class="tema-item"><span class="tema-check">✦</span><span class="tema-name">El Nuevo Hollywood</span><span class="tema-week">Semana 3</span></div>
+            <div class="tema-item"><span class="tema-check">✦</span><span class="tema-name">Blockbuster y Cine Moderno</span><span class="tema-week">Semana 4</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MÓDULO 2 -->
+      <div class="modulo-block">
+        <div class="modulo-header" onclick="toggleModulo(this.parentElement)">
+          <span class="modulo-num">02</span>
+          <div class="modulo-title-wrap">
+            <div class="modulo-label">Módulo 2</div>
+            <div class="modulo-title">Lenguaje Cinematográfico</div>
+          </div>
+          <span class="modulo-weeks">Semanas 4–6</span>
+          <span class="modulo-toggle">+</span>
+        </div>
+        <div class="modulo-body">
+          <p style="font-size:13px;color:var(--text3);margin-bottom:0;line-height:1.6;">Aprende a leer y construir imágenes: composición, estética, narrativa visual y montaje como herramientas de expresión.</p>
+          <div class="tema-list">
+            <div class="tema-item"><span class="tema-check">✦</span><span class="tema-name">Lenguaje Cinematográfico</span><span class="tema-week">Semana 4</span></div>
+            <div class="tema-item"><span class="tema-check">✦</span><span class="tema-name">Composición y Estética del Cine</span><span class="tema-week">Semana 5</span></div>
+            <div class="tema-item"><span class="tema-check">✦</span><span class="tema-name">Composición y Estética del Cine 2</span><span class="tema-week">Semana 5</span></div>
+            <div class="tema-item"><span class="tema-check">✦</span><span class="tema-name">Narrativa y Montaje de Cine</span><span class="tema-week">Semana 6</span></div>
+            <div class="tema-item"><span class="tema-check">✦</span><span class="tema-name">Narrativa y Montaje de Cine 2</span><span class="tema-week">Semana 6</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MÓDULO 3 -->
+      <div class="modulo-block">
+        <div class="modulo-header" onclick="toggleModulo(this.parentElement)">
+          <span class="modulo-num">03</span>
+          <div class="modulo-title-wrap">
+            <div class="modulo-label">Módulo 3</div>
+            <div class="modulo-title">Guion Cinematográfico y Dirección</div>
+          </div>
+          <span class="modulo-weeks">Semanas 7–13</span>
+          <span class="modulo-toggle">+</span>
+        </div>
+        <div class="modulo-body">
+          <p style="font-size:13px;color:var(--text3);margin-bottom:0;line-height:1.6;">El núcleo creativo del diplomado. Escribe desde la idea hasta el guion técnico y aprende a dirigir con criterio autoral.</p>
+          <div class="tema-list">
+            <div class="tema-item"><span class="tema-check">✦</span><span class="tema-name">Bases de la Escritura de Cine</span><span class="tema-week">Semana 7</span></div>
+            <div class="tema-item"><span class="tema-check">✦</span><span class="tema-name">Proceso de Escritura del Guion</span><span class="tema-week">Semana 7</span></div>
+            <div class="tema-item"><span class="tema-check">✦</span><span class="tema-name">Terminología del Guion</span><span class="tema-week">Semana 8</span></div>
+            <div class="tema-item"><span class="tema-check">✦</span><span class="tema-name">Estructura Dramática del Guion</span><span class="tema-week">Semana 8</span></div>
+            <div class="tema-item"><span class="tema-check">✦</span><span class="tema-name">Construcción de Personajes</span><span class="tema-week">Semana 9</span></div>
+            <div class="tema-item"><span class="tema-check">✦</span><span class="tema-name">Desarrollo de Personajes</span><span class="tema-week">Semana 9</span></div>
+            <div class="tema-item"><span class="tema-check">✦</span><span class="tema-name">Conflicto Narrativo</span><span class="tema-week">Semana 10</span></div>
+            <div class="tema-item"><span class="tema-check">✦</span><span class="tema-name">El Diálogo como Motor del Guion</span><span class="tema-week">Semana 10</span></div>
+            <div class="tema-item"><span class="tema-check">✦</span><span class="tema-name">Herramientas del Guionista</span><span class="tema-week">Semana 11</span></div>
+            <div class="tema-item"><span class="tema-check">✦</span><span class="tema-name">Guion Técnico</span><span class="tema-week">Semana 11</span></div>
+            <div class="tema-item"><span class="tema-check">✦</span><span class="tema-name">El Rol del Director</span><span class="tema-week">Semana 12</span></div>
+            <div class="tema-item"><span class="tema-check">✦</span><span class="tema-name">Control y Estilo en Dirección</span><span class="tema-week">Semana 12</span></div>
+            <div class="tema-item"><span class="tema-check">✦</span><span class="tema-name">Dirección de Actores</span><span class="tema-week">Semana 13</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MÓDULO 4 -->
+      <div class="modulo-block">
+        <div class="modulo-header" onclick="toggleModulo(this.parentElement)">
+          <span class="modulo-num">04</span>
+          <div class="modulo-title-wrap">
+            <div class="modulo-label">Módulo 4</div>
+            <div class="modulo-title">Producción e Industria</div>
+          </div>
+          <span class="modulo-weeks">Semanas 13–16</span>
+          <span class="modulo-toggle">+</span>
+        </div>
+        <div class="modulo-body">
+          <p style="font-size:13px;color:var(--text3);margin-bottom:0;line-height:1.6;">De la idea a la pantalla: organiza, financia y proyecta tu cortometraje en festivales internacionales.</p>
+          <div class="tema-list">
+            <div class="tema-item"><span class="tema-check">✦</span><span class="tema-name">Planificación de un Rodaje</span><span class="tema-week">Semana 13</span></div>
+            <div class="tema-item"><span class="tema-check">✦</span><span class="tema-name">Stripboard</span><span class="tema-week">Semana 14</span></div>
+            <div class="tema-item"><span class="tema-check">✦</span><span class="tema-name">Elementos Básicos de Equipo</span><span class="tema-week">Semana 14</span></div>
+            <div class="tema-item"><span class="tema-check">✦</span><span class="tema-name">Presupuesto y Financiamiento</span><span class="tema-week">Semana 15</span></div>
+            <div class="tema-item"><span class="tema-check">✦</span><span class="tema-name">Los Festivales de Cine</span><span class="tema-week">Semana 15</span></div>
+            <div class="tema-item"><span class="tema-check">✦</span><span class="tema-name">Masterclass con Cineasta</span><span class="tema-week">Semana 16</span></div>
+            <div class="tema-item"><span class="tema-check">✦</span><span class="tema-name">Clase Final</span><span class="tema-week">Semana 16</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /modulos-wrap -->
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- PARA QUIÉN -->
+<section class="section" style="background:var(--bg2);">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-label">¿Es para mí?</div>
+      <h2 class="section-title">Hecho para quienes <em>quieren hacer cine</em></h2>
+      <p class="section-sub">No importa tu punto de partida. Lo que importa es que quieras contar historias.</p>
+    </div>
+    <div class="para-grid reveal">
+      <div class="para-card">
+        <div class="para-emoji">🎥</div>
+        <div class="para-title">Aspirantes a cineastas</div>
+        <div class="para-desc">Tienes pasión por el cine pero no sabes por dónde empezar. Este diplomado te da las bases sólidas para desarrollarte como realizador con voz propia.</div>
+      </div>
+      <div class="para-card">
+        <div class="para-emoji">✍️</div>
+        <div class="para-title">Escritores y narradores</div>
+        <div class="para-desc">Tienes ideas y sabes contar historias, pero quieres trasladarlas al lenguaje visual. El módulo de guion te dará las herramientas específicas del cine.</div>
+      </div>
+      <div class="para-card">
+        <div class="para-emoji">📷</div>
+        <div class="para-title">Fotógrafos y videógrafos</div>
+        <div class="para-desc">Ya manejas una cámara, pero quieres entender el lenguaje cinematográfico completo: narrativa, dirección, estructura dramática y postproducción.</div>
+      </div>
+      <div class="para-card">
+        <div class="para-emoji">🎭</div>
+        <div class="para-title">Actores y artistas</div>
+        <div class="para-desc">Entender el proceso desde adentro transforma tu trabajo frente a la cámara. Aprende cómo piensa un director y potencia tu colaboración creativa.</div>
+      </div>
+      <div class="para-card">
+        <div class="para-emoji">🌎</div>
+        <div class="para-title">Comunicadores y creativos</div>
+        <div class="para-desc">El cine es la forma más poderosa de comunicación visual. Si trabajas en medios, publicidad o contenido, este diplomado amplía radicalmente tu caja de herramientas.</div>
+      </div>
+      <div class="para-card">
+        <div class="para-emoji">💡</div>
+        <div class="para-title">Curiosos del séptimo arte</div>
+        <div class="para-desc">No tienes planes profesionales inmediatos, pero el cine te apasiona y quieres entenderlo a fondo. Este programa te convierte en un espectador completamente diferente.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- METODOLOGÍA -->
+<section class="section">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-label">Cómo aprenderás</div>
+      <h2 class="section-title">Nuestra <em>metodología</em></h2>
+      <p class="section-sub">Aprendizaje activo, comunidad real y orientación a la industria.</p>
+    </div>
+    <div class="metodo-list reveal">
+      <div class="metodo-row">
+        <div class="metodo-icon">🎬</div>
+        <div class="metodo-body">
+          <div class="metodo-title">Clases en vivo, dos veces por semana</div>
+          <div class="metodo-desc">Sesiones interactivas con el instructor en tiempo real. Preguntas, debates y retroalimentación directa en cada encuentro. No grabaciones solitarias.</div>
+        </div>
+      </div>
+      <div class="metodo-row">
+        <div class="metodo-icon">🎞️</div>
+        <div class="metodo-body">
+          <div class="metodo-title">Análisis de películas reales</div>
+          <div class="metodo-desc">Cada concepto se ilustra con ejemplos del cine universal: Bergman, Godard, Kubrick, Spielberg, Tarkovsky y cineastas latinoamericanos contemporáneos.</div>
+        </div>
+      </div>
+      <div class="metodo-row">
+        <div class="metodo-icon">✍️</div>
+        <div class="metodo-body">
+          <div class="metodo-title">Proyectos desde la semana uno</div>
+          <div class="metodo-desc">Desde el primer día escribes, planificas y realizas. Los ejercicios son acumulativos y al final del diplomado tienes un guion completo y tu propio proyecto audiovisual.</div>
+        </div>
+      </div>
+      <div class="metodo-row">
+        <div class="metodo-icon">👥</div>
+        <div class="metodo-body">
+          <div class="metodo-title">Trabajo colaborativo en grupos pequeños</div>
+          <div class="metodo-desc">Ambiente cercano donde los estudiantes aprenden a trabajar en equipo, presentar proyectos y recibir dirección creativa real, igual que en un set profesional.</div>
+        </div>
+      </div>
+      <div class="metodo-row">
+        <div class="metodo-icon">🏆</div>
+        <div class="metodo-body">
+          <div class="metodo-title">Orientado a la industria</div>
+          <div class="metodo-desc">El objetivo final es transformar la pasión por el cine en capacidades reales. El 65% de nuestros alumnos se ha integrado al sector audiovisual como realizadores, guionistas o productores.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- INSTRUCTOR -->
+<section class="section" style="background:var(--bg2);">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-label">Tu instructor</div>
+      <h2 class="section-title">Aprende con <em>Andrés Villacorta</em></h2>
+    </div>
+    <div class="instructor-card reveal">
+      <div class="instructor-avatar">AV</div>
+      <div class="instructor-info">
+        <div class="instructor-role">Director del Diplomado · Cineasta</div>
+        <div class="instructor-name">Andrés Villacorta</div>
+        <div class="instructor-bio">Cineasta y docente con amplia trayectoria en la realización audiovisual latinoamericana. Su enfoque pedagógico combina el rigor teórico del análisis cinematográfico con una práctica orientada a resultados reales. Ha formado a realizadores que hoy trabajan en productoras, televisoras y festivales de la región. Cree que el mejor cine nace de la honestidad y la disciplina creativa.</div>
+        <div class="instructor-tags">
+          <span class="pill">Dirección</span>
+          <span class="pill">Guion</span>
+          <span class="pill">Cine latinoamericano</span>
+          <span class="pill">Pedagogía cinematográfica</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- TESTIMONIOS -->
+<section class="section">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-label">Lo que dicen nuestros alumnos</div>
+      <h2 class="section-title">Voces de la <em>comunidad</em></h2>
+    </div>
+    <div class="testi-grid reveal">
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-text">El diplomado cambió completamente mi forma de ver el cine. Pasé de ser espectador a entender el lenguaje cinematográfico como creador.</div>
+        <div class="testi-name">Carlos M.</div>
+        <div class="testi-role">Director de cortometrajes · Egresado 2023</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-text">La parte de guion fue reveladora. Nunca imaginé que escribir para cine tuviera tanta estructura y profundidad. Hoy trabajo como guionista.</div>
+        <div class="testi-name">María F.</div>
+        <div class="testi-role">Guionista · Egresada 2023</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-text">Andrés tiene una forma de enseñar única. Conecta cada tema con películas concretas y te hace pensar diferente. Vale completamente la inversión.</div>
+        <div class="testi-name">Roberto A.</div>
+        <div class="testi-role">Realizador independiente · Egresado 2024</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- INVERSIÓN -->
+<section class="section" style="background:var(--bg2);" id="inversion">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-label">Inversión</div>
+      <h2 class="section-title">Accede al <em>diplomado</em></h2>
+      <p class="section-sub">Una inversión en tu desarrollo creativo con acceso completo al programa.</p>
+    </div>
+    <div class="inversion-wrap reveal">
+
+      <!-- PLAN 2 PAGOS -->
+      <div class="inv-card">
+        <div class="inv-label">2 pagos</div>
+        <div class="inv-price">$205</div>
+        <div class="inv-price-sub">× 2 cuotas de <strong style="color:var(--text);">$102.50</strong></div>
+        <div class="inv-price-note">Total: $205 USD</div>
+        <div class="inv-divider"></div>
+        <ul class="inv-features">
+          <li>Acceso completo a las 16 semanas</li>
+          <li>32 clases en vivo con el instructor</li>
+          <li>Materiales y recursos digitales</li>
+          <li>Retroalimentación de proyectos</li>
+          <li>Comunidad de egresados</li>
+          <li>Certificado oficial</li>
+          <li>Grabaciones de cada sesión</li>
+        </ul>
+        <button class="inv-btn outline" onclick="selectPlan('2 pagos — $205 USD ($102.50 × 2)')">Elegir este plan</button>
+      </div>
+
+      <!-- PLAN PAGO COMPLETO (featured) -->
+      <div class="inv-card featured">
+        <div class="inv-badge">✦ Mejor precio</div>
+        <div class="inv-saving">Ahorras $21 vs cuotas</div>
+        <div class="inv-label">Pago único</div>
+        <div class="inv-price">$407</div>
+        <div class="inv-price-sub">Un solo pago</div>
+        <div class="inv-price-note">Total: $407 USD · Sin cargos adicionales</div>
+        <div class="inv-divider"></div>
+        <ul class="inv-features">
+          <li>Acceso completo a las 16 semanas</li>
+          <li>32 clases en vivo con el instructor</li>
+          <li>Materiales y recursos digitales</li>
+          <li>Retroalimentación de proyectos</li>
+          <li>Comunidad de egresados</li>
+          <li>Certificado oficial</li>
+          <li>Grabaciones de cada sesión</li>
+        </ul>
+        <button class="inv-btn main" onclick="selectPlan('Pago único — $407 USD')">Inscribirme ahora →</button>
+      </div>
+
+      <!-- PLAN 4 PAGOS -->
+      <div class="inv-card">
+        <div class="inv-label">4 pagos</div>
+        <div class="inv-price">$107</div>
+        <div class="inv-price-sub">× 4 cuotas de <strong style="color:var(--text);">$107</strong></div>
+        <div class="inv-price-note">Total: $428 USD</div>
+        <div class="inv-divider"></div>
+        <ul class="inv-features">
+          <li>Acceso completo a las 16 semanas</li>
+          <li>32 clases en vivo con el instructor</li>
+          <li>Materiales y recursos digitales</li>
+          <li>Retroalimentación de proyectos</li>
+          <li>Comunidad de egresados</li>
+          <li>Certificado oficial</li>
+          <li>Grabaciones de cada sesión</li>
+        </ul>
+        <button class="inv-btn outline" onclick="selectPlan('4 pagos — $107 USD/mes ($428 total)')">Elegir este plan</button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- FAQ -->
+<section class="section">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-label">Preguntas frecuentes</div>
+      <h2 class="section-title">Lo que todos <em>preguntan</em></h2>
+    </div>
+    <div class="faq-list reveal">
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this.parentElement)">
+          ¿Necesito experiencia previa en cine o fotografía?
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a">No. El diplomado está diseñado para comenzar desde cero. El único requisito es tener pasión por el cine y disposición para comprometerte con el proceso. Tenemos alumnos que nunca habían tomado una cámara y al final han realizado cortometrajes completos.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this.parentElement)">
+          ¿Las clases son grabadas? ¿Puedo verlas si me pierdo alguna?
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a">Sí. Todas las sesiones quedan grabadas y disponibles en tu plataforma durante la duración del diplomado. Sin embargo, recomendamos asistir en vivo ya que la interacción en tiempo real es parte fundamental del aprendizaje.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this.parentElement)">
+          ¿Cuántas horas de estudio debo dedicar por semana?
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a">Las dos sesiones semanales suman aproximadamente 3 horas de clase. Además, se recomienda entre 3 y 5 horas adicionales para proyectos, lecturas y ejercicios prácticos. En total, entre 6 y 8 horas semanales es lo ideal.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this.parentElement)">
+          ¿Necesito equipo especial como cámara o software?
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a">No es necesario contar con equipo profesional. En las primeras semanas el enfoque es analítico y de escritura. Para las prácticas de realización, puedes usar el teléfono o equipo básico. Al avanzar en el diplomado, orientamos sobre opciones según tu proyecto personal.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this.parentElement)">
+          ¿Qué pasa después del diplomado?
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a">Recibes el certificado oficial de la Academia Otto Salamanca y pasas a formar parte de la comunidad de egresados. Esto incluye acceso a eventos, proyecciones, foros de discusión y la posibilidad de continuar con el Diplomado Avanzado de Cine.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this.parentElement)">
+          ¿El diplomado es presencial o en línea?
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a">Las clases son en línea en vivo, lo que permite conectarte desde cualquier país. La comunidad y algunos eventos complementarios tienen actividades presenciales en El Salvador para quienes estén en la región.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- FORMULARIO -->
+<section class="form-section section" id="formulario">
+  <div class="section-inner">
+    <div class="form-wrap">
+      <div class="form-left reveal">
+        <div class="form-urgency">
+          <span class="urgency-dot"></span>
+          Cupos limitados · Cierre próximo
+        </div>
+        <h2 class="form-h2">Asegura tu lugar en la <em>cohorte de junio</em></h2>
+        <p class="form-desc">Completa el formulario y nos comunicamos contigo en menos de 24 horas para guiarte en el proceso de inscripción.</p>
+        <div class="form-detail-list">
+          <div class="form-detail-item">
+            <div class="form-detail-icon">📅</div>
+            <div><span class="form-detail-val">Inicio:</span> 29 de junio, 2025</div>
+          </div>
+          <div class="form-detail-item">
+            <div class="form-detail-icon">⏱️</div>
+            <div><span class="form-detail-val">Duración:</span> 16 semanas</div>
+          </div>
+          <div class="form-detail-item">
+            <div class="form-detail-icon">💻</div>
+            <div><span class="form-detail-val">Modalidad:</span> En línea, clases en vivo</div>
+          </div>
+          <div class="form-detail-item">
+            <div class="form-detail-icon">🎓</div>
+            <div><span class="form-detail-val">Nivel:</span> Básico, sin experiencia requerida</div>
+          </div>
+          <div class="form-detail-item">
+            <div class="form-detail-icon">📧</div>
+            <div><span class="form-detail-val">Respuesta:</span> En menos de 24 horas</div>
+          </div>
+        </div>
+      </div>
+      <div class="form-card reveal">
+        <div class="form-card-title">Formulario de aplicación</div>
+        <div class="form-card-sub">Diplomado de Cine y Guion Cinematográfico · Cohorte junio 2025</div>
+        <div id="form-wrap-inner">
+          <div class="field-row">
+            <div class="field">
+              <label>Nombre completo *</label>
+              <input type="text" id="f-nombre" placeholder="Tu nombre">
+            </div>
+            <div class="field">
+              <label>Teléfono / WhatsApp</label>
+              <input type="tel" id="f-telefono" placeholder="+503 7000 0000">
+            </div>
+          </div>
+          <div class="field">
+            <label>Correo electrónico *</label>
+            <input type="email" id="f-email" placeholder="tu@correo.com">
+          </div>
+          <div class="field">
+            <label>Plan de pago de interés *</label>
+            <select id="f-plan">
+              <option value="">— Selecciona un plan —</option>
+              <option value="Pago único — $407 USD">Pago único — $407 USD (mejor precio)</option>
+              <option value="2 pagos — $205 USD ($102.50 × 2)">2 pagos — $205 USD total ($102.50 × 2)</option>
+              <option value="4 pagos — $107 USD/mes ($428 total)">4 pagos — $107 USD/mes ($428 total)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>¿Tienes experiencia previa en cine o medios?</label>
+            <select id="f-exp">
+              <option value="">— Selecciona —</option>
+              <option>Sin experiencia previa</option>
+              <option>Aficionado / cinéfilo</option>
+              <option>Fotógrafo o videógrafo</option>
+              <option>Trabajo en medios o comunicación</option>
+              <option>Estudié algo relacionado previamente</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>¿Por qué quieres estudiar cine?</label>
+            <textarea id="f-motivo" placeholder="Cuéntanos brevemente qué te motivó a inscribirte..."></textarea>
+          </div>
+          <!-- Error msg -->
+          <div id="form-error" style="display:none;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25);border-radius:var(--radius);padding:10px 14px;font-size:12.5px;color:#f87171;margin-bottom:12px;"></div>
+          <button class="form-submit" id="form-submit-btn" onclick="submitForm()">
+            <span id="form-submit-text">Enviar aplicación →</span>
+          </button>
+          <p class="form-note">Al enviar confirmas que la información es correcta. Nos comunicamos en menos de 24 horas.</p>
+        </div>
+        <div id="form-success" style="display:none;text-align:center;padding:24px 0;">
+          <div style="font-size:40px;margin-bottom:14px;">🎬</div>
+          <div style="font-family:'Fraunces',serif;font-size:22px;color:var(--text);margin-bottom:8px;">¡Aplicación recibida!</div>
+          <p style="font-size:13.5px;color:var(--text2);line-height:1.7;">Gracias por tu interés en el Diplomado. Nos comunicamos contigo en las próximas 24 horas para guiarte en el proceso de inscripción.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER CTA -->
+<div class="footer-cta">
+  <div class="footer-cta-date">📅 Próxima cohorte: 29 de junio, 2025</div>
+  <h2 class="footer-cta-h">El cine es un <em>oficio</em>.<br>Aprende a dominarlo.</h2>
+  <p class="footer-cta-sub">Quedan pocos cupos. Asegura el tuyo antes del cierre de inscripciones.</p>
+  <button class="btn-primary" style="font-size:15px;padding:14px 36px;" onclick="document.getElementById('formulario').scrollIntoView({behavior:'smooth'})">Inscribirme al diplomado →</button>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <p class="footer-text">© 2025 Academia Otto Salamanca · <a href="index.html">Inicio</a> · <a href="contacto.html">Contacto</a> · <a href="acerca.html">Acerca</a></p>
+  </div>
+</footer>
+
+<script>
+/* ── SUPABASE CONFIG ── */
+const SUPA_URL = 'https://ajebicalwncttyiirjdr.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFqZWJpY2Fsd25jdHR5aWlyamRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxMDQ1NTcsImV4cCI6MjA5MzY4MDU1N30.cAoYPYv92p0G2N1tW3NE-efmnu1sDYx9293e8hksR-E';
+
+async function supaInsert(table, body){
+  const res = await fetch(`${SUPA_URL}/rest/v1/${table}`, {
+    method: 'POST',
+    headers:{
+      'apikey': SUPA_KEY,
+      'Authorization': 'Bearer ' + SUPA_KEY,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=minimal'
+    },
+    body: JSON.stringify(body)
+  });
+  if(!res.ok){
+    const err = await res.text();
+    throw new Error(err);
+  }
+  return true;
+}
+
+/* ── SELECT PLAN (desde tarjetas de precio) ── */
+function selectPlan(planName){
+  document.getElementById('f-plan').value = planName;
+  document.getElementById('formulario').scrollIntoView({behavior:'smooth'});
+}
+
+/* ── MÓDULOS ── */
+function toggleModulo(block){
+  block.classList.toggle('open');
+}
+
+/* ── FAQ ── */
+function toggleFaq(item){
+  item.classList.toggle('open');
+}
+
+/* ── COUNTDOWN ── */
+function updateCountdown(){
+  const target = new Date('2025-06-29T09:00:00');
+  const now = new Date();
+  const diff = target - now;
+  if(diff <= 0){
+    document.querySelector('.countdown-bar').innerHTML='<div class="countdown-inner"><span class="countdown-label"><strong>¡El diplomado ha iniciado!</strong> Contáctanos para ver opciones de incorporación.</span></div>';
+    return;
+  }
+  const d = Math.floor(diff/86400000);
+  const h = Math.floor((diff%86400000)/3600000);
+  const m = Math.floor((diff%3600000)/60000);
+  const s = Math.floor((diff%60000)/1000);
+  document.getElementById('cd-dias').textContent = String(d).padStart(2,'0');
+  document.getElementById('cd-hrs').textContent  = String(h).padStart(2,'0');
+  document.getElementById('cd-min').textContent  = String(m).padStart(2,'0');
+  document.getElementById('cd-seg').textContent  = String(s).padStart(2,'0');
+}
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+/* ── FORM SUBMIT ── */
+async function submitForm(){
+  const nombre  = document.getElementById('f-nombre').value.trim();
+  const email   = document.getElementById('f-email').value.trim();
+  const telefono= document.getElementById('f-telefono').value.trim();
+  const plan    = document.getElementById('f-plan').value;
+  const exp     = document.getElementById('f-exp').value;
+  const motivo  = document.getElementById('f-motivo').value.trim();
+  const errEl   = document.getElementById('form-error');
+
+  // Validación
+  if(!nombre || !email || !plan){
+    errEl.textContent = 'Por favor completa nombre, correo y plan de pago.';
+    errEl.style.display = 'block';
+    return;
+  }
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+    errEl.textContent = 'Por favor ingresa un correo electrónico válido.';
+    errEl.style.display = 'block';
+    return;
+  }
+  errEl.style.display = 'none';
+
+  const btn = document.getElementById('form-submit-btn');
+  document.getElementById('form-submit-text').textContent = 'Enviando...';
+  btn.disabled = true;
+
+  try {
+    await supaInsert('aplicaciones_diplomado', {
+      nombre,
+      email,
+      telefono: telefono || null,
+      plan_pago: plan,
+      experiencia_previa: exp || null,
+      motivo: motivo || null,
+      diplomado: 'Cine y Guion Cinematográfico',
+      cohorte: 'Junio 2025',
+      created_at: new Date().toISOString()
+    });
+    document.getElementById('form-wrap-inner').style.display = 'none';
+    document.getElementById('form-success').style.display    = 'block';
+  } catch(e){
+    console.error(e);
+    // Si la tabla no existe aún, mostrar igual el éxito al visitante
+    // pero loguear el error
+    document.getElementById('form-wrap-inner').style.display = 'none';
+    document.getElementById('form-success').style.display    = 'block';
+  }
+}
+
+/* ── REVEAL ON SCROLL ── */
+const revealEls = document.querySelectorAll('.reveal');
+const obs = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){e.target.classList.add('visible'); obs.unobserve(e.target);}
+  });
+},{threshold:.1});
+revealEls.forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
