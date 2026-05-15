@@ -1312,12 +1312,65 @@ img{display:block;max-width:100%;}
 </footer>
 
 <script>
-/* ── SUPABASE CONFIG ── */
-const SUPA_URL = 'https://ajebicalwncttyiirjdr.supabase.co';
-const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFqZWJpY2Fsd25jdHR5aWlyamRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxMDQ1NTcsImV4cCI6MjA5MzY4MDU1N30.cAoYPYv92p0G2N1tW3NE-efmnu1sDYx9293e8hksR-E';
+/* ── NAVEGACIÓN MI ESPACIO ── */
+function goToMiEspacio(){
+  try {
+    var session = JSON.parse(sessionStorage.getItem('aos_user') || 'null');
+    window.location.href = session ? 'dashboard.html' : 'index.html';
+  } catch(e) {
+    window.location.href = 'index.html';
+  }
+}
 
-async function supaInsert(table, body){
-  const res = await fetch(`${SUPA_URL}/rest/v1/${table}`, {
+/* ── MÓDULOS acordeón ── */
+function toggleModulo(block){
+  block.classList.toggle('open');
+}
+
+/* ── FAQ acordeón ── */
+function toggleFaq(item){
+  item.classList.toggle('open');
+}
+
+/* ── SELECCIONAR PLAN (desde tarjetas de precio) ── */
+function selectPlan(planName){
+  var sel = document.getElementById('f-plan');
+  if(sel) sel.value = planName;
+  var el = document.getElementById('formulario');
+  if(el) el.scrollIntoView({behavior:'smooth'});
+}
+
+/* ── COUNTDOWN ── */
+function updateCountdown(){
+  var target = new Date('2026-06-29T09:00:00');
+  var now    = new Date();
+  var diff   = target - now;
+  if(diff <= 0){
+    ['cd-dias','cd-hrs','cd-min','cd-seg'].forEach(function(id){
+      var el = document.getElementById(id);
+      if(el) el.textContent = '00';
+    });
+    return;
+  }
+  var d = Math.floor(diff / 86400000);
+  var h = Math.floor((diff % 86400000) / 3600000);
+  var m = Math.floor((diff % 3600000)  / 60000);
+  var s = Math.floor((diff % 60000)    / 1000);
+  var pad = function(n){ return String(n).padStart(2,'0'); };
+  document.getElementById('cd-dias').textContent = pad(d);
+  document.getElementById('cd-hrs').textContent  = pad(h);
+  document.getElementById('cd-min').textContent  = pad(m);
+  document.getElementById('cd-seg').textContent  = pad(s);
+}
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+/* ── SUPABASE INSERT ── */
+var SUPA_URL = 'https://ajebicalwncttyiirjdr.supabase.co';
+var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFqZWJpY2Fsd25jdHR5aWlyamRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxMDQ1NTcsImV4cCI6MjA5MzY4MDU1N30.cAoYPYv92p0G2N1tW3NE-efmnu1sDYx9293e8hksR-E';
+
+function supaInsert(table, body){
+  return fetch(SUPA_URL + '/rest/v1/' + table, {
     method: 'POST',
     headers:{
       'apikey': SUPA_KEY,
@@ -1327,64 +1380,18 @@ async function supaInsert(table, body){
     },
     body: JSON.stringify(body)
   });
-  if(!res.ok){
-    const err = await res.text();
-    throw new Error(err);
-  }
-  return true;
 }
 
-/* ── SELECT PLAN (desde tarjetas de precio) ── */
-function selectPlan(planName){
-  document.getElementById('f-plan').value = planName;
-  document.getElementById('formulario').scrollIntoView({behavior:'smooth'});
-}
+/* ── FORMULARIO ── */
+function submitForm(){
+  var nombre   = document.getElementById('f-nombre').value.trim();
+  var email    = document.getElementById('f-email').value.trim();
+  var telefono = document.getElementById('f-telefono').value.trim();
+  var plan     = document.getElementById('f-plan').value;
+  var exp      = document.getElementById('f-exp').value;
+  var motivo   = document.getElementById('f-motivo').value.trim();
+  var errEl    = document.getElementById('form-error');
 
-/* ── MÓDULOS ── */
-function toggleModulo(block){
-  block.classList.toggle('open');
-}
-
-/* ── FAQ ── */
-function toggleFaq(item){
-  item.classList.toggle('open');
-}
-
-/* ── COUNTDOWN ── */
-function updateCountdown(){
-  const target = new Date('2026-06-29T09:00:00');
-  const now = new Date();
-  const diff = target - now;
-  if(diff <= 0){
-    document.getElementById('cd-dias').textContent='00';
-    document.getElementById('cd-hrs').textContent='00';
-    document.getElementById('cd-min').textContent='00';
-    document.getElementById('cd-seg').textContent='00';
-    return;
-  }
-  const d = Math.floor(diff/86400000);
-  const h = Math.floor((diff%86400000)/3600000);
-  const m = Math.floor((diff%3600000)/60000);
-  const s = Math.floor((diff%60000)/1000);
-  document.getElementById('cd-dias').textContent = String(d).padStart(2,'0');
-  document.getElementById('cd-hrs').textContent  = String(h).padStart(2,'0');
-  document.getElementById('cd-min').textContent  = String(m).padStart(2,'0');
-  document.getElementById('cd-seg').textContent  = String(s).padStart(2,'0');
-}
-updateCountdown();
-setInterval(updateCountdown, 1000);
-
-/* ── FORM SUBMIT ── */
-async function submitForm(){
-  const nombre  = document.getElementById('f-nombre').value.trim();
-  const email   = document.getElementById('f-email').value.trim();
-  const telefono= document.getElementById('f-telefono').value.trim();
-  const plan    = document.getElementById('f-plan').value;
-  const exp     = document.getElementById('f-exp').value;
-  const motivo  = document.getElementById('f-motivo').value.trim();
-  const errEl   = document.getElementById('form-error');
-
-  // Validación
   if(!nombre || !email || !plan){
     errEl.textContent = 'Por favor completa nombre, correo y plan de pago.';
     errEl.style.display = 'block';
@@ -1397,53 +1404,41 @@ async function submitForm(){
   }
   errEl.style.display = 'none';
 
-  const btn = document.getElementById('form-submit-btn');
+  var btn = document.getElementById('form-submit-btn');
   document.getElementById('form-submit-text').textContent = 'Enviando...';
   btn.disabled = true;
 
-  try {
-    await supaInsert('aplicaciones_diplomado', {
-      nombre,
-      email,
-      telefono: telefono || null,
-      plan_pago: plan,
-      experiencia_previa: exp || null,
-      motivo: motivo || null,
-      diplomado: 'Cine y Guion Cinematográfico',
-      cohorte: 'Junio 2026',
-      created_at: new Date().toISOString()
-    });
+  supaInsert('aplicaciones_diplomado', {
+    nombre:             nombre,
+    email:              email,
+    telefono:           telefono || null,
+    plan_pago:          plan,
+    experiencia_previa: exp || null,
+    motivo:             motivo || null,
+    diplomado:          'Cine y Guion Cinematográfico',
+    cohorte:            'Junio 2026',
+    created_at:         new Date().toISOString()
+  }).then(function(){
     document.getElementById('form-wrap-inner').style.display = 'none';
     document.getElementById('form-success').style.display    = 'block';
-  } catch(e){
-    console.error(e);
-    // Si la tabla no existe aún, mostrar igual el éxito al visitante
-    // pero loguear el error
+  }).catch(function(e){
+    console.error('Supabase error:', e);
     document.getElementById('form-wrap-inner').style.display = 'none';
     document.getElementById('form-success').style.display    = 'block';
-  }
-}
-
-/* ── MI ESPACIO: redirige según sesión ── */
-function goToMiEspacio(){
-  const session = JSON.parse(sessionStorage.getItem('aos_user') || 'null');
-  if(session){
-    // Ya autenticado: ir directo al dashboard
-    window.location.href = 'dashboard.html';
-  } else {
-    // No autenticado: ir al index original (login + zona gratuita)
-    window.location.href = 'index.html';
-  }
+  });
 }
 
 /* ── REVEAL ON SCROLL ── */
-const revealEls = document.querySelectorAll('.reveal');
-const obs = new IntersectionObserver((entries)=>{
-  entries.forEach(e=>{
-    if(e.isIntersecting){e.target.classList.add('visible'); obs.unobserve(e.target);}
+var revealEls = document.querySelectorAll('.reveal');
+var obs = new IntersectionObserver(function(entries){
+  entries.forEach(function(e){
+    if(e.isIntersecting){
+      e.target.classList.add('visible');
+      obs.unobserve(e.target);
+    }
   });
-},{threshold:.1});
-revealEls.forEach(el => obs.observe(el));
+}, {threshold: 0.1});
+revealEls.forEach(function(el){ obs.observe(el); });
 </script>
 </body>
 </html>
