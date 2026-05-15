@@ -1,6 +1,23 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1294519489403410');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1294519489403410&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Diplomado de Cine y Guion Cinematográfico · Academia Otto Salamanca</title>
@@ -1315,8 +1332,10 @@ img{display:block;max-width:100%;}
 /* ── NAVEGACIÓN MI ESPACIO ── */
 function goToMiEspacio(){
   try {
+    fbq('trackCustom', 'MiEspacioClick');
     var session = JSON.parse(sessionStorage.getItem('aos_user') || 'null');
-    window.location.href = session ? 'dashboard.html' : 'index.html';
+    var dest = session ? 'dashboard.html' : 'index.html';
+    setTimeout(function(){ window.location.href = dest; }, 300);
   } catch(e) {
     window.location.href = 'index.html';
   }
@@ -1421,10 +1440,12 @@ function submitForm(){
   }).then(function(){
     document.getElementById('form-wrap-inner').style.display = 'none';
     document.getElementById('form-success').style.display    = 'block';
+    fbq('track', 'Lead', {content_name: 'Diplomado Cine y Guion', plan: plan});
   }).catch(function(e){
     console.error('Supabase error:', e);
     document.getElementById('form-wrap-inner').style.display = 'none';
     document.getElementById('form-success').style.display    = 'block';
+    fbq('track', 'Lead', {content_name: 'Diplomado Cine y Guion', plan: plan});
   });
 }
 
