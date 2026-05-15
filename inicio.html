@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Academia Otto Salamanca · Plataforma</title>
+<meta name="description" content="Accede a la plataforma de la Academia Otto Salamanca.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#0b0b0e;--bg2:#111115;--bg3:#18181f;
+  --gold:#f0c050;--gold2:#c9952e;
+  --text:#eeeae3;--text2:#9e9aaa;--text3:#5a5668;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
+  --border-gold:rgba(240,192,80,0.25);
+  --radius:8px;--tr:all .2s ease;
+}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:40px 36px;max-width:420px;width:100%;text-align:center;}
+.logo{font-family:'Fraunces',serif;font-size:20px;color:var(--text);margin-bottom:6px;}
+.logo em{font-style:italic;color:var(--gold);}
+.sub{font-size:12px;color:var(--text3);margin-bottom:32px;}
+.card-title{font-family:'Fraunces',serif;font-size:22px;color:var(--text);margin-bottom:8px;}
+.card-desc{font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:28px;}
+.btn{display:block;width:100%;padding:12px;border-radius:var(--radius);font-size:13.5px;font-weight:600;border:none;cursor:pointer;transition:var(--tr);margin-bottom:10px;font-family:inherit;text-align:center;text-decoration:none;}
+.btn-gold{background:var(--gold2);color:#0b0b0e;}
+.btn-gold:hover{background:var(--gold);}
+.btn-outline{background:none;border:1px solid var(--border2);color:var(--text2);}
+.btn-outline:hover{border-color:var(--gold2);color:var(--text);}
+.divider{height:1px;background:var(--border);margin:20px 0;}
+.hint{font-size:11.5px;color:var(--text3);line-height:1.6;}
+.hint a{color:var(--gold2);}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">Otto Salamanca <em>Academia</em></div>
+  <div class="sub">Escuela de Cine</div>
+
+  <div class="card-title">¿Ya eres alumno?</div>
+  <p class="card-desc">Inicia sesión para acceder a tus diplomados, clases, materiales y el Cine Fórum de la comunidad.</p>
+
+  <a href="index.html" class="btn btn-gold">Iniciar sesión →</a>
+  <a href="index.html" class="btn btn-outline">Crear cuenta gratuita</a>
+
+  <div class="divider"></div>
+
+  <div class="hint">
+    ¿Quieres conocer más sobre la Academia, nuestros contenidos gratuitos y la comunidad?<br><br>
+    <a href="acerca.html">Sobre la Academia</a> &nbsp;·&nbsp;
+    <a href="noticias.html">Noticias</a> &nbsp;·&nbsp;
+    <a href="forum.html">Cine Fórum</a> &nbsp;·&nbsp;
+    <a href="contacto.html">Contacto</a>
+  </div>
+</div>
+
+<script>
+// Si ya tiene sesión activa, redirigir directo al dashboard
+const session = JSON.parse(sessionStorage.getItem('aos_user') || 'null');
+if(session) window.location.replace('dashboard.html');
+</script>
+</body>
+</html>
