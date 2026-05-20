@@ -242,6 +242,9 @@ async function init(){
 /* PLAYLIST */
 function renderPlaylist(){
   const playlist=document.getElementById('playlist');
+  // Build lookup map — avoids JSON serialization issues in onclick
+  window.clasesMap={};
+  semanasList.forEach(s=>{(s.clases||[]).forEach(c=>{window.clasesMap[c.id]={clase:c,semana:s};});});
   if(!semanasList.length){
     playlist.innerHTML='<div class="empty-playlist">Este diplomado no tiene clases publicadas aún.</div>';
     return;
@@ -258,7 +261,7 @@ function renderPlaylist(){
       <div class="clase-list">
         ${(s.clases||[]).map(c=>`
           <div class="clase-item ${completadas.has(String(c.id))?'completada':''} ${claseActual?.id===c.id?'active':''}" 
-               id="ci-${c.id}" onclick="loadClase(${JSON.stringify(c).replace(/'/g,'&#39;')},${JSON.stringify(s).replace(/'/g,'&#39;')})">
+               id="ci-${c.id}" onclick="loadClaseById(${c.id})">
             <div class="clase-num">${completadas.has(String(c.id))?'✓':c.numero}</div>
             <div class="clase-body">
               <div class="clase-nombre">${c.titulo}</div>
@@ -270,6 +273,13 @@ function renderPlaylist(){
 }
 
 function toggleSemana(i){document.getElementById('sg-'+i).classList.toggle('collapsed');}
+
+/* LOAD BY ID — safe alternative to JSON in onclick */
+function loadClaseById(id){
+  const entry = clasesMap[id];
+  if(!entry){ console.error('Clase not found:', id); return; }
+  loadClase(entry.clase, entry.semana);
+}
 
 /* LOAD CLASS */
 async function loadClase(clase,semana){
