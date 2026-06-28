@@ -1535,7 +1535,7 @@ async function createDiplomado() {
     await loadDiplomados();
     closeModal('modal-diplomado-create');
     toast('Diplomado creado ✓');
-  } catch(e) { toast('Error creando diplomado','error'); }
+  } catch(e) { toast('Error: ' + (e.message||e),'error'); console.error('createDiplomado error:',e); }
 }
 
 /* ── DIPLOMADO EDITOR ── */
