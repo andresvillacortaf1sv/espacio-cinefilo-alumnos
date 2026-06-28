@@ -257,14 +257,22 @@ async function init(){
   // Cargar diplomados dinámicamente desde Supabase
   let diplomadosDB = [];
   let semanasPor = {};
+  let clasesPor  = {};
   try {
-    const [dData, sData] = await Promise.all([
+    const [dData, sData, cData] = await Promise.all([
       supaGet('diplomados', 'select=*&order=created_at.asc'),
-      supaGet('semanas', 'select=id,diplomado_id')
+      supaGet('semanas',    'select=id,diplomado_id'),
+      supaGet('clases',     'select=id,semana_id')
     ]);
     diplomadosDB = dData || [];
+    const semanaMap = {};
     (sData || []).forEach(s => {
+      semanaMap[s.id] = s.diplomado_id;
       semanasPor[s.diplomado_id] = (semanasPor[s.diplomado_id] || 0) + 1;
+    });
+    (cData || []).forEach(c => {
+      const did = semanaMap[c.semana_id];
+      if(did) clasesPor[did] = (clasesPor[did] || 0) + 1;
     });
   } catch(e) { console.error('Error cargando diplomados:', e); }
 
@@ -280,7 +288,9 @@ async function init(){
       TIPO === d.id ||
       (legacyKey && TIPO === legacyKey);
     const url = i < 2 ? LEGACY_URLS[i] : `sala.html?diplomado=${d.id}`;
-    return { ...d, acceso: tieneAcceso, url, semanas: semanasPor[d.id] || 0,
+    return { ...d, acceso: tieneAcceso, url,
+             semanas: semanasPor[d.id] || 0,
+             clases:  clasesPor[d.id]  || 0,
              badge: p.badge, color1: p.color1, color2: p.color2, emoji: p.emoji };
   });
 

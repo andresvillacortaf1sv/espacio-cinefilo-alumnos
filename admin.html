@@ -977,7 +977,7 @@ async function promoteUser(id,currentTipo){
     const newTipo=document.getElementById('tipo-select').value;
     container.remove();
     try{await supaPatch('usuarios',id,{tipo:newTipo});await loadUsuarios();toast('Acceso actualizado');}
-    catch(e){toast('Error actualizando','error');}
+    catch(e){toast('Error: '+(e.message||e),'error');console.error('promoteUser error:',e);}
   };
 }
 async function deleteUser(id){
