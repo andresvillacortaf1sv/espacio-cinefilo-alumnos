@@ -948,9 +948,19 @@ function filterUsers(q,tipo=''){
   renderUsers(f);
 }
 async function promoteUser(id,currentTipo){
-  const opciones=['gratuito','diplomado_cine','diplomado_avanzado','ambos'];
-  const labels=['Gratuito','Diplomado de Cine y Guion','Diplomado Avanzado','Ambos diplomados'];
-  const optsHtml=opciones.map((o,i)=>`<option value="${o}" ${o===currentTipo?'selected':''}>${labels[i]}</option>`).join('');
+  // Cargar diplomados desde Supabase para opciones dinámicas
+  let diplomadosDB = [];
+  try { diplomadosDB = await supaGet('diplomados','select=id,nombre&order=created_at.asc') || []; } catch(e){}
+  // Mapear claves legacy al UUID del diplomado correspondiente
+  const legacyMap = {};
+  if(diplomadosDB[0]) legacyMap['diplomado_cine']     = diplomadosDB[0].id;
+  if(diplomadosDB[1]) legacyMap['diplomado_avanzado'] = diplomadosDB[1].id;
+  const resolvedTipo = legacyMap[currentTipo] || currentTipo;
+  // Construir opciones: gratuito + cada diplomado por UUID + ambos + admin
+  const opciones = ['gratuito', ...diplomadosDB.map(d=>d.id), 'ambos', 'admin'];
+  const labelMap  = { gratuito:'Gratuito', ambos:'Ambos diplomados', admin:'⚙ Admin' };
+  diplomadosDB.forEach(d => { labelMap[d.id] = d.nombre; });
+  const optsHtml=opciones.map(o=>`<option value="${o}" ${o===resolvedTipo?'selected':''}>${labelMap[o]||o}</option>`).join('');
   const container=document.createElement('div');
   container.style.cssText='position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;';
   container.innerHTML=`<div style="background:#111115;border:1px solid rgba(255,255,255,0.13);border-radius:14px;padding:28px;width:100%;max-width:360px;">

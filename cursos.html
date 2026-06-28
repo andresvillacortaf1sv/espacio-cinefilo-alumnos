@@ -229,44 +229,15 @@ const session = JSON.parse(sessionStorage.getItem('aos_user') || 'null');
 if(!session) window.location.href = 'index.html';
 
 const TIPO = session ? session.tipo : 'gratuito';
-const TIENE_BASICO    = ['diplomado_cine','ambos','admin'].includes(TIPO);
-const TIENE_AVANZADO  = ['diplomado_avanzado','ambos','admin'].includes(TIPO);
 
-/* ── DIPLOMADOS DATA ── */
-const DIPLOMADOS = [
-  {
-    id: 'cine',
-    nombre: 'Diplomado de Cine y Guion Cinematográfico',
-    nivel: 'Básico',
-    badge: 'badge-basico',
-    descripcion: 'Un recorrido completo por el lenguaje cinematográfico: desde la concepción de una idea hasta la realización de un cortometraje. Cubre dirección, fotografía, guion, sonido y montaje.',
-    instructor: 'Andrés Villacorta',
-    semanas: 12,
-    clases: 24,
-    acceso: TIENE_BASICO,
-    color1: '#1a1208',
-    color2: '#2a1e0a',
-    emoji: '🎬',
-    tipo_key: 'diplomado_cine',
-    url: 'sala.html?diplomado=cine'
-  },
-  {
-    id: 'avanzado',
-    nombre: 'Diplomado Avanzado de Cine',
-    nivel: 'Avanzado',
-    badge: 'badge-avanzado',
-    descripcion: 'Profundización en los procesos creativos y técnicos del cine contemporáneo. Análisis de obras, desarrollo de proyectos personales y masterclasses con realizadores invitados.',
-    instructor: 'Andrés Villacorta',
-    semanas: 10,
-    clases: 20,
-    acceso: TIENE_AVANZADO,
-    color1: '#0d1520',
-    color2: '#121c2e',
-    emoji: '🎞',
-    tipo_key: 'diplomado_avanzado',
-    url: 'sala.html?diplomado=avanzado'
-  }
+const PALETAS = [
+  { color1:'#1a1208', color2:'#2a1e0a', badge:'badge-basico',   emoji:'🎬' },
+  { color1:'#0d1520', color2:'#121c2e', badge:'badge-avanzado', emoji:'🎞' },
+  { color1:'#1a0808', color2:'#2e1212', badge:'badge-basico',   emoji:'🎭' },
+  { color1:'#0d1a10', color2:'#122e1a', badge:'badge-basico',   emoji:'🎥' },
+  { color1:'#1a1020', color2:'#2a1a30', badge:'badge-avanzado', emoji:'🏆' },
 ];
+const LEGACY_URLS = ['sala.html?diplomado=cine', 'sala.html?diplomado=avanzado'];
 
 const PROXIMOS = [
   { emoji:'📷', titulo:'Taller de Fotografía Cinematográfica', meta:'Próximamente · 6 semanas', badge:'En desarrollo' },
@@ -275,7 +246,7 @@ const PROXIMOS = [
 ];
 
 /* ── INIT ── */
-function init(){
+async function init(){
   const user = session || {};
   const inicial = (user.nombre||'?')[0].toUpperCase();
   const avatarEl = document.getElementById('user-avatar');
@@ -283,18 +254,47 @@ function init(){
   if(savedPhoto) avatarEl.innerHTML = `<img src="${savedPhoto}" alt="Perfil">`;
   else avatarEl.textContent = inicial;
 
+  // Cargar diplomados dinámicamente desde Supabase
+  let diplomadosDB = [];
+  let semanasPor = {};
+  try {
+    const [dData, sData] = await Promise.all([
+      supaGet('diplomados', 'select=*&order=created_at.asc'),
+      supaGet('semanas', 'select=id,diplomado_id')
+    ]);
+    diplomadosDB = dData || [];
+    (sData || []).forEach(s => {
+      semanasPor[s.diplomado_id] = (semanasPor[s.diplomado_id] || 0) + 1;
+    });
+  } catch(e) { console.error('Error cargando diplomados:', e); }
+
+  const esAdmin = TIPO === 'admin';
+  const esAmbos = TIPO === 'ambos';
+
+  const DIPLOMADOS = diplomadosDB.map((d, i) => {
+    const p = PALETAS[i % PALETAS.length];
+    // Los primeros 2 (por created_at) usan las claves legacy
+    const legacyKey = i === 0 ? 'diplomado_cine' : i === 1 ? 'diplomado_avanzado' : null;
+    const tieneAcceso = esAdmin ||
+      (esAmbos && i < 2) ||
+      TIPO === d.id ||
+      (legacyKey && TIPO === legacyKey);
+    const url = i < 2 ? LEGACY_URLS[i] : `sala.html?diplomado=${d.id}`;
+    return { ...d, acceso: tieneAcceso, url, semanas: semanasPor[d.id] || 0,
+             badge: p.badge, color1: p.color1, color2: p.color2, emoji: p.emoji };
+  });
+
   const activos = DIPLOMADOS.filter(d=>d.acceso).length;
   document.getElementById('page-sub').textContent =
     activos === 0 ? 'Tu cuenta no tiene acceso a diplomados aún. Contacta a la Academia.' :
     activos === 1 ? 'Tienes acceso a 1 diplomado activo.' :
     `Tienes acceso a ${activos} diplomados activos.`;
 
-  renderDiplomados();
+  renderDiplomados(DIPLOMADOS);
   renderProximos();
-  loadProgreso();
 }
 
-function renderDiplomados(){
+function renderDiplomados(DIPLOMADOS){
   const grid = document.getElementById('diplomados-grid');
   grid.innerHTML = DIPLOMADOS.map(d => {
     const progreso = parseInt(localStorage.getItem('progreso_'+d.id)||'0');
