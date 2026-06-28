@@ -1524,6 +1524,7 @@ function openCreateDiplomadoModal() {
 
 async function createDiplomado() {
   const obj = {
+    id:          crypto.randomUUID(),
     nombre:      document.getElementById('dc-nombre').value.trim(),
     nivel:       document.getElementById('dc-nivel').value,
     instructor:  document.getElementById('dc-instructor').value.trim(),
