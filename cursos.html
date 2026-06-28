@@ -289,8 +289,8 @@ async function init(){
       (legacyKey && TIPO === legacyKey);
     const url = i < 2 ? LEGACY_URLS[i] : `sala.html?diplomado=${d.id}`;
     return { ...d, acceso: tieneAcceso, url,
-             semanas: semanasPor[d.id] || 0,
-             clases:  clasesPor[d.id]  || 0,
+             semanas: d.semanas_count || semanasPor[d.id] || 0,
+             clases:  d.clases_count  || clasesPor[d.id]  || 0,
              badge: p.badge, color1: p.color1, color2: p.color2, emoji: p.emoji };
   });
 

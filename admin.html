@@ -637,6 +637,10 @@ tr:hover td{background:rgba(255,255,255,0.02);}
       </div>
       <div class="field"><label>Instructor</label><input type="text" id="de-instructor"></div>
       <div class="field"><label>Descripción</label><textarea id="de-desc"></textarea></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div class="field"><label>Número de semanas</label><input type="number" id="de-semanas" min="0" placeholder="0"></div>
+        <div class="field"><label>Número de clases</label><input type="number" id="de-clases" min="0" placeholder="0"></div>
+      </div>
     </div>
     <div class="modal-actions">
       <button class="btn btn-outline" onclick="closeModal('modal-diplomado-edit')">Cancelar</button>
@@ -1556,15 +1560,19 @@ function openDiplomadoEditModal() {
   document.getElementById('de-nivel').value       = activeDiplomado.nivel || 'Básico';
   document.getElementById('de-instructor').value  = activeDiplomado.instructor || '';
   document.getElementById('de-desc').value        = activeDiplomado.descripcion || '';
+  document.getElementById('de-semanas').value    = activeDiplomado.semanas_count || 0;
+  document.getElementById('de-clases').value     = activeDiplomado.clases_count  || 0;
   openModal('modal-diplomado-edit');
 }
 
 async function saveDiplomadoEdit() {
   const obj = {
-    nombre:      document.getElementById('de-nombre').value.trim(),
-    nivel:       document.getElementById('de-nivel').value,
-    instructor:  document.getElementById('de-instructor').value.trim(),
-    descripcion: document.getElementById('de-desc').value.trim(),
+    nombre:        document.getElementById('de-nombre').value.trim(),
+    nivel:         document.getElementById('de-nivel').value,
+    instructor:    document.getElementById('de-instructor').value.trim(),
+    descripcion:   document.getElementById('de-desc').value.trim(),
+    semanas_count: parseInt(document.getElementById('de-semanas').value) || 0,
+    clases_count:  parseInt(document.getElementById('de-clases').value)  || 0,
   };
   if(!obj.nombre) { toast('El nombre es requerido','error'); return; }
   try {
