@@ -205,13 +205,20 @@ img{display:block;max-width:100%;}
 
 <div class="toast" id="toast"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 
 const SUPA_URL='https://ajebicalwncttyiirjdr.supabase.co';
 const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFqZWJpY2Fsd25jdHR5aWlyamRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxMDQ1NTcsImV4cCI6MjA5MzY4MDU1N30.cAoYPYv92p0G2N1tW3NE-efmnu1sDYx9293e8hksR-E';
+const sb = supabase.createClient(SUPA_URL, SUPA_KEY);
 async function supa(table,method,body,query){
   const url=SUPA_URL+'/rest/v1/'+table+(query?'?'+query:'');
-  const opts={method:method||'GET',headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json'}};
+  // Usa el token de sesion del alumno logueado (si existe) para que RLS
+  // reconozca las lecturas de contenido pagado; si no hay sesion real
+  // (paginas publicas), cae de vuelta a la anon key.
+  const { data: { session: authSession } } = await sb.auth.getSession();
+  const accessToken = authSession?.access_token || SUPA_KEY;
+  const opts={method:method||'GET',headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+accessToken,'Content-Type':'application/json'}};
   if(body)opts.body=JSON.stringify(body);
   const res=await fetch(url,opts);
   if(!res.ok){const e=await res.text();throw new Error(e);}
@@ -368,7 +375,8 @@ function loadProgreso(){
   // Aquí simplemente leemos del localStorage
 }
 
-function doLogout(){
+async function doLogout(){
+  try{ await sb.auth.signOut(); }catch(e){}
   sessionStorage.removeItem('aos_user');
   window.location.href = 'index.html';
 }

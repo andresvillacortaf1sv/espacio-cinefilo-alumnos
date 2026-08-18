@@ -424,6 +424,7 @@ footer{border-top:1px solid var(--border);padding:40px 32px;margin-top:20px;}
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 
 const SUPA_URL = 'https://ajebicalwncttyiirjdr.supabase.co';
@@ -447,10 +448,30 @@ async function supa(table, method='GET', body=null, query='') {
   return res.json();
 }
 
+const sb = supabase.createClient(SUPA_URL, SUPA_KEY);
+
 const supaGet    = (table, query='') => supa(table, 'GET', null, query);
 const supaPost   = (table, body)     => supa(table, 'POST', body);
 const supaPatch  = (table, id, body) => supa(table, 'PATCH', body, 'id=eq.' + id);
 const supaDelete = (table, id)       => supa(table, 'DELETE', null, 'id=eq.' + id);
+
+// Registro, login y edición de perfil ya NO se hacen contra la tabla
+// `usuarios` directamente (esa tabla quedó cerrada con RLS) — pasan por esta
+// Edge Function, que nunca expone el password_hash al navegador.
+async function usuariosAuth(action, payload) {
+  const res = await fetch(SUPA_URL + '/functions/v1/usuarios-auth', {
+    method: 'POST',
+    headers: {
+      'apikey': SUPA_KEY,
+      'Authorization': 'Bearer ' + SUPA_KEY,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ action, ...payload }),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || 'Error de conexión');
+  return data;
+}
 
 
 const TMDB_KEY = '9ead44dc2fd5da01ee3499ece3cd72fb';
@@ -487,13 +508,21 @@ document.getElementById('register-form').addEventListener('submit', async functi
   if(password && password.length < 6){toast('La contraseña debe tener al menos 6 caracteres');return;}
   btn.textContent='Guardando...';btn.disabled=true;
   try{
-    const passHash = password ? hashSimple(password) : '';
-    await supaPost('usuarios',{nombre,email,telefono,tipo:'gratuito',password_hash:passHash});
+    const { user, session } = await usuariosAuth('register', {nombre,email,telefono,password});
+    // La cuenta ya nace con sesion real de Supabase Auth (JWT firmado) en vez
+    // de la fila "en confianza" que se guardaba antes — asi cursos.html y
+    // sala.html pueden verificar del lado del servidor quien esta pidiendo
+    // el contenido pagado.
+    if(session?.access_token && session?.refresh_token){
+      await sb.auth.setSession({access_token:session.access_token, refresh_token:session.refresh_token});
+    }
+    sessionStorage.setItem('aos_user', JSON.stringify(user));
     this.style.display='none';
     document.getElementById('register-success').style.display='block';
+    setTimeout(()=>{ closeModal(); navigateTo('dashboard.html'); }, 1400);
   }catch(err){
     // Si el email ya existe, mostrar mensaje amigable
-    if(err.message.includes('unique')||err.message.includes('duplicate')){
+    if(err.message.includes('ya está registrado')){
       btn.textContent='Este correo ya está registrado';
     }else{
       btn.textContent='Error — intenta de nuevo';
@@ -503,13 +532,7 @@ document.getElementById('register-form').addEventListener('submit', async functi
   }
 });
 
-/* ── LOGIN CON SUPABASE ── */
-function hashSimple(str){
-  let h=5381;
-  for(let i=0;i<str.length;i++) h=((h<<5)+h)+str.charCodeAt(i);
-  return (h>>>0).toString(16);
-}
-
+/* ── LOGIN CON SUPABASE (vía Edge Function usuarios-auth) ── */
 async function doLogin(){
   const email    = document.getElementById('login-email').value.trim();
   const password = document.getElementById('login-pass').value;
@@ -520,28 +543,28 @@ async function doLogin(){
   btn.textContent='Verificando...'; btn.disabled=true;
   if(errEl) errEl.style.display='none';
   try{
-    const data = await supaGet('usuarios','select=*&email=eq.'+encodeURIComponent(email)+'&limit=1');
-    if(data && data[0]){
-      const user = data[0];
-      const hasHash = user.password_hash && user.password_hash.length > 0;
-      if(hasHash && hashSimple(password) !== user.password_hash){
-        btn.textContent='Iniciar sesión'; btn.disabled=false;
-        showLoginError('Contraseña incorrecta');
-        return;
-      }
-      sessionStorage.setItem('aos_user', JSON.stringify({
-        id:user.id, nombre:user.nombre, email:user.email,
-        telefono:user.telefono, tipo:user.tipo
-      }));
-      closeModal();
-      navigateTo('dashboard.html');
-    } else {
-      btn.textContent='Iniciar sesión'; btn.disabled=false;
-      showLoginError('Correo no encontrado. ¿Ya tienes cuenta?');
+    const { user, session } = await usuariosAuth('login', {email, password});
+    // Se guarda el perfil "seguro" completo (incluye bio/géneros/top
+    // películas) para que perfil.html no tenga que volver a pedirlo con un
+    // SELECT directo a `usuarios` — esa tabla ya no es legible desde el
+    // navegador.
+    //
+    // Ademas, si el login vino con una sesion real (session.access_token),
+    // se activa aqui mismo via el SDK de Supabase — asi el navegador queda
+    // con un JWT firmado y verificable, no solo un objeto que "dice" quien
+    // es el usuario. cursos.html/sala.html usan ese JWT para que RLS decida
+    // de verdad si puede ver el contenido pagado.
+    if(session?.access_token && session?.refresh_token){
+      await sb.auth.setSession({access_token:session.access_token, refresh_token:session.refresh_token});
     }
+    sessionStorage.setItem('aos_user', JSON.stringify(user));
+    closeModal();
+    navigateTo('dashboard.html');
   } catch(e){
     btn.textContent='Iniciar sesión'; btn.disabled=false;
-    showLoginError('Error de conexión. Intenta de nuevo.');
+    if(e.message==='Correo no encontrado'){ showLoginError('Correo no encontrado. ¿Ya tienes cuenta?'); }
+    else if(e.message==='Contraseña incorrecta'){ showLoginError('Contraseña incorrecta'); }
+    else { showLoginError('Error de conexión. Intenta de nuevo.'); }
   }
 }
 

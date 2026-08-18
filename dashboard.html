@@ -488,10 +488,12 @@ document.addEventListener('click', e=>{
 
 <div class="toast" id="toast"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 
 const SUPA_URL = 'https://ajebicalwncttyiirjdr.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFqZWJpY2Fsd25jdHR5aWlyamRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxMDQ1NTcsImV4cCI6MjA5MzY4MDU1N30.cAoYPYv92p0G2N1tW3NE-efmnu1sDYx9293e8hksR-E';
+const sb = supabase.createClient(SUPA_URL, SUPA_KEY);
 async function supa(table,method='GET',body=null,query=''){
   const url=SUPA_URL+'/rest/v1/'+table+(query?'?'+query:'');
   const opts={method,headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':method==='POST'?'return=representation':''}  };
@@ -513,7 +515,8 @@ const TMDB_IMG = 'https://image.tmdb.org/t/p/w342';
 // El usuario llega aquí desde index.html con datos en sessionStorage
 const session = JSON.parse(sessionStorage.getItem('aos_user') || 'null');
 
-function doLogout(){
+async function doLogout(){
+  try{ await sb.auth.signOut(); }catch(e){}
   sessionStorage.removeItem('aos_user');
   window.location.href = 'index.html';
 }

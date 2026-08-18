@@ -189,6 +189,7 @@ input,textarea,select{font-family:inherit;}
         <span class="pass-toggle" onclick="togglePassForm()">Cambiar contraseña</span>
       </div>
       <div class="section-card-body" id="pass-form" style="display:none;">
+        <div class="field"><label>Contraseña actual</label><input type="password" id="p-pass-current" placeholder="Tu contraseña actual"></div>
         <div class="field-row">
           <div class="field"><label>Nueva contraseña</label><input type="password" id="p-pass-new" placeholder="Nueva contraseña"></div>
           <div class="field"><label>Confirmar contraseña</label><input type="password" id="p-pass-confirm" placeholder="Repetir contraseña"></div>
@@ -240,16 +241,31 @@ input,textarea,select{font-family:inherit;}
 <style>@keyframes loader-pulse{0%,100%{opacity:.7;transform:scale(1);}50%{opacity:1;transform:scale(1.06);}}body{opacity:0;transition:opacity .3s ease,transform .3s ease;}body.aos-loaded{opacity:1;}</style>
 <script>(function(){var l=document.getElementById('page-loader'),b=document.getElementById('loader-bar'),w=0;var iv=setInterval(function(){w=Math.min(w+(Math.random()*18),88);b.style.width=w+'%';},70);window.addEventListener('load',function(){clearInterval(iv);b.style.width='100%';setTimeout(function(){l.style.opacity='0';document.body.classList.add('aos-loaded');setTimeout(function(){if(l.parentNode)l.parentNode.removeChild(l);},420);},180);});})();function navigateTo(url){document.body.style.opacity='0';document.body.style.transform='translateY(-5px)';document.body.style.transition='opacity .18s ease,transform .18s ease';setTimeout(function(){window.location.href=url;},190);}</script>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const SUPA_URL='https://ajebicalwncttyiirjdr.supabase.co';
 const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFqZWJpY2Fsd25jdHR5aWlyamRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxMDQ1NTcsImV4cCI6MjA5MzY4MDU1N30.cAoYPYv92p0G2N1tW3NE-efmnu1sDYx9293e8hksR-E';
+const sb = supabase.createClient(SUPA_URL, SUPA_KEY);
 const TMDB_KEY='9ead44dc2fd5da01ee3499ece3cd72fb';
 const TMDB_IMG='https://image.tmdb.org/t/p/w342';
 
 async function supaGet(t,q){const url=SUPA_URL+'/rest/v1/'+t+(q?'?'+q:'');const r=await fetch(url,{headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}});if(!r.ok)throw new Error(await r.text());return r.json();}
 async function supaPatch(t,id,b){const url=SUPA_URL+'/rest/v1/'+t+'?id=eq.'+id;const r=await fetch(url,{method:'PATCH',headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json'},body:JSON.stringify(b)});if(!r.ok)throw new Error(await r.text());return r.json();}
 
-function hashSimple(str){let h=5381;for(let i=0;i<str.length;i++)h=((h<<5)+h)+str.charCodeAt(i);return (h>>>0).toString(16);}
+// Cambios a `usuarios` (contraseña, nombre, teléfono, bio, géneros, top
+// películas) ya no se hacen con supaPatch directo — esa tabla quedó cerrada
+// con RLS. Pasan por esta Edge Function, que pide la contraseña actual como
+// prueba de identidad (no hay sesiones firmadas todavía, ver Parte 2).
+async function usuariosAuth(action,payload){
+  const r=await fetch(SUPA_URL+'/functions/v1/usuarios-auth',{
+    method:'POST',
+    headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json'},
+    body:JSON.stringify({action,...payload})
+  });
+  const data=await r.json().catch(()=>({}));
+  if(!r.ok) throw new Error(data.error||'Error de conexión');
+  return data;
+}
 
 /* SESIÓN */
 const session=JSON.parse(sessionStorage.getItem('aos_user')||'null');
@@ -290,30 +306,30 @@ async function init(){
                       JSON.parse(localStorage.getItem('completadas_avanzado')||'[]').length;
   document.getElementById('stat-completadas').textContent = completadas;
 
-  // Load from Supabase
-  try{
-    const data = await supaGet('usuarios','select=*&id=eq.'+session.id+'&limit=1');
-    userDB = data && data[0];
-    if(userDB){
-      document.getElementById('p-nombre').value   = userDB.nombre||'';
-      document.getElementById('p-email').value    = userDB.email||'';
-      document.getElementById('p-telefono').value = userDB.telefono||'';
-      document.getElementById('p-bio').value      = userDB.bio||'';
-      document.getElementById('avatar-name').textContent = userDB.nombre||'Cinéfilo';
-      document.getElementById('avatar-tipo').textContent = TIPO_LABELS[userDB.tipo]||userDB.tipo;
-      document.getElementById('avatar-tipo').className   = 'avatar-tipo '+(TIPO_CLASS[userDB.tipo]||'tipo-gratuito');
+  // Perfil: ya no se pide con un SELECT aparte a `usuarios` (esa tabla ya no
+  // es legible desde el navegador). Se usa lo que ya trae la sesión guardada
+  // al iniciar sesión (login/register/update_profile siempre devuelven el
+  // perfil completo "seguro", sin password_hash — ver usuarios-auth).
+  userDB = session;
+  if(userDB){
+    document.getElementById('p-nombre').value   = userDB.nombre||'';
+    document.getElementById('p-email').value    = userDB.email||'';
+    document.getElementById('p-telefono').value = userDB.telefono||'';
+    document.getElementById('p-bio').value      = userDB.bio||'';
+    document.getElementById('avatar-name').textContent = userDB.nombre||'Cinéfilo';
+    document.getElementById('avatar-tipo').textContent = TIPO_LABELS[userDB.tipo]||userDB.tipo;
+    document.getElementById('avatar-tipo').className   = 'avatar-tipo '+(TIPO_CLASS[userDB.tipo]||'tipo-gratuito');
 
-      // Géneros
-      if(userDB.generos_favoritos && Array.isArray(userDB.generos_favoritos)){
-        userDB.generos_favoritos.forEach(g=>selectedGeneros.add(g));
-      }
-
-      // Top películas
-      topPeliculas = userDB.top_peliculas || [];
-      if(typeof topPeliculas === 'string') topPeliculas = JSON.parse(topPeliculas);
-      document.getElementById('stat-top').textContent = topPeliculas.filter(p=>p&&p.titulo).length;
+    // Géneros
+    if(userDB.generos_favoritos && Array.isArray(userDB.generos_favoritos)){
+      userDB.generos_favoritos.forEach(g=>selectedGeneros.add(g));
     }
-  }catch(e){console.warn('Load error:',e);}
+
+    // Top películas
+    topPeliculas = userDB.top_peliculas || [];
+    if(typeof topPeliculas === 'string') topPeliculas = JSON.parse(topPeliculas);
+    document.getElementById('stat-top').textContent = topPeliculas.filter(p=>p&&p.titulo).length;
+  }
 
   renderGeneros();
   renderTop();
@@ -439,18 +455,21 @@ function togglePassForm(){
   f.style.display=f.style.display==='none'?'block':'none';
 }
 async function changePassword(){
+  const currentPassword=document.getElementById('p-pass-current').value;
   const np=document.getElementById('p-pass-new').value;
   const cp=document.getElementById('p-pass-confirm').value;
+  if(!currentPassword){toast('Escribe tu contraseña actual','error');return;}
   if(!np){toast('Escribe la nueva contraseña','error');return;}
   if(np.length<6){toast('Mínimo 6 caracteres','error');return;}
   if(np!==cp){toast('Las contraseñas no coinciden','error');return;}
   try{
-    await supaPatch('usuarios',session.id,{password_hash:hashSimple(np)});
+    await usuariosAuth('change_password',{id:session.id,currentPassword,newPassword:np});
     toast('Contraseña actualizada ✓');
+    document.getElementById('p-pass-current').value='';
     document.getElementById('p-pass-new').value='';
     document.getElementById('p-pass-confirm').value='';
     document.getElementById('pass-form').style.display='none';
-  }catch(e){toast('Error actualizando contraseña','error');}
+  }catch(e){toast(e.message||'Error actualizando contraseña','error');}
 }
 
 /* GUARDAR TODO */
@@ -459,26 +478,33 @@ async function saveAll(){
   const telefono = document.getElementById('p-telefono').value.trim();
   const bio      = document.getElementById('p-bio').value.trim();
   if(!nombre){toast('El nombre es requerido','error');return;}
-  const cleanTop = topPeliculas.filter(p=>p&&p.titulo);
   // Pad to keep indices
   const topArr = [0,1,2,3].map(i=>topPeliculas[i]||null);
+  // No hay sesiones firmadas todavía (ver Parte 2), así que para confirmar
+  // que quien guarda estos cambios es realmente el dueño de la cuenta se
+  // vuelve a pedir la contraseña aquí, igual que en el cambio de contraseña.
+  const currentPassword = window.prompt('Para guardar los cambios, confirma tu contraseña actual:');
+  if(currentPassword===null) return; // canceló
+  if(!currentPassword){toast('Necesitas escribir tu contraseña para guardar','error');return;}
   try{
-    await supaPatch('usuarios',session.id,{
+    const { user } = await usuariosAuth('update_profile',{
+      id: session.id,
+      currentPassword,
       nombre,
       telefono,
       bio,
       generos_favoritos: [...selectedGeneros],
       top_peliculas: JSON.stringify(topArr)
     });
-    // Update session
-    const updated = {...session,nombre};
-    sessionStorage.setItem('aos_user',JSON.stringify(updated));
+    // Update session con el perfil ya actualizado que devuelve la función
+    sessionStorage.setItem('aos_user',JSON.stringify(user));
     document.getElementById('avatar-name').textContent=nombre;
     toast('Perfil guardado ✓','success');
-  }catch(e){toast('Error guardando perfil','error');console.error(e);}
+  }catch(e){toast(e.message||'Error guardando perfil','error');console.error(e);}
 }
 
-function doLogout(){
+async function doLogout(){
+  try{ await sb.auth.signOut(); }catch(e){}
   sessionStorage.removeItem('aos_user');
   navigateTo('index.html');
 }

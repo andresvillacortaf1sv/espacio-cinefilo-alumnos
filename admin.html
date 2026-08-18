@@ -848,13 +848,32 @@ tr:hover td{background:rgba(255,255,255,0.02);}
 
 <div class="toast" id="toast"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 
 const SUPA_URL='https://ajebicalwncttyiirjdr.supabase.co';
 const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFqZWJpY2Fsd25jdHR5aWlyamRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxMDQ1NTcsImV4cCI6MjA5MzY4MDU1N30.cAoYPYv92p0G2N1tW3NE-efmnu1sDYx9293e8hksR-E';
+
+// Cliente real de Supabase Auth — reemplaza la contraseña que antes estaba
+// escrita en este archivo (ADMIN_PASS). El acceso de verdad ahora lo decide
+// Supabase (Authentication → Users) + la tabla `admins` + RLS, no una
+// comparación en JavaScript que cualquiera podía leer con "ver código fuente".
+//
+// Cambia este correo por el que uses para el usuario admin en Supabase Auth
+// (Authentication → Users → Add user) y luego dalo de alta en la tabla
+// `admins` — instrucciones completas en GUIA_SEGURIDAD.md.
+const ADMIN_EMAIL = 'andresvillacortaf1@gmail.com';
+const sb = supabase.createClient(SUPA_URL, SUPA_KEY);
+
 async function supa(table,method,body,query){
   const url=SUPA_URL+'/rest/v1/'+table+(query?'?'+query:'');
-  const opts={method:method||'GET',headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':method==='POST'?'return=representation':''}};
+  // Las llamadas a la API ya no usan la anon key como Authorization — usan
+  // el token de sesión del admin logueado, para que RLS (is_admin()) las
+  // reconozca como autenticadas. La apikey sigue siendo la anon key (headers
+  // requerido por Supabase, no es lo que decide el permiso).
+  const { data: { session: authSession } } = await sb.auth.getSession();
+  const accessToken = authSession?.access_token || SUPA_KEY;
+  const opts={method:method||'GET',headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+accessToken,'Content-Type':'application/json','Prefer':method==='POST'?'return=representation':''}};
   if(body)opts.body=JSON.stringify(body);
   const res=await fetch(url,opts);
   if(!res.ok){const e=await res.text();throw new Error(e);}
@@ -867,24 +886,48 @@ const supaPatch=(t,id,b)=>supa(t,'PATCH',b,'id=eq.'+id);
 const supaDelete=(t,id)=>supa(t,'DELETE',null,'id=eq.'+id);
 
 
-const ADMIN_PASS='Zidane5_';
 const TMDB_KEY='9ead44dc2fd5da01ee3499ece3cd72fb';
 const TMDB_IMG='https://image.tmdb.org/t/p/w342';
 
-/* AUTH */
-function doLogin(){
-  if(document.getElementById('login-pass').value===ADMIN_PASS){
+/* AUTH — login real con Supabase Auth (sustituye la contraseña hardcodeada) */
+async function doLogin(){
+  const btn = document.querySelector('.login-btn');
+  const err = document.getElementById('login-error');
+  err.style.display='none';
+  if(btn){ btn.disabled=true; btn.textContent='Verificando...'; }
+  const { error } = await sb.auth.signInWithPassword({
+    email: ADMIN_EMAIL,
+    password: document.getElementById('login-pass').value
+  });
+  if(btn){ btn.disabled=false; btn.textContent='Entrar al panel'; }
+  if(error){
+    err.textContent = 'Contraseña incorrecta';
+    err.style.display='block';
+    setTimeout(()=>err.style.display='none',2500);
+    return;
+  }
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('app').style.display='block';
+  loadAllData();
+}
+async function doLogout(){
+  await sb.auth.signOut();
+  document.getElementById('app').style.display='none';
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('login-pass').value='';
+}
+document.getElementById('login-pass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+
+// Si ya había una sesión de admin abierta (recargaste la página, por
+// ejemplo), Supabase la recupera sola y no hace falta volver a loguearse.
+(async () => {
+  const { data: { session: existing } } = await sb.auth.getSession();
+  if (existing) {
     document.getElementById('login-screen').style.display='none';
     document.getElementById('app').style.display='block';
     loadAllData();
-  }else{
-    const err=document.getElementById('login-error');
-    err.style.display='block';
-    setTimeout(()=>err.style.display='none',2500);
   }
-}
-function doLogout(){document.getElementById('app').style.display='none';document.getElementById('login-screen').style.display='flex';document.getElementById('login-pass').value='';}
-document.getElementById('login-pass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+})();
 
 /* NAV */
 const pageTitles={dashboard:'Dashboard',usuarios:'Usuarios',diplomados:'Diplomados',peliculas:'Películas',ciclo:'Ciclo Mensual',noticias:'Noticias',editorial:'Editorial',forum:'Cine Fórum',proyeccion:'Sala de Proyección',contactos:'Mensajes de Contacto'};

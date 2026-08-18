@@ -78,10 +78,13 @@ button{cursor:pointer;font-family:inherit;}
 </div>
 <div class="toast" id="toast"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 
 const SUPA_URL='https://ajebicalwncttyiirjdr.supabase.co';const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFqZWJpY2Fsd25jdHR5aWlyamRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxMDQ1NTcsImV4cCI6MjA5MzY4MDU1N30.cAoYPYv92p0G2N1tW3NE-efmnu1sDYx9293e8hksR-E';
-async function supa(t,m,b,q){const url=SUPA_URL+'/rest/v1/'+t+(q?'?'+q:'');const o={method:m||'GET',headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':m==='POST'?'return=representation':''}};if(b)o.body=JSON.stringify(b);const r=await fetch(url,o);if(!r.ok){const e=await r.text();throw new Error(e);}if(r.status===204)return null;return r.json();}
+const sb = supabase.createClient(SUPA_URL, SUPA_KEY);
+async function getAccessToken(){const { data: { session: authSession } } = await sb.auth.getSession();return authSession?.access_token || SUPA_KEY;}
+async function supa(t,m,b,q){const url=SUPA_URL+'/rest/v1/'+t+(q?'?'+q:'');const accessToken=await getAccessToken();const o={method:m||'GET',headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+accessToken,'Content-Type':'application/json','Prefer':m==='POST'?'return=representation':''}};if(b)o.body=JSON.stringify(b);const r=await fetch(url,o);if(!r.ok){const e=await r.text();throw new Error(e);}if(r.status===204)return null;return r.json();}
 const supaGet=(t,q)=>supa(t,'GET',null,q||'');
 const supaPost=(t,b)=>supa(t,'POST',b,'');
 const supaPatch=(t,id,b)=>supa(t,'PATCH',b,'id=eq.'+id);
