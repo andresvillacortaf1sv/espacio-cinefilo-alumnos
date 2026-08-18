@@ -632,6 +632,27 @@ img{display:block;max-width:100%;}
   .header-nav{display:none;}
 }
 </style>
+
+<!-- ── META PIXEL ──
+     Pixel ID confirmado en Meta Events Manager: conjunto de datos "CINE LANDING" (1294519489403410),
+     ya activo en el dominio ottosalamancaacademia.online. -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1294519489403410');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1294519489403410&ev=PageView&noscript=1"
+/></noscript>
+<!-- ── FIN META PIXEL ── -->
+
 </head>
 <body>
 
@@ -1408,6 +1429,11 @@ function submitForm(){
   document.getElementById('form-submit-text').textContent = 'Enviando...';
   btn.disabled = true;
 
+  // event_id compartido entre el Pixel (navegador) y el Conversion API (servidor)
+  // para que Meta deduplique el mismo evento Lead en vez de contarlo 2 veces.
+  var eventId = (window.crypto && crypto.randomUUID) ? crypto.randomUUID()
+                : 'lead-' + Date.now() + '-' + Math.random().toString(36).slice(2);
+
   supaInsert('aplicaciones_diplomado', {
     nombre:             nombre,
     email:              email,
@@ -1417,8 +1443,16 @@ function submitForm(){
     motivo:             motivo || null,
     diplomado:          'Cine y Guion Cinematográfico',
     cohorte:            'Octubre 2026',
+    event_id:           eventId,
     created_at:         new Date().toISOString()
   }).then(function(){
+    if (typeof fbq === 'function') {
+      fbq('track', 'Lead', {
+        content_name: 'Diplomado de Cine y Guion Cinematográfico',
+        value: 0,
+        currency: 'USD'
+      }, { eventID: eventId });
+    }
     document.getElementById('form-wrap-inner').style.display = 'none';
     document.getElementById('form-success').style.display    = 'block';
   }).catch(function(e){
